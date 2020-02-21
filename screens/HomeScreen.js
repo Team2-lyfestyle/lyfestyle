@@ -1,53 +1,40 @@
 import * as React from 'react';
-import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, TextInput } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as WebBrowser from 'expo-web-browser';
 
 import { MonoText } from '../components/StyledText';
+import firebase from '../constants/firebase'
 
 export default function HomeScreen() {
+
+  const [name, updateName] = React.useState(false)
+  const [email, updateEmail] = React.useState(false)
+  const [data, updatedata] = React.useState(false)
+  let storeData = (obj) => {
+    firebase.database().ref('users/'+ obj.email).set(obj);
+  }
+  
+   let getData = () => {
+    firebase.database().ref('users/').on('value', function (snapshot) {
+     updatedata(JSON.stringify(snapshot.val()))
+    });
+  }
+  
+
+
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-        <View style={styles.welcomeContainer}>
-          <Image
-            source={
-              __DEV__
-                ? require('../assets/images/robot-dev.png')
-                : require('../assets/images/robot-prod.png')
-            }
-            style={styles.welcomeImage}
-          />
-        </View>
+      <TextInput style={{borderColor:"red"}} placeholder={"Input name"} onChangeText={text => updateName(text)}></TextInput>
+      <TextInput style={{borderColor:"red"}} placeholder={"Input email"} onChangeText={text => updateEmail(text)}></TextInput>
+      <TouchableOpacity style={{borderColor: 'black'}} onPress={() => storeData({name: name, email: email})}>
+        <Text>CLICK ME TO STORE</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={()=>getData()}>
+        <Text>CLICK ME TO GET</Text>
+      </TouchableOpacity>
+      <Text>{data}</Text>
 
-        <View style={styles.getStartedContainer}>
-          <DevelopmentModeNotice />
-
-          <Text style={styles.getStartedText}>Open up the code for this screen:</Text>
-
-          <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-            <MonoText>screens/HomeScreen.js</MonoText>
-          </View>
-
-          <Text style={styles.getStartedText}>
-            Change any of the text, save the file, and your app will automatically reload.
-          </Text>
-        </View>
-
-        <View style={styles.helpContainer}>
-          <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-
-      <View style={styles.tabBarInfoContainer}>
-        <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
-
-        <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-          <MonoText style={styles.codeHighlightText}>navigation/BottomTabNavigator.js</MonoText>
-        </View>
-      </View>
     </View>
   );
 }

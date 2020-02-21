@@ -1,32 +1,40 @@
 import * as React from 'react';
-import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Platform, StyleSheet, Text, TouchableOpacity, View, TextInput } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as WebBrowser from 'expo-web-browser';
 
 import { MonoText } from '../components/StyledText';
 import firebase from '../constants/firebase'
 
-
 export default function HomeScreen() {
 
-  function storeData(name) {
-    firebase.database().ref('users/').set({
-      name: name
+  const [name, updateName] = React.useState(false)
+  const [email, updateEmail] = React.useState(false)
+  const [data, updatedata] = React.useState(false)
+  let storeData = (obj) => {
+    firebase.database().ref('users/'+ obj.email).set(obj);
+  }
+  
+   let getData = () => {
+    firebase.database().ref('users/').on('value', function (snapshot) {
+     updatedata(JSON.stringify(snapshot.val()))
     });
   }
+  
 
-  function getData() {
-    firebase.database().ref('users/').on('value', function (snapshot) {
-      console.log(snapshot.val())
-    }
-    )
-  }
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={storeData("Monica")}>
-        <Text>{getData()}</Text>
+      <TextInput style={{borderColor:"red"}} placeholder={"Input name"} onChangeText={text => updateName(text)}></TextInput>
+      <TextInput style={{borderColor:"red"}} placeholder={"Input email"} onChangeText={text => updateEmail(text)}></TextInput>
+      <TouchableOpacity style={{borderColor: 'black'}} onPress={() => storeData({name: name, email: email})}>
+        <Text>CLICK ME TO STORE</Text>
       </TouchableOpacity>
+      <TouchableOpacity onPress={()=>getData()}>
+        <Text>CLICK ME TO GET</Text>
+      </TouchableOpacity>
+      <Text>{data}</Text>
+
     </View>
   );
 }

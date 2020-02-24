@@ -40,13 +40,13 @@ export default function HomeScreen() {
       <TextInput
         style={styles.inputContainer}
         placeholder={'Input name'}
-        placeholderTextColor={'grey'}
+        placeholderTextColor={'black'}
         onChangeText={text => updateName(text)}
       ></TextInput>
       <TextInput
         style={styles.inputContainer}
         placeholder={'Input Email'}
-        placeholderTextColor={'grey'}
+        placeholderTextColor={'black'}
         onChangeText={text => updateEmail(text)}
       ></TextInput>
       <TouchableOpacity
@@ -120,3 +120,5 @@ const styles = StyleSheet.create({
     position: 'relative'
   }
 });
+
+

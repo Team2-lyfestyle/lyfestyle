@@ -32,12 +32,14 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Text>Are you ready for a new lyfestyle?</Text>
       <TextInput
+        clearButtonMode='always'
         style={styles.inputContainer}
         placeholder={'Input name'}
         placeholderTextColor={'grey'}
         onChangeText={text => updateName(text)}
       ></TextInput>
       <TextInput
+        clearButtonMode='always'
         style={styles.inputContainer}
         placeholder={'Input Email'}
         placeholderTextColor={'grey'}

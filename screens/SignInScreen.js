@@ -23,7 +23,7 @@ export default function HomeScreen() {
     firebase
       .database()
       .ref('users/')
-      .on('value', function(snapshot) {
+      .once('value', function(snapshot) { // once('value') gets value once. on('value') get value and keepd listening for changes
         updatedata(JSON.stringify(snapshot.val()));
       });
   };

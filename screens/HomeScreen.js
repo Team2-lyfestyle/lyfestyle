@@ -12,7 +12,7 @@ export default function HomeScreen() {
   const [name, updateName] = React.useState(false);
   const [email, updateEmail] = React.useState(false);
   const [data, updatedata] = React.useState(false);
-  let storeData = obj => {
+  let storeData = (obj) => {
     firebase
       .database()
       .ref('users/' + obj.name)
@@ -23,7 +23,7 @@ export default function HomeScreen() {
     firebase
       .database()
       .ref('users/')
-      .on('value', function(snapshot) {
+      .once('value', function(snapshot) { // once('value') gets value once. on('value') get value and keepd listening for changes
         updatedata(JSON.stringify(snapshot.val()));
       });
   };
@@ -46,12 +46,12 @@ export default function HomeScreen() {
         onChangeText={text => updateEmail(text)}
       ></TextInput>
       <TouchableOpacity
-        style={{ borderColor: 'black' }}
+        style={styles.inputContainer}
         onPress={() => storeData({ name: name, email: email })}
       >
         <Text>CLICK ME TO STORE</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => getData()}>
+      <TouchableOpacity style={styles.inputContainer} onPress={() => getData()}>
         <Text>CLICK ME TO GET</Text>
       </TouchableOpacity>
       <Text>{data}</Text>

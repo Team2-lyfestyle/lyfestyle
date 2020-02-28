@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import firebase from '../constants/firebase';
 
+
 export default function HomeScreen() {
   const [name, updateName] = React.useState(false);
   const [email, updateEmail] = React.useState(false);
@@ -31,17 +32,19 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text>Are you ready for a new lyfestyle?</Text>
+      <ShadowBox style={styles.shadowBox}>
+        <TextInput
+          clearButtonMode='always'
+          style={styles.inputContainer}
+          placeholder={'Name'}
+          placeholderTextColor={'grey'}
+          onChangeText={text => updateName(text)}
+        ></TextInput>
+      </ShadowBox>
       <TextInput
         clearButtonMode='always'
         style={styles.inputContainer}
-        placeholder={'Input name'}
-        placeholderTextColor={'grey'}
-        onChangeText={text => updateName(text)}
-      ></TextInput>
-      <TextInput
-        clearButtonMode='always'
-        style={styles.inputContainer}
-        placeholder={'Input Email'}
+        placeholder={'Email'}
         placeholderTextColor={'grey'}
         onChangeText={text => updateEmail(text)}
       ></TextInput>

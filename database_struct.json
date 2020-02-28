@@ -1,0 +1,82 @@
+{
+    "users":{
+        "username":{
+            "name": "Leo",
+            "DOB": "16/04/1998",
+            "email": "myemail@gamil.com",
+            "password": "Hashed password",
+            "bio": "Hello this is my bio",
+            "picture": "Either the file itself or a path to it",
+            "friends":["list", "of", "usernames"],
+            "posts": ["list", "of", "post IDs"],
+            "nutrition": ["list", "of", "nutrition IDs"],
+            "training": ["list", "of", "training IDs"],
+            "chats": ["list", "of", "chat IDS"]
+
+        }
+    },
+    "posts":{
+        "postID": {
+            "poster": "username",
+            "description": "This is me in the Gym :)",
+            "media": "photo or path to photo",
+            "timestamp": "UTF-8 10:00",
+            "likes": 100,
+            "commments": [
+                {
+                    "comenter": "username",
+                    "media": "photo or path to photo",
+                    "likes":50
+                }
+            ]
+        }
+    },
+    "trainings":{
+        "trainingID": {
+            "poster": "username",
+            "description": "1: situps, 2: pushups, 3: die",
+            "timestamp": "UTF-8 10:00",
+            "media": "photo or path to photo",
+            "likes": 100,
+            "commments": [
+                {
+                    "comenter": "username",
+                    "media": "photo or path to photo",
+                    "likes":50
+                }
+            ]
+
+        }
+    },
+    "nutrition":{
+        "nutritionID": {
+            "poster": "username",
+            "description": "DO NOT EAT CARBS!!!!",
+            "timestamp": "UTF-8 10:00",
+            "media": "photo or path to photo",
+            "likes": 100,
+            "commments": [
+                {
+                    "comenter": "username",
+                    "media": "photo or path to photo",
+                    "likes":50
+                }
+            ]
+
+        }
+    },
+    "chats": {
+        "chatID": {
+            "message1": {
+                "text": "what up?",
+                "media":"photo or path to photo",
+                "timestamp":"UTF-8 10:00"
+            },
+            "message2": {
+                "text": "not much, you?",
+                "media":"photo or path to photo",
+                "timestamp":"UTF-8 11:00"
+            }
+        }
+    }
+}

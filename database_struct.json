@@ -7,76 +7,79 @@
             "password": "Hashed password",
             "bio": "Hello this is my bio",
             "picture": "Either the file itself or a path to it",
-            "friends":["list", "of", "usernames"],
-            "posts": ["list", "of", "post IDs"],
-            "nutrition": ["list", "of", "nutrition IDs"],
-            "training": ["list", "of", "training IDs"],
-            "chats": ["list", "of", "chat IDS"]
-
+            "friends":["list", "of", "usernames"]
         }
     },
     "posts":{
         "postID": {
-            "poster": "username",
+            "posterUID": "username",
             "description": "This is me in the Gym :)",
-            "media": "photo or path to photo",
+            "media": "path to photo",
             "timestamp": "UTF-8 10:00",
-            "likes": 100,
-            "commments": [
-                {
-                    "comenter": "username",
-                    "media": "photo or path to photo",
-                    "likes":50
-                }
-            ]
+            "likes": 100
         }
     },
     "trainings":{
         "trainingID": {
-            "poster": "username",
+            "posterUID": "username",
             "description": "1: situps, 2: pushups, 3: die",
             "timestamp": "UTF-8 10:00",
-            "media": "photo or path to photo",
+            "media": "path to photo",
             "likes": 100,
-            "commments": [
-                {
-                    "comenter": "username",
-                    "media": "photo or path to photo",
-                    "likes":50
-                }
-            ]
-
+            "difficulty": "Easy"
         }
     },
     "nutrition":{
         "nutritionID": {
-            "poster": "username",
+            "posterUID": "username",
             "description": "DO NOT EAT CARBS!!!!",
             "timestamp": "UTF-8 10:00",
-            "media": "photo or path to photo",
-            "likes": 100,
-            "commments": [
-                {
-                    "comenter": "username",
-                    "media": "photo or path to photo",
-                    "likes":50
-                }
-            ]
-
+            "media": "path to photo",
+            "likes": 100
         }
     },
+
+    "post_comments": {
+        "commentID": {
+            "posterUID": "username",
+            "description": "nice pic bruh!",
+            "media": "path to photo",
+            "likes": 10,
+            "timestamp": "UTF-8 10:00"
+        }
+    },
+    "nutrition_comment": {
+        "commentID": {
+            "posterUID": "username",
+            "description": "nice nutrition bruh!",
+            "media": "path to photo",
+            "likes": 10,
+            "timestamp": "UTF-8 10:00"
+        }
+    },
+    "training_comment": {
+        "commentID": {
+            "posterUID": "username",
+            "description": "nice training bruh!",
+            "media": "path to photo",
+            "likes": 10,
+            "timestamp": "UTF-8 10:00"
+        }
+    },
+
     "chats": {
         "chatID": {
             "message1": {
                 "text": "what up?",
-                "media":"photo or path to photo",
+                "media":"path to photo",
                 "timestamp":"UTF-8 10:00"
             },
             "message2": {
                 "text": "not much, you?",
-                "media":"photo or path to photo",
+                "media":"path to photo",
                 "timestamp":"UTF-8 11:00"
             }
         }
     }
+
 }

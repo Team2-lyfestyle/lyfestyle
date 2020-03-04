@@ -67,17 +67,34 @@
         }
     },
 
-    "chats": {
+    "chats": {  // Saves only METADATA of chats
+        "chatID": {
+            "title": "My Chat with Israel",
+            "lastMessage": "Bruh we gotta do that big data project",
+            "timestamp":"UTF-8 10:00"
+        }
+    },
+
+    "members": { // stores members of each chat. chatID is the same as chat above
+        "chatID": {
+            "leo": true,
+            "monica": true,
+            "israel":true,
+            "brandon": true
+       }
+    },
+
+    "messages": { // Stores the messages of a chat. ChatID matches the ones above
         "chatID": {
             "message1": {
-                "text": "what up?",
-                "media":"path to photo",
+                "name": "leo",
+                "message": "Hey man! Whats up",
                 "timestamp":"UTF-8 10:00"
             },
             "message2": {
-                "text": "not much, you?",
-                "media":"path to photo",
-                "timestamp":"UTF-8 11:00"
+                "name": "israel",
+                "message": "Bruh we gotta do that big data project",
+                "timestamp":"UTF-8 10:10"
             }
         }
     }

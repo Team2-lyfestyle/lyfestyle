@@ -8,15 +8,34 @@ import {
 } from 'react-native';
 import firebase from '../constants/firebase';
 
-export default function SignInScreen({navigation}) {
+export default function RegisterScreen({navigation}) {
   const [email, updateEmail] = React.useState(false);
   const [password, updatePassword] = React.useState(false);
 
+
   const [data, updatedata] = React.useState(false);
+  let storeData = obj => {
+    firebase
+      .database()
+      .ref('users/' + obj.email)
+      .set(obj);
+  };
+
+  let getData = () => {
+    firebase
+      .database()
+      .ref('users/')
+      .once('value', function(snapshot) { // once('value') gets value once. on('value') get value and keepd listening for changes
+        updatedata(JSON.stringify(snapshot.val()));
+      });
+  };
 
   let _submit = () => {
-    firebase.auth().signInWithEmailAndPassword(email, password)
-    .then(console.log("LoggedIn"))
+    firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then(async () => {
+        uid = await firebase.auth().currentUser.uid
+        firebase.database().ref('users/' + uid).set({email: email, password: password})
+    })
   }
 
   return (
@@ -36,9 +55,9 @@ export default function SignInScreen({navigation}) {
       ></TextInput>
       <TouchableOpacity
         style={{ borderColor: 'black' }}
-        onPress={() => navigation.navigate('Register')}
+        onPress={() => _submit()}
       >
-        <Text>CLICK ME TO register</Text>
+        <Text>CLICK ME TO STORE</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => getData()}>
         <Text>CLICK ME TO GET</Text>
@@ -48,7 +67,7 @@ export default function SignInScreen({navigation}) {
   );
 }
 
-SignInScreen.navigationOptions = {
+RegisterScreen.navigationOptions = {
   header: null
 };
 

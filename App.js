@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Platform, StatusBar, StyleSheet, View} from 'react-native';
-import { SplashScreen } from 'expo';
+import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { SplashScreen, Notifications } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
@@ -13,6 +13,8 @@ import useLinking from './navigation/useLinking';
 import firebase from './constants/firebase'
 
 
+import registerForPushNotificationsAsync from './util/registerForPushNotificationsAsnyc';
+import NotificationContext from './util/NotificationContext';
 const Stack = createStackNavigator();
 
 export default function App(props) {
@@ -21,11 +23,16 @@ export default function App(props) {
   const [initialNavigationState, setInitialNavigationState] = React.useState();
   const [isLoggedIn, setLoggedIn] = React.useState(false);
 
+  const [notification, setNotification] = React.useState();
   const containerRef = React.useRef();
   const { getInitialState } = useLinking(containerRef);
 
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
+    function _handleNotification(notification) {
+      setNotification(notification);
+    }
+
     async function loadResourcesAndDataAsync() {
       try {
         SplashScreen.preventAutoHide();
@@ -44,6 +51,15 @@ export default function App(props) {
           ...Ionicons.font,
           'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
         });
+
+        // Register for push notifications 
+        await registerForPushNotificationsAsync();
+        // Handle notifications that are received or selected while the app
+        // is open. If the app was closed and then opened by tapping the
+        // notification (rather than just tapping the app icon to open it),
+        // this function will fire on the next tick after the app starts
+        // with the notification data.
+        _notificationSubscription = Notifications.addListener(_handleNotification);
       } catch (e) {
         // We might want to provide this error information to an error reporting service
         console.warn(e);
@@ -54,6 +70,11 @@ export default function App(props) {
     }
 
     loadResourcesAndDataAsync();
+
+    // Unsubscribe from notifications when component unmounts
+    return function cleanup() {
+      _notificationSubscription.remove();
+    }
   }, []);
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {

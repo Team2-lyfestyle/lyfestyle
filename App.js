@@ -61,22 +61,20 @@ export default function App(props) {
   } else {
     return (
       <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
-          <Stack.Navigator>
-            {
-                isLoggedIn ? 
-                (
-                  <Stack.Screen name="Home" component={BottomTabNavigator} />
-                ) : 
-                (
-                <>
-                  <Stack.Screen name="SignIn" component={SignInScreen}/>
-                  <Stack.Screen name="Register" component={RegisterScreen}/>
-                </>
-                )
-            }
-            
+        {Platform.OS === 'ios' && <StatusBar barStyle='default' />}
+        <NavigationContainer
+          ref={containerRef}
+          initialState={initialNavigationState}
+        >
+          <Stack.Navigator headerMode='none'>
+            {isLoggedIn ? (
+              <Stack.Screen name='Home' component={BottomTabNavigator} />
+            ) : (
+              <>
+                <Stack.Screen name='SignIn' component={SignInScreen} />
+                <Stack.Screen name='Register' component={RegisterScreen} />
+              </>
+            )}
           </Stack.Navigator>
         </NavigationContainer>
       </View>

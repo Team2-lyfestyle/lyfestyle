@@ -2,13 +2,16 @@ import React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import firebase from '../constants/firebase';
+import AuthContext from '../util/AuthContext';
 
 const RegisterScreen = ({ navigation }) => {
   const [name, updateName] = React.useState(false);
   const [email, updateEmail] = React.useState(false);
   const [password, updatePassword] = React.useState(false);
-
   const [data, updatedata] = React.useState(false);
+
+  const { signUp } = React.useContext(AuthContext);
+
   let storeData = obj => {
     firebase
       .database()
@@ -27,17 +30,9 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   let _submit = () => {
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(async () => {
-        uid = await firebase.auth().currentUser.uid;
-        firebase
-          .database()
-          .ref('users/' + uid)
-          .set({email: email, password: password });
-      });
-  };
+    signUp(email, password);
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.greeting}>
@@ -74,6 +69,7 @@ const RegisterScreen = ({ navigation }) => {
         onPress={() => _submit()}
       >
         <Text styles={{ fontWeight: 'bold' }}>Sign Up</Text>
+
       </TouchableOpacity>
       <TouchableOpacity
         style={{ alignSelf: 'center', marginTop: 32 }}

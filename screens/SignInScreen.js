@@ -2,19 +2,18 @@ import React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import firebase from '../constants/firebase';
+import AuthContext from '../util/AuthContext';
 
-const SignInScreen = ({ navigation }) => {
-  const [email, updateEmail] = React.useState('');
-  const [password, updatePassword] = React.useState('');
 
+export default function SignInScreen({navigation}) {
+  const [email, updateEmail] = React.useState(false);
+  const [password, updatePassword] = React.useState(false);
   const [data, updatedata] = React.useState(false);
+  const { signIn } = React.useContext(AuthContext);
 
   let _submit = () => {
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(console.log('LoggedIn'));
-  };
+    signIn(email, password);
+  }
 
   return (
     <View style={styles.container}>
@@ -49,14 +48,9 @@ const SignInScreen = ({ navigation }) => {
           Sign In
         </Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        style={{ alignSelf: 'center', marginTop: 32 }}
-        onPress={() => navigation.navigate('Register')}
-      >
-        <Text style={{ color: '#fff', fontSize: 15, fontWeight: '500' }}>
-          Don't have an account yet?
-          <Text style={{ fontWeight: '600', color: '#00FED4' }}> Sign Up!</Text>
-        </Text>
+
+      <TouchableOpacity onPress={() => _submit()}>
+        <Text>CLICK ME TO SUBMIT</Text>
       </TouchableOpacity>
     </View>
   );

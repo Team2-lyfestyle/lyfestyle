@@ -7,7 +7,7 @@ import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import TrainingScreen from '../screens/TrainingScreen';
 import ExploreScreen from '../screens/ExploreScreen';
-import ChatScreen from '../screens/ChatScreen';
+import ChatStackNavigator from '../navigation/ChatStackNavigator';
 import TipScreen from '../screens/TipScreen';
 
 const BottomTab = createBottomTabNavigator();
@@ -53,9 +53,8 @@ export default function BottomTabNavigator({ navigation, route }) {
       />
       <BottomTab.Screen
         name='Chat'
-        component={ChatScreen}
+        component={ChatStackNavigator}
         options={{
-          title: 'Chat',
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} name='ios-text' />
           )

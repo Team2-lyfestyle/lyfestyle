@@ -7,13 +7,15 @@ import {
   TextInput
 } from 'react-native';
 import firebase from '../constants/firebase';
+import AuthContext from '../util/AuthContext';
 
 export default function RegisterScreen({navigation}) {
   const [email, updateEmail] = React.useState(false);
   const [password, updatePassword] = React.useState(false);
-
-
   const [data, updatedata] = React.useState(false);
+
+  const { signUp } = React.useContext(AuthContext);
+
   let storeData = obj => {
     firebase
       .database()
@@ -31,11 +33,7 @@ export default function RegisterScreen({navigation}) {
   };
 
   let _submit = () => {
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then(async () => {
-        uid = await firebase.auth().currentUser.uid
-        firebase.database().ref('users/' + uid).set({email: email, password: password})
-    })
+    signUp(email, password);
   }
 
   return (
@@ -57,7 +55,7 @@ export default function RegisterScreen({navigation}) {
         style={{ borderColor: 'black' }}
         onPress={() => _submit()}
       >
-        <Text>CLICK ME TO STORE</Text>
+        <Text>CLICK ME TO SUBMIT</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => getData()}>
         <Text>CLICK ME TO GET</Text>

@@ -7,16 +7,16 @@ import {
   TextInput
 } from 'react-native';
 import firebase from '../constants/firebase';
+import AuthContext from '../util/AuthContext';
 
 export default function SignInScreen({navigation}) {
   const [email, updateEmail] = React.useState(false);
   const [password, updatePassword] = React.useState(false);
-
   const [data, updatedata] = React.useState(false);
+  const { signIn } = React.useContext(AuthContext);
 
   let _submit = () => {
-    firebase.auth().signInWithEmailAndPassword(email, password)
-    .then(console.log("LoggedIn"))
+    signIn(email, password);
   }
 
   return (
@@ -40,8 +40,8 @@ export default function SignInScreen({navigation}) {
       >
         <Text>CLICK ME TO register</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => getData()}>
-        <Text>CLICK ME TO GET</Text>
+      <TouchableOpacity onPress={() => _submit()}>
+        <Text>CLICK ME TO SUBMIT</Text>
       </TouchableOpacity>
       <Text>{data}</Text>
     </View>

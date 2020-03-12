@@ -49,7 +49,6 @@ export default class ChatScreen extends React.Component {
     this.getMessages = this.getMessages.bind(this); 
     this.deleteLocalMessages = this.deleteLocalMessages.bind(this);
     
-    this.headerTitle = this.props.navigation.getParam('name', 'Finder')
     this.messageCount = 0;    // Variable used to assign _id to messages
 
     this.state = {
@@ -59,9 +58,9 @@ export default class ChatScreen extends React.Component {
 
     this.otherUser = {
       _id: 2,
-      name: this.props.navigation.getParam('name', '?'),
+      name: "",
       avatar: 'https://placeimg.com/140/140/any',
-      username: this.props.navigation.getParam('username', '?'),
+      username: "",
     }
   }
 
@@ -88,22 +87,6 @@ export default class ChatScreen extends React.Component {
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }));
-
-
-    // Send to api
-    message = messages[0];    
-    api.sendMessage({
-      to: this.otherUser.username,
-      from: this.thisUser.username,
-      text: message.text,
-      createdAt: new Date(),
-      token: this.thisUser.token,
-    }).then( (response) => {
-      console.log(response);
-    }).catch( (error) => {
-      console.log('Error sending message');
-      console.log(error);
-    })
   }
 
   getMessages() {
@@ -116,7 +99,6 @@ export default class ChatScreen extends React.Component {
   }
 
   deleteLocalMessages() {
-    ChatStorage.removeMessages(this.otherUser.username);
     this.setState({
       messages: [],
     });
@@ -127,6 +109,7 @@ export default class ChatScreen extends React.Component {
     if (!this.state.componentHasLoaded) {
       return (
         <SafeAreaView style={{flex: 1}}>
+          <Text>Loading</Text>
           <ActivityIndicator />
         </SafeAreaView>
       )

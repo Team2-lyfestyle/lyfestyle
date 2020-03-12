@@ -7,7 +7,7 @@ import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import TrainingScreen from '../screens/TrainingScreen';
 import ExploreScreen from '../screens/ExploreScreen';
-import ChatScreen from '../screens/ChatScreen';
+import ChatStackNavigator from '../navigation/ChatStackNavigator';
 import TipScreen from '../screens/TipScreen';
 
 const BottomTab = createBottomTabNavigator();
@@ -17,7 +17,7 @@ export default function BottomTabNavigator({ navigation, route }) {
   // Set the header title on the parent stack navigator depending on the
   // currently active tab. Learn more in the documentation:
   // https://reactnavigation.org/docs/en/screen-options-resolution.html
-  navigation.setOptions({ headerTitle: getHeaderTitle(route) });
+  //navigation.setOptions({ headerTitle: getHeaderTitle(route) });
 
   return (
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
@@ -53,9 +53,8 @@ export default function BottomTabNavigator({ navigation, route }) {
       />
       <BottomTab.Screen
         name='Chat'
-        component={ChatScreen}
+        component={ChatStackNavigator}
         options={{
-          title: 'Chat',
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} name='ios-text' />
           )

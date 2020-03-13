@@ -43,20 +43,25 @@ export default function SignInScreen({navigation}) {
       </View>
       <TouchableOpacity
         style={styles.button}
+        onPress={() => _submit()}
       >
         <Text>
           Sign In
         </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => _submit()}>
-        <Text>CLICK ME TO SUBMIT</Text>
+      <TouchableOpacity
+        style={{ alignSelf: 'center', marginTop: 32 }}
+        onPress={() => navigation.navigate('Register')}
+      >
+        <Text style={{ color: '#fff', fontSize: 15, fontWeight: '500' }}>
+          Already have an account?
+          <Text style={{ fontWeight: '600', color: '#00FED4' }}> Register Now!</Text>
+        </Text>
       </TouchableOpacity>
     </View>
   );
 };
-
-export default SignInScreen;
 
 const styles = StyleSheet.create({
   container: {

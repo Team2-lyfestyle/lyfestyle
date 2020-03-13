@@ -157,6 +157,7 @@ export default function App(props) {
   } else {
     return (
       <View style={styles.container}>
+
         <AuthContext.Provider value={authContext}><NotificationContext.Provider value={state.notification}>
 
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}

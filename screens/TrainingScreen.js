@@ -6,10 +6,14 @@ const TrainingScreen = ({ navigation }) => {
 
     const [_data, setdata] = React.useState(false)
 
-    // GET curent Loggedin USER
+    // GET curent Loggedin USER. This gets the auth
     let getCurrUser = () => {
-        let currUser = firebase.auth().currentUser
-        setdata(JSON.stringify(currUser))
+        let currUserID = firebase.auth().currentUser.uid
+        firebase.database().ref('users/' + currUserID)
+            .once('value', function (snapshot) {
+                let val = snapshot.val()
+                setdata(JSON.stringify(val))
+            });
     }
 
     // GET a user using ID

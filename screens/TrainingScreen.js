@@ -6,7 +6,7 @@ const TrainingScreen = ({ navigation }) => {
 
     const [_data, setdata] = React.useState(false)
 
-    // GET curent Loggedin USER. This gets the auth
+    // GET curent Loggedin USER.
     let getCurrUser = () => {
         let currUserID = firebase.auth().currentUser.uid
         firebase.database().ref('users/' + currUserID)

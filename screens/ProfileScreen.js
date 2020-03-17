@@ -7,10 +7,6 @@ export default function App() {
         <SafeAreaView style = {styles.container}>
             {/* Allow for scroll on profile page */}
             <ScrollView showsVerticalScrollIndicator = {false}>
-                {/* Profile Header  */}
-                {/* <View style = {[styles.centerThing, {marginTop: 30}, {marginBottom: 30}]}>
-                    <Text style = {styles.pageHeader}> Profile</Text>
-                </View> */}
                 {/* Profile Image  */}
                 <View style = {[styles.centerThing, {marginTop: 30}]}>
                     <View style = {styles.profileImage}>
@@ -36,6 +32,31 @@ export default function App() {
                         <Text style = {{fontSize: 10}, {color: '#AEB5BC'}}>Posts</Text>
                     </View>
                 </View>
+                <View style = {styles.pictureContainer}>
+                    <ScrollView horizontal = {true} showsHorizontalScrollIndicator = {false}>
+                        <View style = {styles.mediaImage}>
+                            <Image source = {require("../assets/images/1.jpg")} style = {styles.image} resizeMode="cover"></Image>
+                        </View>
+                        <View style = {styles.mediaImage}>
+                            <Image source = {require("../assets/images/2.jpg")} style = {styles.image} resizeMode="cover"></Image>
+                        </View>
+                        <View style = {styles.mediaImage}>
+                            <Image source = {require("../assets/images/3.jpg")} style = {styles.image} resizeMode="cover"></Image>
+                        </View>
+                        <View style = {styles.mediaImage}>
+                            <Image source = {require("../assets/images/4.jpg")} style = {styles.image} resizeMode="cover"></Image>
+                        </View>
+                        <View style = {styles.mediaImage}>
+                            <Image source = {require("../assets/images/5.jpg")} style = {styles.image} resizeMode="cover"></Image>
+                        </View>
+                        <View style = {styles.mediaImage}>
+                            <Image source = {require("../assets/images/6.jpg")} style = {styles.image} resizeMode="cover"></Image>
+                        </View>
+                        <View style = {styles.mediaImage}>
+                            <Image source = {require("../assets/images/7.jpg")} style = {styles.image} resizeMode="cover"></Image>
+                        </View>
+                    </ScrollView>
+                </View>
             </ScrollView>
         </SafeAreaView>
     );
@@ -57,10 +78,7 @@ const styles = StyleSheet.create({
         marginRight: 20
     },
 
-    pageHeader: {
-        fontSize: 30
-    },
-
+    // Properties for the profile picture 
     profileImage: {
         width: 200,
         height: 200,
@@ -68,6 +86,7 @@ const styles = StyleSheet.create({
         // overflow: 'hidden'
     },
 
+    // Stats = Number of posts container 
     statsContainer: {
         flexDirection: 'row',
         marginLeft: 20,
@@ -75,5 +94,28 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         paddingBottom: 5
         // alignSelf: 'center'
+    },
+
+    // Sets margin for image container 
+    pictureContainer: {
+        // margin: 20
+        marginTop: 20,
+        marginBottom: 20
+    },
+
+    // Container for images 
+    mediaImage: {
+        width: 130,
+        height: 150,
+        borderRadius: 12,
+        overflow: 'hidden',
+        marginHorizontal: 10
+    },
+
+    // Properties for images(posts) 
+    image : {
+        flex: 1,
+        width: undefined,
+        height: undefined
     }
 })

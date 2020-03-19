@@ -80,7 +80,7 @@ export default function App(props) {
         // Load our initial navigation state
         dispatch({ type: 'NAVIGATION', initialNavigationState: await getInitialState() });
 
-        await registerForPushNotificationsAsync();
+        await registerForPushNotificationsAsync(); 
         
         // check firebase login and register for push notifications
         firebase.auth().onAuthStateChanged(async user => {

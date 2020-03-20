@@ -67,12 +67,12 @@ export default function App(props) {
     }
   );
   
+  const _handleNotification = (notification) => {
+    dispatch({ type: 'NOTIFICATION', notification: notification });
+  }
+
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
-    function _handleNotification(notification) {
-      dispatch({ type: 'NOTIFICATION', notification });
-    }
-
     async function loadResourcesAndDataAsync() {
       try {
         SplashScreen.preventAutoHide();
@@ -80,19 +80,26 @@ export default function App(props) {
         // Load our initial navigation state
         dispatch({ type: 'NAVIGATION', initialNavigationState: await getInitialState() });
 
-        await registerForPushNotificationsAsync();
+        // await registerForPushNotificationsAsync();
         
         // check firebase login and register for push notifications
         firebase.auth().onAuthStateChanged(async user => {
+          // If user is defined, then we are signed in
           if (user) {
             // Register for push notifications 
-            await registerForPushNotificationsAsync();
-            // Handle notifications that are received or selected while the app
-            // is open. If the app was closed and then opened by tapping the
-            // notification (rather than just tapping the app icon to open it),
-            // this function will fire on the next tick after the app starts
-            // with the notification data.
-            _notificationSubscription = Notifications.addListener(_handleNotification);
+            try {
+              await registerForPushNotificationsAsync();
+              // Handle notifications that are received or selected while the app
+              // is open. If the app was closed and then opened by tapping the
+              // notification (rather than just tapping the app icon to open it),
+              // this function will fire on the next tick after the app starts
+              // with the notification data.
+              _notificationSubscription = Notifications.addListener(_handleNotification);
+            }
+            catch (err) {
+              console.log('Error registering for push notifications');
+            }
+
             dispatch({ type: 'SIGN_IN' });
           }
         });

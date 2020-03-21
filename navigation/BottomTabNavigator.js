@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 //SCREENS
 import TabBarIcon from '../components/TabBarIcon';
+import TabBarIconWithBadge from '../components/TabBarIconWithBadge';
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import TrainingScreen from '../screens/TrainingScreen';
@@ -23,6 +24,7 @@ export default function BottomTabNavigator({ navigation, route }) {
   // https://reactnavigation.org/docs/en/screen-options-resolution.html
   navigation.setOptions({ header: 'null' });
 
+  
   return (
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME} activeBackgroundColor = '#2f95dc'>
       <BottomTab.Screen
@@ -60,7 +62,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         component={ChatStackNavigator}
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name='ios-text' />
+            <TabBarIconWithBadge focused={focused} name='ios-text' />
           )
         }}
       />

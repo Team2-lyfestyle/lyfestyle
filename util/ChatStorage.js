@@ -38,19 +38,31 @@ const asyncStorage = {
 
 
 /*
+CHAT STORAGE DATA TYPES:
+
 ChatSessions is an object of the form:
 {
   chatSessionId1: ChatSession,
   chatSessionId2: ChatSession,
   ...
 }
-
+s
 ChatSession is an object of the form:
 {
   members: { userId1: true, userId2: true, ...},
   lastMessage: "last message",
-  timestamp: "ios 8601 time",
-  title: "title of chat session"
+  timestamp: "iso 8601 time, basically a (new Date()).toISOString()",
+  title: "title of chat session",
+  numOfUnreadMessages: Number
+}
+
+The relevant chat data stored in AsyncStorage is as follows:
+{
+  'chatSessions': ChatSessions,
+  'chatid1': Messages,
+  ...
+  'chatidn': Messages,
+  'totalNumOfUnreadMessages': Number
 }
 */
 const chatStorage = {
@@ -68,13 +80,13 @@ const chatStorage = {
   },
 
   setChatSessions: async (sessions) => {
-    return asyncStorage.setItem('chatSessions', sessions);
+    return await asyncStorage.setItem('chatSessions', sessions);
   },
 
   setChatSession: async (id, session) => {
-    let chatSessions = this.getChatSessions();
+    let chatSessions = await this.getChatSessions();
     chatSessions[id] = session;
-    return asyncStorage.setItem('chatSessions', chatSessions);
+    return await asyncStorage.setItem('chatSessions', chatSessions);
   },
 
   /*
@@ -86,7 +98,7 @@ const chatStorage = {
     if (!session)
       return false;
 
-    let chatSessions = this.getChatSessions();
+    let chatSessions = await this.getChatSessions();
     if (!chatSessions[id])
       return false;
 
@@ -94,8 +106,10 @@ const chatStorage = {
       chatSessions[id]['lastMessage'] = session['lastMessage'];
     if (session['timestamp'])
       chatSessions[id]['timestamp'] = session['timestamp'];
+    if (session['numOfUnreadMessages'])
+      chatSessions[id]['numOfUnreadMessages'] = session['numOfUnreadMessages'];
 
-    return this.setChatSession(id, chatSessions[id]);
+    return await this.setChatSessions(chatSessions);
   },
 
   deleteChatSession: async (id) => {
@@ -109,24 +123,70 @@ const chatStorage = {
   },
 
   getMessages: async (chatid) => {
-    let messages = asyncStorage.getItem(chatid);
+    let messages = await asyncStorage.getItem(chatid);
 
     // Null check
     if (messages === null) {
-      asyncStorage.setItem(chatid, []);
-      return [];
+      asyncStorage.setItem(chatid, {});
+      return {};
     }
     else {
       return JSON.parse(messages);
     }
   },
 
-  addMessage: async (chatid, message, timestamp) => {
-    let messages = this.getMessages(chatid);
-    messages.push(message);
-    
-    // Also updates chatSession data so that lastMessage and timestamp is consistent
-    let result = this.updateChatSession(chatid, {lastMessage: message, timestamp: timestamp ? timestamp : new Date()});
-    return result && asyncStorage.setItem(chatid, messages);
+  /*
+    'messages' is an object of the form
+    {
+      msg1: {
+        message: '...',
+        name: 'userid of sender',
+        timestamp: 'UTC timestamp'
+      },
+      ...
+    }
+  */
+  setMessages: async (chatid, messages) => {
+    return await asyncStorage.setItem(chatid, messages);
+  },
+
+  addNewMessages: async (chatid, messages) => {
+    return null;
+  },
+
+  /*
+    'message' is an object of the form:
+    {
+      message: '...',
+      name: 'userid of sender',
+      timestamp: 'UTC timestamp'
+    }
+  */
+  addNewMessage: async (chatid, key, message) => {
+    let messages = await this.getMessages(chatid);
+    messages[key] = message;
+    return await asyncStorage.setItem(chatid, messages);
+  },
+
+  getTotalNumOfUnreadMessages: async () => {
+    let numMsgs = await asyncStorage.getItem('totalNumOfUnreadMessages');
+    if (numMsgs === null) {
+      await asyncStorage.setItem('totalNumOfUnreadMessages', 0);
+      return 0;
+    }
+    else {
+      return numMsgs;
+    }
+  },
+
+  setTotalNumOfUnreadMessages: async (num) => {
+    return await asyncStorage.setItem('totalNumOfUnreadMessages', num);
+  },
+
+  addTotalNumOfUnreadMessages: async (num) => {
+    let numMsgs = await asyncStorage.getItem('totalNumOfUnreadMessages');
+    numMsgs += num;
+    return await asyncStorage.setItem('totalNumOfUnreadMessages', numMsgs);
   }
+
 }

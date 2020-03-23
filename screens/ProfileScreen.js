@@ -5,19 +5,16 @@ import { Ionicons, MaterialIcons, AntDesign, FontAwesome} from '@expo/vector-ico
 
 export default function Profile({navigation}) {
     return (
-        <SafeAreaView style = {styles.container}>
+        <View style = {styles.container}>
+            {/* Header w/ Profile title  */}
+            <View style={styles.header}>
+                <Text style={styles.headerTitle}>Profile</Text>
+            </View>
             {/* Allow for scroll on profile page */}
             <ScrollView showsVerticalScrollIndicator = {false}>
                 <TouchableHighlight style = {styles.settingsIcon} onPress={() => navigation.navigate('Home')}>
                     <Ionicons name = "md-more" size = {32} color = "grey"/>
                 </TouchableHighlight>
-                
-                {/*
-                <View style = {[{marginTop: 20}, {marginRight: 20}, {alignItems: 'flex-end'}]}>
-                    <Ionicons name = "md-more" size = {32} color = "grey"/>
-                    <AntDesign name = "setting" size = {32} color = "grey"/> 
-                </View>
-                */}
                 
                 {/* Profile Image  */}
                 <View style = {[styles.center, {marginTop: 10}]}>
@@ -27,7 +24,7 @@ export default function Profile({navigation}) {
                 </View>
                 {/* Name */}
                 <View style = {[styles.center, {marginTop: 30}, {marginBottom: 15}]}>
-                    <Text style = {[{fontSize: 30}, { fontWeight: '200' }]}>John Doe</Text>
+                    <Text style = {[{fontSize: 30}, { fontWeight: '20' }]}>John Doe</Text>
                     {/* Followers Count  */}
                     {/* <View style = {[{marginTop: 15}, {alignItems: 'center'}]}>
                         <Text style = {{fontSize: 15}}>150</Text>
@@ -40,9 +37,9 @@ export default function Profile({navigation}) {
                 </View>
                 {/* Stats Container */}
                 <View style = {styles.statsContainer}>
-                    <View style = {[{alignItems: 'center'}, {marginTop: 10}]}>
-                        <Text style = {[{fontSize: 15}, { fontWeight: '200' }]}>100</Text>
-                        <Text style = {[{fontSize: 10}, { fontWeight: '200' }, {color: 'grey'}]}>Posts</Text>
+                    <View style = {[{alignItems: 'left'}, {marginTop: 10}]}>
+                        <Text style = {[{fontSize: 15}, { fontWeight: '20' }]}>100</Text>
+                        <Text style = {[{fontSize: 10}, { fontWeight: '20' }, {color: 'grey'}]}>Posts</Text>
                     </View>
                 </View>
                 {/* Picture Container  */}
@@ -73,19 +70,43 @@ export default function Profile({navigation}) {
                     </ScrollView>
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#EFEdF4'
     },
 
+    // Properties for Header container 
+    header: {
+        paddingTop: 40,
+        paddingBottom: 16,
+        backgroundColor: '#204051',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#EBECF4',
+        shadowColor: '#454D65',
+        shadowOffset: { height: 5 },
+        shadowRadius: 15,
+        shadowOpacity: 0.2,
+        zIndex: 10
+    },
+
+    // Properties for Header title 
+    headerTitle: {
+        fontSize: 20,
+        fontWeight: '500'
+    },
+    
     center: {
         alignSelf: 'center',
     },
 
+    // Properties for Settings icon 
     settingsIcon: {
         marginTop: 10,
         marginRight: 20,
@@ -112,7 +133,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginLeft: 20,
         marginRight: 20,
-        borderBottomWidth: 2,
+        borderBottomWidth: 1.5,
         paddingBottom: 5
         // alignSelf: 'center'
     },

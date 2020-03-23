@@ -48,7 +48,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           title: 'Post',
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name='ios-bulb' />
+            <TabBarIcon focused={focused} name='ios-add-circle' />
           )
         }}
       />

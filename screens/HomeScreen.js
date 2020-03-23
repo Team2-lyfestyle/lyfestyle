@@ -1,41 +1,38 @@
 import React from 'react';
 import { Text, StyleSheet, View, FlatList, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import moment from 'moment'
 
 posts = [
   {
     id: '1',
     name: 'Monica K',
-    text:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-    timestamp: 1569109273726,
+    text: 'Look at my gym!',
+    timestamp: 1584637200000,
     avatar: require('../assets/dummyImages/tempAvatar.jpg'),
     image: require('../assets/dummyImages/tempImage1.jpg')
   },
   {
     id: '2',
     name: 'Brandon K',
-    text:
-      'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    timestamp: 1569109273726,
+    text: 'Deadlifts today!',
+    timestamp: 1584378000000,
     avatar: require('../assets/dummyImages/tempAvatar.jpg'),
     image: require('../assets/dummyImages/tempImage2.jpg')
   },
   {
     id: '3',
     name: 'Israel P',
-    text:
-      'Amet mattis vulputate enim nulla aliquet porttitor lacus luctus. Vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant.',
-    timestamp: 1569109273726,
+    text: 'Gymming with a view!',
+    timestamp: 1584032400000,
     avatar: require('../assets/dummyImages/tempAvatar.jpg'),
     image: require('../assets/dummyImages/tempImage3.jpg')
   },
   {
     id: '4',
     name: 'Leo Y',
-    text:
-      'At varius vel pharetra vel turpis nunc eget lorem. Lorem mollis aliquam ut porttitor leo a diam sollicitudin tempor. Adipiscing tristique risus nec feugiat in fermentum.',
-    timestamp: 1569109273726,
+    text: 'This is a LYFESTYLE!',
+    timestamp: 1583859600000,
     avatar: require('../assets/dummyImages/tempAvatar.jpg'),
     image: require('../assets/dummyImages/tempImage4.jpg')
   }
@@ -56,7 +53,7 @@ class HomeScreen extends React.Component {
           >
             <View>
               <Text style={styles.name}>{post.name}</Text>
-              <Text style={styles.timestamp}>{post.timestamp}</Text>
+              <Text style={styles.timestamp}>{moment(post.timestamp).fromNow()}</Text>
             </View>
             <Ionicons name='ios-more' size={24} color='#73788B' />
           </View>
@@ -66,6 +63,10 @@ class HomeScreen extends React.Component {
             style={styles.postImage}
             resizeMode='cover'
           />
+          <View style={{ flexDirection: 'row' }}>
+            <Ionicons name='ios-heart-empty' size={25} color='#000' style={{marginRight: 15, marginTop:1}} />
+            <Ionicons></Ionicons>
+          </View>
         </View>
       </View>
     );
@@ -98,9 +99,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#EFEdF4'
   },
   header: {
-    paddingTop: 64,
+    paddingTop: 40,
     paddingBottom: 16,
-    backgroundColor: '#FFF',
+    backgroundColor: '#122028',
     alignItems: 'center',
     justifyContent: 'center',
     borderBottomWidth: 1,
@@ -143,6 +144,7 @@ const styles = StyleSheet.create({
   },
   post: {
     marginTop: 15,
+    marginBottom: 5,
     fontSize: 14,
     color: '#838899'
   },

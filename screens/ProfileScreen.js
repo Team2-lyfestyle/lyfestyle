@@ -1,23 +1,30 @@
 import React from "react";
 import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, TouchableHighlight} from "react-native";
 import { Ionicons, MaterialIcons, AntDesign, FontAwesome} from '@expo/vector-icons'
+import { LinearGradient } from 'expo-linear-gradient';
 // import { Header } from "react-native/Libraries/NewAppScreen";
 
 export default function Profile({navigation}) {
     return (
         <View style = {styles.container}>
-            {/* Header w/ Profile title  */}
-            <View style={styles.header}>
-                <Text style={styles.headerTitle}>Profile</Text>
-            </View>
-            {/* Allow for scroll on profile page */}
-            <ScrollView showsVerticalScrollIndicator = {false}>
+        <ScrollView showsVerticalScrollIndicator = {false}>
+            <View style = {styles.header}>
+                <LinearGradient
+                    colors={['rgba(rgba(0, 254, 212, 1))', 'transparent']}
+                    style={{
+                        position: 'absolute',
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        height: 300,
+                    }}
+                />
                 <TouchableHighlight style = {styles.settingsIcon} onPress={() => navigation.navigate('Home')}>
-                    <Ionicons name = "md-more" size = {32} color = "grey"/>
+                    <Ionicons name = "md-more" size = {25} color = "black"/>
                 </TouchableHighlight>
                 
                 {/* Profile Image  */}
-                <View style = {[styles.center, {marginTop: 10}]}>
+                <View style = {[styles.center, {marginTop: 8}]}>
                     <View style = {styles.profileImage}>
                         <Image source={require("../assets/images/profile_pic.jpg")} style = {styles.profileImage}></Image>
                     </View>
@@ -31,15 +38,45 @@ export default function Profile({navigation}) {
                         <Text style = {{fontSize: 10}, {color: '#AEB5BC'}}>Followers</Text>
                     </View> */}
                 </View>
+            </View>
+
+            {/* Allow for scroll on profile page */}
+            {/* <ScrollView showsVerticalScrollIndicator = {false}>
+                <TouchableHighlight style = {styles.settingsIcon} onPress={() => navigation.navigate('Home')}>
+                    <Ionicons name = "md-more" size = {32} color = "grey"/>
+                </TouchableHighlight> */}
+                
+                {/* Profile Image  */}
+                {/* <View style = {[styles.center, {marginTop: 10}]}>
+                    <View style = {styles.profileImage}>
+                        <Image source={require("../assets/images/profile_pic.jpg")} style = {styles.profileImage}></Image>
+                    </View> */}
+                {/* </View> */}
+                {/* Name */}
+                {/* <View style = {[styles.center, {marginTop: 30}, {marginBottom: 15}]}>
+                    <Text style = {[{fontSize: 30}, { fontWeight: '20' }]}>John Doe</Text> */}
+                    {/* Followers Count  */}
+                    {/* <View style = {[{marginTop: 15}, {alignItems: 'center'}]}>
+                        <Text style = {{fontSize: 15}}>150</Text>
+                        <Text style = {{fontSize: 10}, {color: '#AEB5BC'}}>Followers</Text>
+                    </View> */}
+                {/* </View> */}
+       
                 {/* Bio  */}
+                <View style = {styles.statsContainer}>
+                    <View style = {[{alignItems: 'left'}, {marginTop: 10}]}>
+                        <Text style = {[{fontSize: 15}, { fontWeight: 'bold' }]}>Bio</Text>
+                    </View>
+                </View>
+
                 <View style = {styles.centerBio}>
                     <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tincidunt enim quis laoreet dapibus. Nulla lacinia posuere diam aliquam tincidunt. Vivamus commodo ligula quis nisl placerat laoreet.</Text>
                 </View>
                 {/* Stats Container */}
                 <View style = {styles.statsContainer}>
                     <View style = {[{alignItems: 'left'}, {marginTop: 10}]}>
-                        <Text style = {[{fontSize: 15}, { fontWeight: '20' }]}>100</Text>
-                        <Text style = {[{fontSize: 10}, { fontWeight: '20' }, {color: 'grey'}]}>Posts</Text>
+                        <Text style = {[{fontSize: 15}, { fontWeight: 'bold' }]}>100</Text>
+                        <Text style = {[{fontSize: 10}, { fontWeight: 'bold' }, {color: 'grey'}]}>Posts</Text>
                     </View>
                 </View>
                 {/* Picture Container  */}
@@ -82,11 +119,11 @@ const styles = StyleSheet.create({
 
     // Properties for Header container 
     header: {
-        paddingTop: 40,
+        paddingTop: 15,
         paddingBottom: 16,
         backgroundColor: '#204051',
-        alignItems: 'center',
-        justifyContent: 'center',
+        // alignItems: 'center',
+        // justifyContent: 'center',
         borderBottomWidth: 1,
         borderBottomColor: '#EBECF4',
         shadowColor: '#454D65',
@@ -96,11 +133,9 @@ const styles = StyleSheet.create({
         zIndex: 10
     },
 
-    // Properties for Header title 
-    headerTitle: {
-        fontSize: 20,
-        fontWeight: '500'
-    },
+    // headerContent: {
+    //     flexDirection: 'row',
+    // },
     
     center: {
         alignSelf: 'center',
@@ -108,24 +143,29 @@ const styles = StyleSheet.create({
 
     // Properties for Settings icon 
     settingsIcon: {
-        marginTop: 10,
+        marginTop: 25,
         marginRight: 20,
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
+        flex: 1
+    },
+
+    // Properties for the profile picture 
+    profileImage: {
+        width: 140,
+        height: 140,
+        borderRadius: 70,
+        shadowColor: '#202020',
+        shadowOffset: {width: 0, height: 0},
+        shadowRadius: 5,
     },
 
     // Properties to center Bio for profile
     centerBio: {
         alignSelf: 'center',
+        marginTop: 30,
         marginBottom: 20,
         marginLeft: 20,
-        marginRight: 20
-    },
-
-    // Properties for the profile picture 
-    profileImage: {
-        width: 180,
-        height: 180,
-        borderRadius: 90,
+        marginRight: 20,
     },
 
     // Stats = Number of posts container 
@@ -140,17 +180,17 @@ const styles = StyleSheet.create({
 
     // Sets margin for image container 
     pictureContainer: {
-        marginTop: 20,
-        marginBottom: 20
+        marginTop: 30,
+        marginBottom: 30
     },
 
     // Container for images 
     mediaImage: {
-        width: 130,
-        height: 150,
+        width: 170,
+        height: 190,
         borderRadius: 12,
         overflow: 'hidden',
-        marginHorizontal: 10
+        marginHorizontal: 12.5
     },
 
     // Properties for images(posts) 

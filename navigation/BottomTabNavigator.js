@@ -9,6 +9,8 @@ import TrainingScreen from '../screens/TrainingScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import ChatStackNavigator from '../navigation/ChatStackNavigator';
 import TipScreen from '../screens/TipScreen';
+import ImageUpload from '../screens/ImageUpload';
+
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
@@ -78,6 +80,17 @@ export default function BottomTabNavigator({ navigation, route }) {
           title: 'Profile',
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} name='md-person' />
+          )
+        }}
+      />
+
+      <BottomTab.Screen
+        name='Photo'
+        component={ImageUpload}
+        options={{
+          title: 'Photo',
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon focused={focused} name='ios-fitness' />
           )
         }}
       />

@@ -36,9 +36,7 @@ function getChatUpdate() {
 
 /*
 navigation parameters:
-  'name': String, required. Name of person being chatted with
-  'username': String, required. Username of person being chatted with
-
+  'chatSessionId'
 */
 export default class ChatScreen extends React.Component {
   constructor(props) {
@@ -53,7 +51,7 @@ export default class ChatScreen extends React.Component {
 
     this.state = {
       messages: [],
-      componentHasLoaded: false,
+      dataIsLoaded: false,
     }
 
     this.otherUser = {

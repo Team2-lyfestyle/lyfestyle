@@ -2,16 +2,17 @@ import React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import { TextInput, FlatList } from 'react-native-gesture-handler';
 import firebase from '../constants/firebase';
+import AuthContext from '../util/AuthContext';
 
 const HomeScreen = ({ navigation }) => {
  
 
   return (
     <View style={styles.container}>
-    <Text style={styles.inputTitle}>HELLO</Text>
-    </View>
+      <Text style={styles.inputTitle}>HELLO</Text>
+    </View> 
   );
-};
+}
 
 export default HomeScreen;
 

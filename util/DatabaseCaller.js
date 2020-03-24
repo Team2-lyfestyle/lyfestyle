@@ -45,16 +45,36 @@ const db = {
                 /*
                     snapshot.val() is an object of the form:
                     {
-                        chatId1: { msg1: "...", msg2: "...."},
+                        chatId1: { 
+                            msg1: { message: '...', timestamp: '...', name: '...'}, 
+                            msg2: ...
+                        },
                         chatId2: ...
                     }
                 */
-                callback(snapshot.val());
+                let messages = snapshot.val();
+                console.log('Reading from chat notifs:', messages);
+                
+                // only return data if new messages are available
+                if (messages) {
+                    callback(snapshot.val());
+                }
             });
     },
 
     stopListenForNewMessages: () => {
         firebase.database().ref('notifs/' + this.getCurrentUser().uid + '/chats').off('value');
+    },
+
+    deleteChatsFromNotifs: async () => {
+        try {
+            await firebase.database().ref('notifs/' + this.getCurrentUser().uid + '/chats').remove();
+            return true;
+        }
+        catch (err) {
+            console.log('Error deleting new messages in firebase');
+            return false;
+        }
     },
 
     /*

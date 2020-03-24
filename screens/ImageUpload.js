@@ -5,8 +5,7 @@ import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker'
 import firebase from '../constants/firebase'
-
-const currentUser = firebase.auth().currentUser.uid
+import uploadImage from '../util/image_upload'
 
 export default function ImageUpload({ navigation }) {
     const [photo, updatePhoto] = React.useState(false)
@@ -22,58 +21,12 @@ export default function ImageUpload({ navigation }) {
         }
     })
 
-    let uriToBlob = (uri) => {
-
-        return new Promise((resolve, reject) => {
-
-            const xhr = new XMLHttpRequest();
-
-            xhr.onload = function () {
-                resolve(xhr.response);
-            };
-            xhr.onerror = function () {
-                reject(new Error('uriToBlob failed'));
-            };
-            xhr.responseType = 'blob';
-
-            xhr.open('GET', uri, true);
-            xhr.send(null);
-        });
-    }
-
-    let uploadToFirebase = (blob) => {
-
-        return new Promise((resolve, reject) => {
-            var storageRef = firebase.storage().ref();
-            storageRef.child('uploads/' + currentUser + '/photo.jpg').put(blob, {
-                contentType: 'image/jpeg'
-            }).then((snapshot) => {
-                blob.close();
-                resolve(snapshot);
-            }).catch((error) => {
-                reject(error);
-            });
-        });
-    }
-
     let handleOnPress = () => {
-
         ImagePicker.launchImageLibraryAsync({
             mediaTypes: "Images"
         }).then((result) => {
-
-            if (!result.cancelled) {
-                const { height, width, type, uri } = result;
-                return uriToBlob(uri);
-            }
-
-        }).then((blob) => {
-            return uploadToFirebase(blob);
-        }).then((snapshot) => {
-            console.log("File uploaded");
-        }).catch((error) => {
-            throw error;
-        });
+            uploadImage(result)
+        })
 
     }
 

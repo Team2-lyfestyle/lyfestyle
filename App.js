@@ -11,23 +11,22 @@ import SignInScreen from './screens/SignInScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import useLinking from './navigation/useLinking';
 import firebase from './constants/firebase'
-
 import registerForPushNotificationsAsync from './util/registerForPushNotificationsAsnyc';
-import NotificationContext from './util/NotificationContext';
-import AuthContext from './util/AuthContext';
+import dbCaller from './util/DatabaseCaller';
+import chatStorage from './util/ChatStorage';
+import ChatService from './util/ChatService';
+
+import NotificationContext from './constants/NotificationContext';
+import AuthContext from './constants/AuthContext';
+import ChatServiceContext from './constants/ChatServiceContext';
 
 const Stack = createStackNavigator();
 
 export default function App(props) {
-  /*
-  const [isLoadingComplete, setLoadingComplete] = React.useState(false);
-  const [initialNavigationState, setInitialNavigationState] = React.useState();
-  const [isLoggedIn, setLoggedIn] = React.useState(false);
-  const [notification, setNotification] = React.useState();
-  */
   const containerRef = React.useRef();
   const { getInitialState } = useLinking(containerRef);
   let _notificationSubscription;
+  let _chatService;
 
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
@@ -97,6 +96,10 @@ export default function App(props) {
             catch (err) {
               console.log('Error registering for push notifications');
             }
+
+            // Set up a listener for any new messages sent to firebase
+            _chatService = new ChatService();
+            _chatService.listenForNewMessages();
 
             dispatch({ type: 'SIGN_IN' });
           }
@@ -172,7 +175,7 @@ export default function App(props) {
       <View style={styles.container}>
 
         <AuthContext.Provider value={authContext}><NotificationContext.Provider value={state.notification}>
-
+        <ChatServiceContext.Provider value={_chatService}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
           <NavigationContainer ref={containerRef} initialState={state.initialNavigationState}>
             <Stack.Navigator headerMode='none'>
@@ -190,6 +193,7 @@ export default function App(props) {
               }
             </Stack.Navigator>
           </NavigationContainer>
+        </ChatServiceContext.Provider>
         </NotificationContext.Provider></AuthContext.Provider>
       </View>
     );

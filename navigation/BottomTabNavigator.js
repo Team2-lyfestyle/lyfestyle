@@ -14,6 +14,7 @@ import PostScreen from '../screens/PostScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import QueryExampleScreen from '../screens/QueryExampleScreen';
 
+import ChatServiceContext from '../constants/ChatServiceContext';
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
@@ -24,7 +25,14 @@ export default function BottomTabNavigator({ navigation, route }) {
   // https://reactnavigation.org/docs/en/screen-options-resolution.html
   navigation.setOptions({ header: 'null' });
 
+  let chatService = React.useContext(ChatServiceContext);
+  let [numOfUnreadMessages, setNumOfUnreadMessages] = React.useState(chatService.numOfUnreadMessages);
   
+  chatService.newMsgEmitter.on('newMessage', function() {
+    console.log('New message from bottomtabnavigator');
+    setNumOfUnreadMessages[chatService.numOfUnreadMessages];
+  });
+
   return (
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME} activeBackgroundColor = '#2f95dc'>
       <BottomTab.Screen
@@ -62,7 +70,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         component={ChatStackNavigator}
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabBarIconWithBadge focused={focused} name='ios-text' />
+            <TabBarIconWithBadge focused={focused} name='ios-text' badgeCount={numOfUnreadMessages} />
           )
         }}
       />

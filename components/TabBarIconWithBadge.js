@@ -18,7 +18,7 @@ export default function TabBarIcon(props) {
                 justifyContent: 'center',
                 alignItems: 'center'
             }}>
-                <Text>{props.badgeCount}</Text>
+                {props.badgeCount > 0 && <Text>{props.badgeCount}</Text>}
             </View>
         )}
         <TabBarIcon {...props}/>

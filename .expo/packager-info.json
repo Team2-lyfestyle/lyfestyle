@@ -1,9 +1,18 @@
 {
   "devToolsPort": 19002,
+<<<<<<< HEAD
   "expoServerPort": null,
   "packagerPort": null,
   "packagerPid": null,
   "expoServerNgrokUrl": null,
   "packagerNgrokUrl": null,
   "ngrokPid": null
+=======
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 60056,
+  "expoServerNgrokUrl": "https://d9-s82.brandonkns66.lyfestyle.exp.direct",
+  "packagerNgrokUrl": "https://packager.d9-s82.brandonkns66.lyfestyle.exp.direct",
+  "ngrokPid": 50956
+>>>>>>> utility work
 }

@@ -9,6 +9,7 @@ import TrainingScreen from '../screens/TrainingScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import ChatStackNavigator from '../navigation/ChatStackNavigator';
 import TipScreen from '../screens/TipScreen';
+import QueryExampleScreen from '../screens/QueryExampleScreen';
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
@@ -78,6 +79,17 @@ export default function BottomTabNavigator({ navigation, route }) {
           title: 'Profile',
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} name='md-person' />
+          )
+        }}
+      />
+
+      <BottomTab.Screen
+        name='Queries'
+        component={QueryExampleScreen}
+        options={{
+          title: 'Queries',
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon focused={focused} name='add-circle-outline' />
           )
         }}
       />

@@ -5,10 +5,12 @@ import {
     TouchableOpacity,
     TouchableHighlight,
     View,
+    ActivityIndicator
 } from 'react-native';
 import { Container, Header, Content, Tab, Tabs } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import chatStorage from '../util/ChatStorage';
+import ChatServiceContext from '../constats/ChatServiceContext';
 
 function renderHead({ names, timestamp }) {
 
@@ -36,12 +38,29 @@ export default function ChatSelectScreen({ navigation }) {
   );
   */
 
-  [state, dispatch] = React.useReducer(
+  let chatService = React.useContext(ChatServiceContext);
+
+  chatService.newMsgEmitter.on('newMessage', function() {
+    console.log()
+    dispatch( {action: 'LOAD_START'} );
+    let newSessions = await chatService.getChatSessions();
+    dispatch( {action: 'LOAD_FIN', chatSessions: newSessions} );
+  });
+
+  const [state, dispatch] = React.useReducer(
     (prevState, action) => {
       switch (action.type) {
-        case 'LOAD':
+        case 'LOAD_START':
           return {
-            ...action.chatSessions
+            chatSessions: { ...prevState.chatSessions },
+            chatSessionsLoaded: false,
+            searchText: prevState.searchText
+          }
+        case 'LOAD_FIN':
+          return {
+            ...action.chatSessions,
+            chatSessionsLoaded: true,
+            searchText: prevState.searchText
           }
         case 'DELETE':
           let chatId = action.chatId;
@@ -84,7 +103,7 @@ export default function ChatSelectScreen({ navigation }) {
 
   const renderItem = (rowData, rowMap) => (
     /*
-    data.item is an object of the form: 
+    rowData.item is an object of the form: 
     {
       name: ["name"]
       picture: ["url"]
@@ -128,14 +147,7 @@ export default function ChatSelectScreen({ navigation }) {
   );
 
   const getListData = () => {
-    let listData = [];
-    for (let key in state.chatSessions) {
-      if (state.chatSessions.hasOwnProperty(key)) {
-        listData.push({key: key, ...state.chatSessions[key]});
-      }
-    }
-    listData.sort(sortByDate);
-    return listData;
+    return chatService.getChatSessionsAsOrderedArr();
   }
 
   const loadMessages = async () => {
@@ -148,38 +160,40 @@ export default function ChatSelectScreen({ navigation }) {
   }
 
   React.useEffect(() => {
-    if (state.chatSessionsLoaded) {
-      return;
-    }
-    loadMessages();
-  });
-
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener('focus', async () => {
       console.log('ChatSelect screen focused');
-      loadMessages();
+      let messages = chatService.getChatSessions();
     });
     // Return unsubscribe for cleanup
     return unsubscribe;
   }, [navigation]);
 
 
-  return (
-    <View style={styles.container}>
-      <SwipeListView
-        data={getListData()}
-        renderItem={renderItem}
-        renderHiddenItem={renderHiddenItem}
-        leftOpenValue={75}
-        rightOpenValue={-150}
-        previewRowKey={'0'}
-        previewOpenValue={-40}
-        previewOpenDelay={3000}
-        onRowDidOpen={onRowDidOpen}
-        disableLeftSwipe={true}
-      />
-    </View>
-  );
+  if (state.chatSessionsLoaded) {
+    return (
+      <View style={styles.container}>
+        <SwipeListView
+          data={getListData()}
+          renderItem={renderItem}
+          renderHiddenItem={renderHiddenItem}
+          leftOpenValue={75}
+          rightOpenValue={-150}
+          previewRowKey={'0'}
+          previewOpenValue={-40}
+          previewOpenDelay={3000}
+          onRowDidOpen={onRowDidOpen}
+          disableLeftSwipe={true}
+        />
+      </View>
+    );
+  }
+  else {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator></ActivityIndicator>
+      </View>
+    )
+  }
 }
 
 const styles = StyleSheet.create({

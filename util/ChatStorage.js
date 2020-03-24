@@ -1,41 +1,20 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import asyncStorage from './util/AsyncStorage';
 
-const asyncStorage = {
-  setItem: async (key, value) => {
-    try {
-      if (!(typeof value === "string" || value instanceof String)) {
-        value = JSON.stringify(value);
-      }
-      console.log(`Setting ${key}: ${value}`);
-      await AsyncStorage.setItem(key, value);
-      return true;
+/*
+  Helper function
+  returns the most recent message in an object containing messages
+*/
+function getMostRecentMessage(messages) {
+  let min = {}, curr;
+  min.timestamp = Number.MAX_VALUE;
+  for (let message of Object.keys(messages)) {
+    message.timestamp = new Date(message.timestamp);
+    if (message.timestamp.getTime() < min.timestamp.getTime()) {
+      min = message;
     }
-    catch (err) {
-      console.log(`Error setting ${key}: ${value}`, err);
-      return false;
-    }
-  },
-
-  getItem: async (key) => {
-    try {
-      console.log(`Getting value from ${key}`);
-      let value = await AsyncStorage.getItem(key);
-      if (value !== null) {
-        return value;
-      }
-      else {
-        // No value set at key
-        console.log(`No value set at ${key}`);
-        return null;
-      }
-    }
-    catch (err) {
-      console.log(`Error getting ${key}`, err);
-      return null;
-    }
-  },
+  }
+  return min;
 }
-
 
 /*
 CHAT STORAGE DATA TYPES:
@@ -108,8 +87,20 @@ const chatStorage = {
       chatSessions[id]['timestamp'] = session['timestamp'];
     if (session['numOfUnreadMessages'])
       chatSessions[id]['numOfUnreadMessages'] = session['numOfUnreadMessages'];
+    if (session['incNumOfUnreadMessages'])
+      chatSessions[id]['numOfUnreadMessages'] += session['incNumOfUnreadMessages'];
 
     return await this.setChatSessions(chatSessions);
+  },
+
+  /*
+    'sessions' is an object of the form:
+    {
+      chatId1:
+    }
+  */
+  updateChatSessions: async (sessions) => {
+
   },
 
   deleteChatSession: async (id) => {
@@ -120,6 +111,32 @@ const chatStorage = {
     delete chatSessions[id];
     this.setChatSessions(chatSessions);
     return true;
+  },
+
+
+  mergeNewMsgsFromNotifs: async (newMessageObj) => {
+    /*
+      newMessageObj is an object of the form:
+      {
+        chatId1: { 
+          msg1: { message: '...', timestamp: '...', name: '...'}, 
+          msg2: ...
+        },
+        chatId2: ...
+      }
+    */
+   let promises = [], mostRecentMessage, newChatSession;
+    for (let chatid of Object.keys(newMessageObj)) {
+      mostRecentMessage = getMostRecentMessage(newMessageObj[chatid]);
+      newChatSession = {
+        timestamp: mostRecentMessage.timestamp,
+        lastMessage: mostRecentMessage.message,
+        incNumOfUnreadMessages: Object.keys(chatid).length
+      };
+      promises.push( updateChatSession(chatid, newChatSession) );
+      promises.push( addNewMessages(chatid, newMessageObj[chatid]) );
+    }
+    await Promise.all(promises);
   },
 
   getMessages: async (chatid) => {
@@ -151,7 +168,12 @@ const chatStorage = {
   },
 
   addNewMessages: async (chatid, messages) => {
-    return null;
+    let oldMessages = await this.getMessages(chatid);
+    let newMessages = {
+      ...oldMessages, 
+      ...messages
+    };
+    return await this.setMessages(chatid, newMessages);
   },
 
   /*

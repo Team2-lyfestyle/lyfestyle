@@ -10,7 +10,6 @@ import ExploreScreen from '../screens/ExploreScreen';
 import ChatStackNavigator from '../navigation/ChatStackNavigator';
 import TipScreen from '../screens/TipScreen';
 import QueryExampleScreen from '../screens/QueryExampleScreen';
-import ImageUpload from '../screens/ImageUpload';
 
 
 const BottomTab = createBottomTabNavigator();
@@ -91,17 +90,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           title: 'Queries',
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name='add-circle-outline' />
-          )
-        }}
-      />
-      <BottomTab.Screen
-        name='Photo'
-        component={ImageUpload}
-        options={{
-          title: 'Photo',
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name='ios-fitness' />
+            <TabBarIcon focused={focused} name='md-compass' />
           )
         }}
       />

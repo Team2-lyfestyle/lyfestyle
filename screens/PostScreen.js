@@ -11,7 +11,7 @@ export default class PostScreen extends Component {
           <Text style={styles.headerTitle}> POST </Text>
         </View>
       </View>
-      <View></View>
+      
     );
   }
 }

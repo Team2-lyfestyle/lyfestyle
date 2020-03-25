@@ -91,7 +91,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           title: 'Queries',
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name='add-circle-outline' />
+            <TabBarIcon focused={focused} name='md-compass' />
           )
         }}
       />

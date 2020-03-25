@@ -30,7 +30,7 @@ export default function Profile({navigation}) {
                 </View>
                 {/* Name */}
                 <View style = {[styles.center, {marginTop: 30}, {marginBottom: 15}]}>
-                    <Text style = {[{fontSize: 30}, { fontWeight: '20' }]}>John Doe</Text>
+                    <Text style = {[{fontSize: 30}, { fontWeight: '200' }]}>John Doe</Text>
                     {/* Followers Count  */}
                     {/* <View style = {[{marginTop: 15}, {alignItems: 'center'}]}>
                         <Text style = {{fontSize: 15}}>150</Text>
@@ -41,8 +41,8 @@ export default function Profile({navigation}) {
        
                 {/* Bio  */}
                 <View style = {styles.statsContainer}>
-                    <View style = {[{alignItems: 'left'}, {marginTop: 10}]}>
-                        <Text style = {[{fontSize: 15}, { fontWeight: 'bold' }]}>Bio</Text>
+                    <View style = {[{marginTop: 10}]}>
+                        <Text style = {[{fontSize: 15}, { fontWeight: 'bold' }]}>Bio </Text>
                     </View>
                 </View>
 
@@ -51,8 +51,8 @@ export default function Profile({navigation}) {
                 </View>
                 {/* Stats Container */}
                 <View style = {styles.statsContainer}>
-                    <View style = {[{alignItems: 'left'}, {marginTop: 10}]}>
-                        <Text style = {[{fontSize: 15}, { fontWeight: 'bold' }]}>100</Text>
+                    <View style = {[{marginTop: 10}]}>
+                        <Text style = {[{fontSize: 15}, { fontWeight: 'bold' }]}>100 </Text>
                         <Text style = {[{fontSize: 10}, { fontWeight: 'bold' }, {color: 'grey'}]}>Posts</Text>
                     </View>
                 </View>

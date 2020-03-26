@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import TabBarIcon from './TabBarIcon';
 import Colors from '../constants/Colors';
 
-export default function TabBarIcon(props) {
+export default function TabBarIconWithBadge(props) {
   return (
     <View style={{ width: 24, height: 24, margin: 5}}>
         {props.badgeCount > 0 && (

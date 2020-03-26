@@ -10,7 +10,7 @@ import {
 import { Container, Header, Content, Tab, Tabs } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import chatStorage from '../util/ChatStorage';
-import ChatServiceContext from '../constats/ChatServiceContext';
+import ChatServiceContext from '../constants/ChatServiceContext';
 
 function renderHead({ names, timestamp }) {
 
@@ -40,8 +40,8 @@ export default function ChatSelectScreen({ navigation }) {
 
   let chatService = React.useContext(ChatServiceContext);
 
-  chatService.newMsgEmitter.on('newMessage', function() {
-    console.log()
+  chatService.newMsgEmitter.on('newMessage', async function() {
+    console.log();
     dispatch( {action: 'LOAD_START'} );
     let newSessions = await chatService.getChatSessions();
     dispatch( {action: 'LOAD_FIN', chatSessions: newSessions} );

@@ -9,6 +9,7 @@ import TrainingScreen from '../screens/TrainingScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import ChatStackNavigator from '../navigation/ChatStackNavigator';
 import TipScreen from '../screens/TipScreen';
+import PostScreen from '../screens/PostScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import QueryExampleScreen from '../screens/QueryExampleScreen';
 
@@ -45,12 +46,12 @@ export default function BottomTabNavigator({ navigation, route }) {
         }}
       />
       <BottomTab.Screen
-        name='Tips'
-        component={TipScreen}
+        name='Post'
+        component={PostScreen}
         options={{
-          title: 'Tips',
+          title: 'Post',
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name='ios-bulb' />
+            <TabBarIcon focused={focused} name='ios-add-circle' />
           )
         }}
       />
@@ -108,8 +109,8 @@ function getHeaderTitle(route) {
       return 'Home Page';
     case 'Training':
       return 'Training';
-    case 'Tips':
-      return 'Tips';
+    case 'Post':
+      return 'Post';
     case 'Chat':
       return 'Chat';
     case 'Explore':

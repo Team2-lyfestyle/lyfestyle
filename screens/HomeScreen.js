@@ -64,7 +64,7 @@ class HomeScreen extends React.Component {
             resizeMode='cover'
           />
           <View style={{ flexDirection: 'row' }}>
-            <Ionicons name='ios-heart-empty' size={25} color='#000' style={{marginRight: 15, marginTop:1}} />
+            <Ionicons name='ios-heart-empty' size={25} color='#000' style={{marginRight: 15, marginTop:10}} />
             <Ionicons></Ionicons>
           </View>
         </View>

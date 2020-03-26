@@ -76,7 +76,7 @@ class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Home</Text>
+          <Text style={styles.headerTitle}>Home </Text>
         </View>
 
         <FlatList

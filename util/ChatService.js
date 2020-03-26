@@ -13,6 +13,7 @@ export default class ChatService {
 
   constructor() {
     this.newMsgEmitter = new EventEmitter();
+    this.newMsgEmitter.setMaxListeners(15);
     this.totalNumOfUnreadMessages = 0;
     chatStorage.getTotalNumOfUnreadMessages().then( (result) => {
       this.totalNumOfUnreadMessages = result;

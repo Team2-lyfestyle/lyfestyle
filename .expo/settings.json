@@ -1,8 +1,8 @@
 {
+  "urlRandomness": "jp-rft",
   "hostType": "lan",
   "lanType": "ip",
   "dev": true,
   "minify": false,
-  "urlRandomness": "rr-fff",
   "https": false
 }

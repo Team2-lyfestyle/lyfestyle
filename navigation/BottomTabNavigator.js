@@ -10,6 +10,9 @@ import ExploreScreen from '../screens/ExploreScreen';
 import ChatStackNavigator from '../navigation/ChatStackNavigator';
 import TipScreen from '../screens/TipScreen';
 import PostScreen from '../screens/PostScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import QueryExampleScreen from '../screens/QueryExampleScreen';
+
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
@@ -21,7 +24,7 @@ export default function BottomTabNavigator({ navigation, route }) {
   navigation.setOptions({ header: 'null' });
 
   return (
-    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
+    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME} activeBackgroundColor = '#2f95dc'>
       <BottomTab.Screen
         name='Home'
         component={HomeScreen}
@@ -74,11 +77,22 @@ export default function BottomTabNavigator({ navigation, route }) {
 
       <BottomTab.Screen
         name='Profile'
-        component={LinksScreen}
+        component={ProfileScreen}
         options={{
           title: 'Profile',
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} name='md-person' />
+          )
+        }}
+      />
+
+      <BottomTab.Screen
+        name='Queries'
+        component={QueryExampleScreen}
+        options={{
+          title: 'Queries',
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon focused={focused} name='md-compass' />
           )
         }}
       />

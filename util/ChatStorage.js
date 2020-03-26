@@ -1,4 +1,4 @@
-import asyncStorage from './util/AsyncStorage';
+import asyncStorage from './AsyncStorage';
 
 /*
   Helper function

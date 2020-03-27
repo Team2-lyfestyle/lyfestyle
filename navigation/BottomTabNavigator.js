@@ -4,9 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 //SCREENS
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
 import TrainingScreen from '../screens/TrainingScreen';
-import ExploreScreen from '../screens/ExploreScreen';
 import ChatStackNavigator from '../navigation/ChatStackNavigator';
 import TipScreen from '../screens/TipScreen';
 import PostScreen from '../screens/PostScreen';
@@ -64,17 +62,6 @@ export default function BottomTabNavigator({ navigation, route }) {
           )
         }}
       />
-      <BottomTab.Screen
-        name='Explore'
-        component={ExploreScreen}
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name='md-compass' />
-          )
-        }}
-      />
-
       <BottomTab.Screen
         name='Profile'
         component={ProfileScreen}

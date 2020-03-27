@@ -2,7 +2,10 @@ import React from 'react';
 import { Text, StyleSheet, View, FlatList, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment'
+import { Button } from 'native-base';
+import AuthContext from '../util/AuthContext'
 
+// Dummy Data
 posts = [
   {
     id: '1',
@@ -38,7 +41,10 @@ posts = [
   }
 ];
 
-class HomeScreen extends React.Component {
+export default function HomeScreen({ navigation }) {
+  
+  const {signOut} = React.useContext(AuthContext)
+
   renderPost = post => {
     return (
       <View style={styles.feedItem}>
@@ -64,34 +70,31 @@ class HomeScreen extends React.Component {
             resizeMode='cover'
           />
           <View style={{ flexDirection: 'row' }}>
-            <Ionicons name='ios-heart-empty' size={25} color='#000' style={{marginRight: 15, marginTop:10}} />
+            <Ionicons name='ios-heart-empty' size={25} color='#000' style={{ marginRight: 15, marginTop: 10 }} />
             <Ionicons></Ionicons>
           </View>
         </View>
       </View>
     );
   };
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Home </Text>
-        </View>
-
-        <FlatList
-          style={styles.feed}
-          data={posts}
-          renderItem={({ item }) => this.renderPost(item)}
-          keyExtractor={item => item.id}
-          showsVerticalScrollIndicator={false}
-        />
+  return (
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Home </Text>
       </View>
-    );
-  }
+      <Button onPress={() => { signOut() }}>
+        <Text>LogOut</Text>
+      </Button>
+      <FlatList
+        style={styles.feed}
+        data={posts}
+        renderItem={({ item }) => renderPost(item)}
+        keyExtractor={item => item.id}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
+  );
 }
-
-export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {

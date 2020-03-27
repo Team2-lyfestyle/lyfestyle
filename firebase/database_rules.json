@@ -1,0 +1,46 @@
+{
+    "rules": {
+      "users":{
+        ".read": "auth.uid != null",
+        "$uid": {
+          ".write": "$uid == auth.uid"
+        }
+      },
+      "posts":{
+              ".read": "auth.uid != null",    	
+        ".write": "auth.uid != null"
+      },
+      "trainings":{
+        ".read": "auth.uid != null",    	
+        ".write": "auth.uid != null"
+      },
+      "nutrition":{
+        ".read": "auth.uid != null",    	
+        ".write": "auth.uid != null"
+      },
+      "post_comments":{
+        ".read": "auth.uid != null",    	
+        ".write": "auth.uid != null"
+      },
+      "nutrition_comments":{
+        ".read": "auth.uid != null",    	
+        ".write": "auth.uid != null"
+      },
+      "training_comments":{
+        ".read": "auth.uid != null",    	
+        ".write": "auth.uid != null"
+      },
+      "chats":{
+        ".read": "auth.uid != null",    	
+        ".write": "auth.uid != null"
+      },
+      "members":{
+        ".read": "auth.uid != null",    	
+        ".write": "auth.uid != null"
+      },
+      "messages":{
+        ".read": "auth.uid != null",    	
+        ".write": "auth.uid != null"
+      }
+    }
+  }

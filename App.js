@@ -80,7 +80,7 @@ export default function App(props) {
         // Load our initial navigation state
         dispatch({ type: 'NAVIGATION', initialNavigationState: await getInitialState() });
 
-        await registerForPushNotificationsAsync();
+        await registerForPushNotificationsAsync(); 
         
         // check firebase login and register for push notifications
         firebase.auth().onAuthStateChanged(async user => {
@@ -136,7 +136,15 @@ export default function App(props) {
           console.log("Log in failed", e);
         }
       },
-      signOut: () => dispatch({ type: 'SIGN_OUT' }),
+      signOut: () => {
+        firebase.auth().signOut().then(() => {
+          console.log("Sign Out Successful")
+          dispatch({ type: 'SIGN_OUT' })
+        }).catch(err => {
+          console.log("Sign Out FAILED: ", err)
+        })
+        
+      },
       signUp: async (email, password, name) => {
         try {
           await firebase.auth().createUserWithEmailAndPassword(email, password);

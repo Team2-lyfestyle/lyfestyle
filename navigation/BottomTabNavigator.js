@@ -9,7 +9,10 @@ import TrainingScreen from '../screens/TrainingScreen';
 import ExploreScreen from '../screens/ExploreScreen';
 import ChatStackNavigator from '../navigation/ChatStackNavigator';
 import TipScreen from '../screens/TipScreen';
+import PostScreen from '../screens/PostScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 import QueryExampleScreen from '../screens/QueryExampleScreen';
+
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
@@ -21,7 +24,7 @@ export default function BottomTabNavigator({ navigation, route }) {
   navigation.setOptions({ header: 'null' });
 
   return (
-    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
+    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME} activeBackgroundColor = '#2f95dc'>
       <BottomTab.Screen
         name='Home'
         component={HomeScreen}
@@ -43,12 +46,12 @@ export default function BottomTabNavigator({ navigation, route }) {
         }}
       />
       <BottomTab.Screen
-        name='Tips'
-        component={TipScreen}
+        name='Post'
+        component={PostScreen}
         options={{
-          title: 'Tips',
+          title: 'Post',
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name='ios-bulb' />
+            <TabBarIcon focused={focused} name='ios-add-circle' />
           )
         }}
       />
@@ -74,7 +77,7 @@ export default function BottomTabNavigator({ navigation, route }) {
 
       <BottomTab.Screen
         name='Profile'
-        component={LinksScreen}
+        component={ProfileScreen}
         options={{
           title: 'Profile',
           tabBarIcon: ({ focused }) => (
@@ -89,7 +92,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         options={{
           title: 'Queries',
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name='add-circle-outline' />
+            <TabBarIcon focused={focused} name='md-compass' />
           )
         }}
       />
@@ -106,8 +109,8 @@ function getHeaderTitle(route) {
       return 'Home Page';
     case 'Training':
       return 'Training';
-    case 'Tips':
-      return 'Tips';
+    case 'Post':
+      return 'Post';
     case 'Chat':
       return 'Chat';
     case 'Explore':

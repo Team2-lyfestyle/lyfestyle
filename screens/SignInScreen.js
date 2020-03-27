@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity, Image } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import firebase from '../constants/firebase';
 import AuthContext from '../util/AuthContext';
 
 

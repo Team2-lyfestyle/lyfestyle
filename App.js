@@ -139,7 +139,7 @@ export default function App(props) {
       signOut: () => dispatch({ type: 'SIGN_OUT' }),
       signUp: async (email, password, name) => {
         try {
-          await firebase.auth().createUserWithEmailAndPassword(email, password, name);
+          await firebase.auth().createUserWithEmailAndPassword(email, password);
           let uid = firebase.auth().currentUser.uid;
           await firebase.database().ref('users/' + uid).set({email: email, password: password, name: name});
           dispatch({ type: 'SIGN_IN' });

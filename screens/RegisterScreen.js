@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import firebase from '../constants/firebase';
 import AuthContext from '../util/AuthContext';
-import {sWidth, sHeight} from '../constants/ScreenSize'
+
 
 
 const RegisterScreen = ({ navigation }) => {
@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#122028'
-    height: sWidth
   },
   inner: {
     padding: 10,

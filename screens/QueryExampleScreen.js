@@ -23,8 +23,10 @@ const QueryExampleScreen = ({ navigation }) => {
     React.useEffect(() => {
         async function askPermission() {
             if (Constants.platform.ios) {
-                const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-                if (status !== 'granted') {
+                const { statusRoll } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+                const { statusCamera } = await Permissions.askAsync(Permissions.CAMERA);
+                CAMERA
+                if (statusRoll !== 'granted' && statusCamera !== 'granted') {
                     console.log("Gimme Permission")
                 }
             };

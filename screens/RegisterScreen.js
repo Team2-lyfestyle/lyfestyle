@@ -77,7 +77,7 @@ const RegisterScreen = ({ navigation }) => {
       >
         <Text style={{ color: '#fff', fontSize: 15, fontWeight: '500' }}>
           Already have an account?
-          <Text style={{ fontWeight: '600', color: '#00FED4' }}> Log</Text>
+          <Text style={{ fontWeight: '600', color: '#00FED4' }}>Log In</Text>
         </Text>
       </TouchableOpacity>
     </View>

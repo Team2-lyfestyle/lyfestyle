@@ -1,17 +1,15 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import { createStackNavigator } from '@react-navigation/stack';
 //SCREENS
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
 import TrainingScreen from '../screens/TrainingScreen';
-import ExploreScreen from '../screens/ExploreScreen';
 import ChatStackNavigator from '../navigation/ChatStackNavigator';
-import TipScreen from '../screens/TipScreen';
 import PostScreen from '../screens/PostScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import QueryExampleScreen from '../screens/QueryExampleScreen';
+
 
 
 const BottomTab = createBottomTabNavigator();
@@ -65,17 +63,6 @@ export default function BottomTabNavigator({ navigation, route }) {
         }}
       />
       <BottomTab.Screen
-        name='Explore'
-        component={ExploreScreen}
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name='md-compass' />
-          )
-        }}
-      />
-
-      <BottomTab.Screen
         name='Profile'
         component={ProfileScreen}
         options={{
@@ -113,8 +100,6 @@ function getHeaderTitle(route) {
       return 'Post';
     case 'Chat':
       return 'Chat';
-    case 'Explore':
-      return 'Explore';
     case 'Profile':
       return 'Profile';
   }

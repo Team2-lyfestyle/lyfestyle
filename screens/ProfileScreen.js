@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, TouchableHighlight} from "react-native";
-import { Ionicons, MaterialIcons, AntDesign, FontAwesome} from '@expo/vector-icons'
+import { Ionicons, MaterialIcons, AntDesign, FontAwesome, Feather } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function Profile({navigation}) {
@@ -19,7 +19,7 @@ export default function Profile({navigation}) {
                     }}
                 />
                 <TouchableHighlight style = {styles.settingsIcon} onPress={() => navigation.navigate('Home')}>
-                    <Ionicons name = "md-more" size = {25} color = "black"/>
+                    <Feather name = "log-out" size = {23} color = "black"/>
                 </TouchableHighlight>
                 
                 {/* Profile Image  */}
@@ -30,7 +30,7 @@ export default function Profile({navigation}) {
                 </View>
                 {/* Name */}
                 <View style = {[styles.center, {marginTop: 30}, {marginBottom: 15}]}>
-                    <Text style = {[{fontSize: 30}, { fontWeight: '200' }]}>John Doe</Text>
+                    <Text style = {[{fontSize: 30}, { fontWeight: '400' }]}>John Doe</Text>
                     {/* Followers Count  */}
                     {/* <View style = {[{marginTop: 15}, {alignItems: 'center'}]}>
                         <Text style = {{fontSize: 15}}>150</Text>

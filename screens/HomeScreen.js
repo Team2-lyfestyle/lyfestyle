@@ -32,15 +32,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <Text>Are you ready for a new lyfestyle?</Text>
-      <ShadowBox style={styles.shadowBox}>
-        <TextInput
-          clearButtonMode='always'
-          style={styles.inputContainer}
-          placeholder={'Name'}
-          placeholderTextColor={'grey'}
-          onChangeText={text => updateName(text)}
-        ></TextInput>
-      </ShadowBox>
+  
       <TextInput
         clearButtonMode='always'
         style={styles.inputContainer}

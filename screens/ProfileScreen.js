@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, TouchableHighl
 import { Ionicons, MaterialIcons, AntDesign, FontAwesome, Feather } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { windowHeight, windowWidth } from '../constants/Dimensions';
 
 
 export default function Profile({navigation}) {
@@ -129,9 +130,9 @@ const styles = StyleSheet.create({
     // Properties for the profile picture 
     profileImage: {
         // width: 140,
-        width: wp('40%'),
+        width: windowWidth * .18 * (windowWidth/windowHeight),
         // height: 140,
-        height: hp('18%'),
+        height:  windowHeight * .18 * (windowWidth/windowHeight),
         borderRadius: 100,
         shadowColor: '#202020',
         shadowOffset: {width: 0, height: 0},

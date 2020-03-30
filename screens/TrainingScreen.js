@@ -1,7 +1,6 @@
 import React from 'react'
 import { View, Text, FlatList } from 'react-native'
 import exercises from '../assets/data/exercises.json';
-
 const TrainingScreen = () => {
     return (
       <View style={{ flex: 1, flexDirection: 'column' }}>

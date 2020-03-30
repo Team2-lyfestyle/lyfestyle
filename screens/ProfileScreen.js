@@ -2,6 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, TouchableHighlight} from "react-native";
 import { Ionicons, MaterialIcons, AntDesign, FontAwesome, Feather } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
+import {windowWidth, windowHeight} from '../constants/Dimensions';
 
 export default function Profile({navigation}) {
     return (
@@ -91,7 +92,7 @@ export default function Profile({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#EFEdF4'
+        backgroundColor: '#EFEdF4',
     },
 
     // Properties for Header container 
@@ -117,6 +118,7 @@ const styles = StyleSheet.create({
     // Properties for Settings icon 
     settingsIcon: {
         marginTop: 25,
+        // marginTop: windowHeight * .025,
         marginRight: 20,
         alignItems: 'flex-end',
         flex: 1
@@ -124,9 +126,11 @@ const styles = StyleSheet.create({
 
     // Properties for the profile picture 
     profileImage: {
-        width: 140,
-        height: 140,
-        borderRadius: 70,
+        // width: 140,
+        width: windowWidth * .45,
+        // height: 140,
+        height: windowHeight * .20,
+        borderRadius: 100,
         shadowColor: '#202020',
         shadowOffset: {width: 0, height: 0},
         shadowRadius: 5,
@@ -159,8 +163,10 @@ const styles = StyleSheet.create({
 
     // Container for images 
     mediaImage: {
-        width: 170,
-        height: 190,
+        // width: 170,
+        width: windowWidth * .450,
+        // height: 190,
+        height: windowHeight * .23,
         borderRadius: 12,
         overflow: 'hidden',
         marginHorizontal: 12.5

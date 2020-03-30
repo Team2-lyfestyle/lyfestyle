@@ -2,7 +2,8 @@ import React from "react";
 import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, TouchableHighlight} from "react-native";
 import { Ionicons, MaterialIcons, AntDesign, FontAwesome, Feather } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
-import {windowWidth, windowHeight} from '../constants/Dimensions';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+
 
 export default function Profile({navigation}) {
     return (
@@ -42,7 +43,7 @@ export default function Profile({navigation}) {
        
                 {/* Bio  */}
                 <View style = {styles.statsContainer}>
-                    <View style = {[{marginTop: 10}]}>
+                    <View style = {[{marginTop: hp('1.5%')}]}>
                         <Text style = {[{fontSize: 15}, { fontWeight: 'bold' }]}>Bio </Text>
                     </View>
                 </View>
@@ -52,7 +53,7 @@ export default function Profile({navigation}) {
                 </View>
                 {/* Stats Container */}
                 <View style = {styles.statsContainer}>
-                    <View style = {[{marginTop: 10}]}>
+                    <View style = {[{marginTop: hp('1.5%')}]}>
                         <Text style = {[{fontSize: 15}, { fontWeight: 'bold' }]}>100 </Text>
                         <Text style = {[{fontSize: 10}, { fontWeight: 'bold' }, {color: 'grey'}]}>Posts</Text>
                     </View>
@@ -117,9 +118,10 @@ const styles = StyleSheet.create({
 
     // Properties for Settings icon 
     settingsIcon: {
-        marginTop: 25,
-        // marginTop: windowHeight * .025,
-        marginRight: 20,
+        // marginTop: 25,
+        marginTop: hp('3%'),
+        // marginRight: 20,
+        marginRight: wp('3%'),
         alignItems: 'flex-end',
         flex: 1
     },
@@ -127,9 +129,9 @@ const styles = StyleSheet.create({
     // Properties for the profile picture 
     profileImage: {
         // width: 140,
-        width: windowWidth * .45,
+        width: wp('40%'),
         // height: 140,
-        height: windowHeight * .20,
+        height: hp('18%'),
         borderRadius: 100,
         shadowColor: '#202020',
         shadowOffset: {width: 0, height: 0},
@@ -139,17 +141,23 @@ const styles = StyleSheet.create({
     // Properties to center Bio for profile
     centerBio: {
         alignSelf: 'center',
-        marginTop: 30,
-        marginBottom: 20,
-        marginLeft: 20,
-        marginRight: 20,
+        // marginTop: 30,
+        marginTop: hp('3%'),
+        // marginBottom: 20,
+        marginBottom: hp('3%'),
+        // marginLeft: 20,
+        marginLeft: wp('3%'),
+        // marginRight: 20,
+        marginRight: wp('3%'),
     },
 
     // Stats = Number of posts container 
     statsContainer: {
         flexDirection: 'row',
-        marginLeft: 20,
-        marginRight: 20,
+        // marginLeft: 20,
+        marginLeft: wp('3%'),
+        // marginRight: 20,
+        marginRight: wp('3%'),
         borderBottomWidth: 1.5,
         paddingBottom: 5
         // alignSelf: 'center'
@@ -157,19 +165,22 @@ const styles = StyleSheet.create({
 
     // Sets margin for image container 
     pictureContainer: {
-        marginTop: 30,
-        marginBottom: 30
+        // marginTop: 30,
+        marginTop: hp('3%'),
+        // marginBottom: 30
+        marginBottom: hp('3%')
     },
 
     // Container for images 
     mediaImage: {
         // width: 170,
-        width: windowWidth * .450,
+        width: wp('45%'),
         // height: 190,
-        height: windowHeight * .23,
+        height: hp('23%'),
         borderRadius: 12,
         overflow: 'hidden',
-        marginHorizontal: 12.5
+        // marginHorizontal: 12.5
+        marginHorizontal: wp('3.5%')
     },
 
     // Properties for images(posts) 

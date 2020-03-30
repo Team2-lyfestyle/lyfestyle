@@ -4,11 +4,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 //SCREENS
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
 import TrainingScreen from '../screens/TrainingScreen';
-import ExploreScreen from '../screens/ExploreScreen';
-import ChatScreen from '../screens/ChatScreen';
+import ChatStackNavigator from '../navigation/ChatStackNavigator';
 import TipScreen from '../screens/TipScreen';
+import PostScreen from '../screens/PostScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import QueryExampleScreen from '../screens/QueryExampleScreen';
+
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
@@ -17,10 +19,10 @@ export default function BottomTabNavigator({ navigation, route }) {
   // Set the header title on the parent stack navigator depending on the
   // currently active tab. Learn more in the documentation:
   // https://reactnavigation.org/docs/en/screen-options-resolution.html
-  navigation.setOptions({ headerTitle: getHeaderTitle(route) });
+  navigation.setOptions({ header: 'null' });
 
   return (
-    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
+    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME} activeBackgroundColor = '#2f95dc'>
       <BottomTab.Screen
         name='Home'
         component={HomeScreen}
@@ -42,43 +44,42 @@ export default function BottomTabNavigator({ navigation, route }) {
         }}
       />
       <BottomTab.Screen
-        name='Tips'
-        component={TipScreen}
+        name='Post'
+        component={PostScreen}
         options={{
-          title: 'Tips',
+          title: 'Post',
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name='ios-bulb' />
+            <TabBarIcon focused={focused} name='ios-add-circle' />
           )
         }}
       />
       <BottomTab.Screen
         name='Chat'
-        component={ChatScreen}
+        component={ChatStackNavigator}
         options={{
-          title: 'Chat',
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} name='ios-text' />
           )
         }}
       />
       <BottomTab.Screen
-        name='Explore'
-        component={ExploreScreen}
+        name='Profile'
+        component={ProfileScreen}
         options={{
-          title: 'Explore',
+          title: 'Profile',
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name='md-compass' />
+            <TabBarIcon focused={focused} name='md-person' />
           )
         }}
       />
 
       <BottomTab.Screen
-        name='Profile'
-        component={LinksScreen}
+        name='Queries'
+        component={QueryExampleScreen}
         options={{
-          title: 'Profile',
+          title: 'Queries',
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name='md-person' />
+            <TabBarIcon focused={focused} name='md-compass' />
           )
         }}
       />
@@ -95,8 +96,8 @@ function getHeaderTitle(route) {
       return 'LYFESTYLE';
     case 'Training':
       return 'Training';
-    case 'Tips':
-      return 'Tips';
+    case 'Post':
+      return 'Post';
     case 'Chat':
       return 'Chat';
     case 'Explore':

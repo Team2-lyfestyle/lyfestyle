@@ -3,7 +3,7 @@ import { Text, StyleSheet, View, FlatList, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment'
 import { Button } from 'native-base';
-import AuthContext from '../util/AuthContext'
+// import AuthContext from '../util/AuthContext'
 
 // Dummy Data
 posts = [
@@ -43,7 +43,7 @@ posts = [
 
 export default function HomeScreen({ navigation }) {
   
-  const {signOut} = React.useContext(AuthContext)
+  // const {signOut} = React.useContext(AuthContext)
 
   renderPost = post => {
     return (
@@ -82,9 +82,9 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Home </Text>
       </View>
-      <Button onPress={() => { signOut() }}>
+      {/* <Button onPress={() => { signOut() }}>
         <Text>LogOut</Text>
-      </Button>
+      </Button> */}
       <FlatList
         style={styles.feed}
         data={posts}

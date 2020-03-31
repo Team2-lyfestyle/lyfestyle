@@ -1,12 +1,17 @@
 import React from "react";
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, TouchableHighlight} from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Button } from "react-native";
 import { Ionicons, MaterialIcons, AntDesign, FontAwesome, Feather } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
+import AuthContext from '../util/AuthContext';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { windowHeight, windowWidth } from '../constants/Dimensions';
+// import { windowHeight, windowWidth } from '../constants/Dimensions';
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 
 export default function Profile({navigation}) {
+
+    const {signOut} = React.useContext(AuthContext)
+
     return (
         <View style = {styles.container}>
         <ScrollView showsVerticalScrollIndicator = {false}>
@@ -21,9 +26,10 @@ export default function Profile({navigation}) {
                         height: 300,
                     }}
                 />
-                <TouchableHighlight style = {styles.settingsIcon} onPress={() => navigation.navigate('Home')}>
+
+                <TouchableOpacity style = {styles.settingsIcon} onPress={() => { signOut() }}>
                     <Feather name = "log-out" size = {23} color = "black"/>
-                </TouchableHighlight>
+                </TouchableOpacity>
                 
                 {/* Profile Image  */}
                 <View style = {[styles.center, {marginTop: 8}]}>
@@ -119,20 +125,23 @@ const styles = StyleSheet.create({
 
     // Properties for Settings icon 
     settingsIcon: {
+        width: wp('6%'),
+        height: hp('3%'),
         // marginTop: 25,
         marginTop: hp('3%'),
         // marginRight: 20,
         marginRight: wp('3%'),
-        alignItems: 'flex-end',
+        marginLeft: wp('90%'),
+        // alignItems: 'flex-end',
         flex: 1
     },
 
     // Properties for the profile picture 
     profileImage: {
-        // width: 140,
-        width: windowWidth * .18 * (windowWidth/windowHeight),
-        // height: 140,
-        height:  windowHeight * .18 * (windowWidth/windowHeight),
+        width: 140,
+        // width: windowWidth * .18 * (windowWidth/windowHeight),
+        height: 140,
+        // height:  windowHeight * .18 * (windowWidth/windowHeight),
         borderRadius: 100,
         shadowColor: '#202020',
         shadowOffset: {width: 0, height: 0},

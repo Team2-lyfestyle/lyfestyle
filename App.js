@@ -3,7 +3,7 @@ import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { SplashScreen, Notifications } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import BottomTabNavigator from './navigation/BottomTabNavigator';
@@ -169,7 +169,7 @@ export default function App(props) {
         <AuthContext.Provider value={authContext}><NotificationContext.Provider value={state.notification}>
 
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <NavigationContainer ref={containerRef} initialState={state.initialNavigationState}>
+          <NavigationContainer ref={containerRef} initialState={state.initialNavigationState} theme={DarkTheme}>
             <Stack.Navigator headerMode='none'>
               {
                 state.isLoggedIn ? 

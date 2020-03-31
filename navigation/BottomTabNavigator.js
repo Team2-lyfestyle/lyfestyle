@@ -9,6 +9,7 @@ import ChatStackNavigator from '../navigation/ChatStackNavigator';
 import PostScreen from '../screens/PostScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import QueryExampleScreen from '../screens/QueryExampleScreen';
+import { DarkTheme } from '@react-navigation/native';
 
 
 
@@ -22,7 +23,7 @@ export default function BottomTabNavigator({ navigation, route }) {
   navigation.setOptions({ header: 'null' });
 
   return (
-    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME} activeBackgroundColor = '#2f95dc'>
+    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME} theme={DarkTheme}>
       <BottomTab.Screen
         name='Home'
         component={HomeScreen}
@@ -40,7 +41,8 @@ export default function BottomTabNavigator({ navigation, route }) {
           title: 'Training',
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} name='ios-fitness' />
-          )
+          ),
+          tabBarVisible:"false"
         }}
       />
       <BottomTab.Screen

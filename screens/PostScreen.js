@@ -14,7 +14,7 @@ import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import queries from '../util/firebase_queries';
 
-const PostScreen = ({navigation}) => {
+const PostScreen = ({ navigation }) => {
   // State data needed
   const [post, updatePost] = React.useState(false);
   const [postPhoto, updatePostPhoto] = React.useState(false);
@@ -33,6 +33,7 @@ const PostScreen = ({navigation}) => {
   let createPost = async (data, uri = null) => {
     if (uri) data.media = true;
     await queries.createPost(data, uri);
+    navigation.navigate('Home');
   };
 
   // Take picture for post
@@ -146,7 +147,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     width: 400,
     height: 300,
-   
+
     borderBottomColor: '#CACACA',
     shadowColor: '#454D65',
     shadowOffset: { height: 5 },

@@ -1,8 +1,21 @@
 import React from 'react';
-import { Text, StyleSheet, View, TouchableOpacity, Image } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import {
+  Text,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Button,
+  Keyboard,
+  Platform
+} from 'react-native';
 import firebase from '../constants/firebase';
 import AuthContext from '../util/AuthContext';
+
+
 
 const RegisterScreen = ({ navigation }) => {
   const [name, updateName] = React.useState(false);
@@ -30,57 +43,72 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   let _submit = () => {
-    signUp(email, password);
-  }
+    signUp(email, password, name);
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.greeting}>
-        Are you ready for a new
-        <Text style={{ fontWeight: '600', color: '#00FED4' }}> LYFESTYLE?</Text>
-      </Text>
-      <Image
-        source={require('../assets/images/lyfestyle.png')}
-        style={styles.image}
-      />
-
-      <View style={styles.form}>
-        
-        <View style={{ marginTop: 32 }}>
-          <Text style={styles.inputTitle}>EMAIL ADDRESS</Text>
-          <TextInput
-            style={styles.input}
-            autoCapitalize='none'
-             onChangeText={text => updateEmail(text)}
-          ></TextInput>
-        </View>
-        <View style={{ marginTop: 32 }}>
-          <Text style={styles.inputTitle}>PASSWORD</Text>
-          <TextInput
-            style={styles.input}
-            secureTextEntry
-            autoCapitalize='none'
-            onChangeText={text => updatePassword(text)}
+    <KeyboardAvoidingView
+      behavior={(Platform.OS = 'ios' ? 'padding' : 'height')}
+      style={styles.container}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.inner}>
+          <Image
+            source={require('../assets/images/lyfestyle.png')}
+            style={styles.image}
           />
-        </View>
-      </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => _submit()}
-      >
-        <Text styles={{ fontWeight: 'bold' }}>Register</Text>
+          <View style={styles.form}>
+            <View style={{ marginTop: 12 }}>
+              <Text style={styles.inputTitle}>NAME</Text>
+              <TextInput
+                style={styles.input}
+                autoCapitalize='none'
+                onChangeText={text => updateName(text)}
+              ></TextInput>
+            </View>
+            <View style={{ marginTop: 12 }}>
+              <Text style={styles.inputTitle}>EMAIL ADDRESS</Text>
+              <TextInput
+                style={styles.input}
+                autoCapitalize='none'
+                onChangeText={text => updateEmail(text)}
+              ></TextInput>
+            </View>
+            <View style={{ marginTop: 12 }}>
+              <Text style={styles.inputTitle}>PASSWORD</Text>
+              <TextInput
+                style={styles.input}
+                secureTextEntry
+                autoCapitalize='none'
+                onChangeText={text => updatePassword(text)}
+              />
+            </View>
+          </View>
+          <TouchableOpacity style={styles.button} onPress={() => _submit()}>
+            <Text styles={{ fontWeight: 'bold' }}>Register</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ alignSelf: 'center' }}
+            onPress={() => navigation.navigate('SignIn')}
+          >
+            <Text
+              style={{
+                color: '#fff',
+                fontSize: 15,
+                fontWeight: '500',
 
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={{ alignSelf: 'center', marginTop: 32 }}
-        onPress={() => navigation.navigate('SignIn')}
-      >
-        <Text style={{ color: '#fff', fontSize: 15, fontWeight: '500' }}>
-          Already have an account?
-          <Text style={{ fontWeight: '600', color: '#00FED4' }}>Log In</Text>
-        </Text>
-      </TouchableOpacity>
-    </View>
+              }}
+            >
+              Already have an account?
+              <Text style={{ fontWeight: '600', color: '#00FED4' }}>
+                {' '}
+                Log In
+              </Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -91,8 +119,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#122028'
   },
+  inner: {
+    padding: 10,
+    height: 10,
+    flex: 1,
+    justifyContent: 'space-around'
+  },
   greeting: {
-    marginTop: 50,
+    marginTop: 10,
     fontSize: 18,
     fontWeight: '400',
     textAlign: 'center',
@@ -100,30 +134,30 @@ const styles = StyleSheet.create({
   },
   image: {
     alignSelf: 'center',
-    width: 250,
-    height: 250,
+    width: 200,
+    height: 200,
     borderRadius: 30,
-    margin: 30
+    margin: 20
   },
   form: {
-    marginTop: 10,
-    marginBottom: 40,
+    marginBottom: 10,
     marginHorizontal: 30
   },
   inputTitle: {
     color: 'white',
     marginTop: 20,
-    fontWeight: "bold"
+    fontWeight: 'bold'
   },
   input: {
     borderBottomColor: '#00FED4',
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: 1,
+    marginBottom: 36,
     height: 40,
     fontSize: 15,
     color: 'white'
   },
   button: {
-    marginTop: 30,
+    marginTop: 20,
     marginHorizontal: 60,
     backgroundColor: '#00FED4',
     borderRadius: 4,
@@ -132,4 +166,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   }
 });
-

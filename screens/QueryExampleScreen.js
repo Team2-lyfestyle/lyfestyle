@@ -85,17 +85,27 @@ const QueryExampleScreen = ({ navigation }) => {
         setuserById(JSON.stringify(user))
     }
     let updateCurrentUser = async (data, uri = null) => {
-        if(uri)
-            data.media = true       // TODO: Maybe store the path instead of a boolean. Path alway follows the pattern uploads/{userID}/profile/
-                                    // TODO: Think about how to save and mark the newest profile picture
+        if (uri)
+            data.media = true               // TODO: Maybe store the path instead of a boolean. Path alway follows the pattern uploads/{userID}/profile/
+                                            // TODO: Think about how to save and mark the newest profile picture
         await queries.updateCurrentUser(data, uri)
     }
     let getPostByUser = async () => {
-        var posts = await queries.getPostByUser()
-        setPostsByUser(JSON.stringify(posts))
+
+        let callback = (snapshot) => {
+            let postArray = []
+            Object.keys(snapshot).forEach(key => {
+                let temp = snapshot[key]
+                temp.id = key
+                postArray.push(temp)
+            })
+            
+            setPostsByUser(JSON.stringify(postArray))
+        }
+        await queries.getPostByUser(callback)
     }
     let createPost = async (data, uri = null) => {
-        if(uri)
+        if (uri)
             data.media = true       // TODO: Maybe store the path instead of a boolean. Path alway follows the pattern uploads/{userID}/posts/{postId}
         await queries.createPost(data, uri)
     }

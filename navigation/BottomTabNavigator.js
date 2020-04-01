@@ -23,7 +23,16 @@ export default function BottomTabNavigator({ navigation, route }) {
   navigation.setOptions({ header: 'null' });
 
   return (
-    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME} theme={DarkTheme}>
+    <BottomTab.Navigator
+      initialRouteName={INITIAL_ROUTE_NAME}
+      theme={DarkTheme}
+      tabBarOptions={{
+        activeTintColor: '#00FED4',
+        style: {
+          backgroundColor: '#122028'
+        }
+      }}
+    >
       <BottomTab.Screen
         name='Home'
         component={HomeScreen}
@@ -42,7 +51,8 @@ export default function BottomTabNavigator({ navigation, route }) {
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} name='ios-fitness' />
           ),
-          tabBarVisible:"false"
+
+          tabBarVisible: 'false'
         }}
       />
       <BottomTab.Screen

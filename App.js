@@ -170,7 +170,7 @@ export default function App(props) {
 
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
           <NavigationContainer ref={containerRef} initialState={state.initialNavigationState} theme={DarkTheme}>
-            <Stack.Navigator headerMode='none'>
+            <Stack.Navigator headerMode='none' >
               {
                 state.isLoggedIn ? 
                 (

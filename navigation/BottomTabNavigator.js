@@ -10,7 +10,7 @@ import TipScreen from '../screens/TipScreen';
 import PostScreen from '../screens/PostScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import QueryExampleScreen from '../screens/QueryExampleScreen';
-
+import TrainingStackNavigator from '../navigation/TrainingStackNavigator';
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';

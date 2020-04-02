@@ -100,7 +100,8 @@ const QueryExampleScreen = ({ navigation }) => {
                 postArray.push(temp)
             })
             
-            setPostsByUser(JSON.stringify(postArray))
+            setPostsByUser(JSON.stringify(postArray));
+            console.log(postArray[1].description);
         }
         await queries.getPostByUser(callback)
     }
@@ -162,6 +163,7 @@ const QueryExampleScreen = ({ navigation }) => {
                     <Text>Click to getPostByUser</Text>
                 </TouchableOpacity>
                 <Text>{postsByUser}</Text>
+                
 
             </View>
 

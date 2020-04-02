@@ -2,6 +2,9 @@ import chatStorage from './ChatStorage';
 import dbCaller from './DatabaseCaller';
 import { EventEmitter } from 'react-native';
 
+/*
+  Helper function to sort two message/chatSession objects by timestamp
+*/
 const sortByDate = (a, b) => (
   a.timestamp.getTime() - b.timestamp.getTime()
 );
@@ -9,15 +12,21 @@ const sortByDate = (a, b) => (
   
 export default class ChatService {
   totalNumOfUnreadMessages;
-  newMsgEmitter;
+  listeners;
 
   constructor() {
-    this.newMsgEmitter = new EventEmitter();
-    this.newMsgEmitter.setMaxListeners(15);
+    this.listeners = [];
     this.totalNumOfUnreadMessages = 0;
     chatStorage.getTotalNumOfUnreadMessages().then( (result) => {
       this.totalNumOfUnreadMessages = result;
     });
+  }
+
+  /*
+  Accepts a function that gets executed when a new message is received
+  */
+  addNewMsgListener(fun) {
+    this.listeners.push(fun);
   }
 
   /*
@@ -36,15 +45,22 @@ export default class ChatService {
         chatId2: ...
       }
       */
-      let p1 = chatStorage.mergeNewMsgsFromNotifs(newMessageObj);
-      let p2 = dbCaller.deleteChatsFromNotifs();
-      await Promise.all([p1, p2]);
+      try {
+        let p1 = await chatStorage.mergeNewMsgsFromNotifs(newMessageObj);
+        let p2 = await dbCaller.deleteChatsFromNotifs();
+        await Promise.all([p1, p2]);
 
-      // Remember to update unread message counter
-      this.totalNumOfUnreadMessages = chatStorage.getTotalNumOfUnreadMessages();
+        // Remember to update unread message counter
+        this.totalNumOfUnreadMessages = chatStorage.getTotalNumOfUnreadMessages();
 
-      // Emit to all listeners that a new message(s) is ready to be read from local storage
-      this.newMsgEmitter.emit('newMessage');
+        // Emit to all listeners that a new message(s) is ready to be read from local storage
+        for (let callback in listeners) {
+          callback();
+        }
+      }
+      catch (err) {
+        console.log('Error:', err);
+      }
     });
   }
 
@@ -58,16 +74,63 @@ export default class ChatService {
   }
 
   /*
+  Checks if there exists a chat session that is equivalent to the 'members' array (equivalent meaning set equality)
+  */
+  async doesChatSessionExistWithMembers(members) {
+    // Helper Functions copied from stack overflow
+    //-----------------
+    function eqSet(as, bs) {
+      return as.size === bs.size && all(isIn(bs), as);
+    }
+    function all(pred, as) {
+        for (var a of as) if (!pred(a)) return false;
+        return true;
+    }
+    function isIn(as) {
+      return function (a) {
+          return as.has(a);
+      };
+    }
+    //--------------
+
+    // Make sure current user id is included in the members array
+    let currentUserId = dbCaller.getCurrentUser().uid;
+    if (!(currentUserId in members)) {
+      members.push(currentUserId);
+    }
+    members = new Set(members);
+
+    let chatSessions = await chatStorage.getChatSessions();
+    for (let chatSessionId of Object.keys(chatSessions)) {
+      if (eqSet(members, new Set(chatSessions[chatSessionId].members))) {
+        return chatSessionId;
+      }
+    }
+
+    return null;
+  }
+
+  /*
   Returns chat sessions as an array of chat session objects.
   Each chat session object has an added 'key' property which is
   set to the chatSessionId as according to firebase
   */
-  async getChatSessionsAsOrderedArr() {
+  convertChatSessionsToOrderedArr(chatSessions) {
     let listData = [];
-    for (let key in state.chatSessions) {
-      if (state.chatSessions.hasOwnProperty(key)) {
-        listData.push({key: key, ...state.chatSessions[key]});
-      }
+    for (let key in Object.keys(chatSessions)) {
+      listData.push({key: key, ...chatSessions[key]});
+    }
+    listData.sort(sortByDate);
+    return listData;
+  }
+
+  /*
+  Equivalent to convertChatSessionsToOrderedArr
+  */
+  convertMessagesToOrderedArr(messages) {
+    let listData = [];
+    for (let key in Object.keys(messages)) {
+      listData.push({_id: key, ...messages[key]});
     }
     listData.sort(sortByDate);
     return listData;
@@ -79,6 +142,6 @@ export default class ChatService {
 
   async sendNewMessage(chatId, message) {
     dbCaller.sendNewMessage(chatId, message);
-    chatStorage.updateChatSession(chatId, {lastMessage: message, timestamp: new Date()})
+    chatStorage.updateChatSession(chatId, {lastMessage: message, timestamp: new Date()});
   }
 }

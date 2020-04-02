@@ -1,15 +1,39 @@
 import firebase from '../constants/firebase';
+import fbqueries from './firebase_queries';
 
 const db = {
-    getCurrentUser: () => {
+    getCurrentUser: function() {
         return firebase.auth().currentUser;
     },
 
-    getFriendsList: async () => {
+    getFriendsList: async function() {
         let thisId = this.getCurrentUser().uid;
+        try {
+            let friends = await (firebase.database().ref('users/' + thisId + '/friends').once('value')).val();
+            console.log('Got friends:', friends);
+            return friends;
+        }
+        catch (err) {
+            console.log('Error getting friend data');
+            return null;
+        }
     },
 
-    getNewMessages: async () => {
+    getUsersById: async function(ids) {
+        let users = [];
+        try {
+            for (let id in ids) {
+                users.push(fbqueries.getUserById(id));
+            }
+            return await Promise.all(users); // Make sure all promises resolve succesfully before returning
+        }
+        catch (err) {
+            console.log('Error getting users');
+            return []
+        }
+    },
+
+    getNewMessages: async function() {
         /*
             'messages' is an object of the form:
             {
@@ -39,9 +63,9 @@ const db = {
         return messages;
     },
 
-    listenForNewMessages: (callback) => {
+    listenForNewMessages: function(callback) {
         firebase.database().ref('notifs/' + this.getCurrentUser().uid + '/chats').on('value', 
-            function(snapshot) {
+            (snapshot) => {
                 /*
                     snapshot.val() is an object of the form:
                     {
@@ -62,11 +86,11 @@ const db = {
             });
     },
 
-    stopListenForNewMessages: () => {
+    stopListenForNewMessages: function() {
         firebase.database().ref('notifs/' + this.getCurrentUser().uid + '/chats').off('value');
     },
 
-    deleteChatsFromNotifs: async () => {
+    deleteChatsFromNotifs: async function() {
         try {
             await firebase.database().ref('notifs/' + this.getCurrentUser().uid + '/chats').remove();
             return true;
@@ -81,7 +105,7 @@ const db = {
     Sends a new message object to the database, under messages/{chatID}
     Returns the reference string to the new message (aka, the messageId)
     */
-    sendNewMessage: async (chatID, message) => {
+    sendNewMessage: async function(chatID, message) {
         let newMsgRef = firebase.database().ref('messages/' + chatID).push();
         try {
             let newMsg = {

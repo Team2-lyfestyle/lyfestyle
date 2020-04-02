@@ -43,6 +43,8 @@ The relevant chat data stored in AsyncStorage is as follows:
   'chatidn': Messages,
   'totalNumOfUnreadMessages': Number
 }
+
+Note that chatId === chatSessionId
 */
 const chatStorage = {
   getChatSessions: async () => {
@@ -55,6 +57,16 @@ const chatStorage = {
     }
     else {
       return JSON.parse(chatSessions);
+    }
+  },
+
+  getChatSession: async (chatSessionId) => {
+    let chatSessions = await this.getChatSessions();
+    if (chatSessions[chatSessionId]) {
+      return chatSessions[chatSessionId];
+    }
+    else {
+      return null;
     }
   },
 
@@ -212,3 +224,5 @@ const chatStorage = {
   }
 
 }
+
+export default chatStorage;

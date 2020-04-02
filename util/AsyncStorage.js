@@ -12,7 +12,7 @@ const asyncStorage = {
     }
     catch (err) {
       console.log(`Error setting ${key}: ${value}`, err);
-      return false;
+      throw err;
     }
   },
 
@@ -31,7 +31,9 @@ const asyncStorage = {
     }
     catch (err) {
       console.log(`Error getting ${key}`, err);
-      return null;
+      throw err;
     }
   },
 }
+
+export default asyncStorage;

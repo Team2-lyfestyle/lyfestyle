@@ -23,7 +23,9 @@ const PostScreen = ({ navigation }) => {
     async function askPermission() {
       if (Constants.platform.ios) {
         const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-        if (status !== 'granted') {
+        const { statusCamera } = await Permissions.askAsync(Permissions.CAMERA);
+
+        if (status !== 'granted' || statusCamera !== 'granted') {
           console.log('Gimme Permission');
         }
       }
@@ -117,6 +119,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#EFEdF4'
   },
   header: {
+    paddingTop: 40,
     flexDirection: 'row',
     paddingBottom: 8,
     paddingHorizontal: 20,

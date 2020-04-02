@@ -1,9 +1,9 @@
 {
   "devToolsPort": 19002,
   "expoServerPort": 19000,
-  "packagerPort": null,
-  "packagerPid": null,
-  "expoServerNgrokUrl": "https://jp-rft.brandonkns66.lyfestyle.exp.direct",
-  "packagerNgrokUrl": "https://packager.jp-rft.brandonkns66.lyfestyle.exp.direct",
-  "ngrokPid": 48384
+  "packagerPort": 19001,
+  "packagerPid": 13032,
+  "expoServerNgrokUrl": "https://v4-nmj.anonymous.lyfestyle.exp.direct",
+  "packagerNgrokUrl": "https://packager.v4-nmj.anonymous.lyfestyle.exp.direct",
+  "ngrokPid": 19908
 }

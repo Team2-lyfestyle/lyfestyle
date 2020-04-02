@@ -3,8 +3,9 @@ import { Text, StyleSheet, View, TouchableOpacity, Image, ScrollView, Button } f
 import { TextInput, FlatList } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
-import * as ImagePicker from 'expo-image-picker'
-import queries from '../util/firebase_queries'
+import * as ImagePicker from 'expo-image-picker';
+import queries from '../util/firebase_queries';
+
 const QueryExampleScreen = ({ navigation }) => {
 
     // State for displaying data retrieved from DB

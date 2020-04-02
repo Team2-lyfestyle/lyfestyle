@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import TabBarIcon from './TabBarIcon';
 import Colors from '../constants/Colors';

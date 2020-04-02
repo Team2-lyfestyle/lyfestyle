@@ -26,7 +26,7 @@ export default function App(props) {
   const containerRef = React.useRef();
   const { getInitialState } = useLinking(containerRef);
   let _notificationSubscription;
-  let _chatService;
+  const _chatService = new ChatService();
 
   const [state, dispatch] = React.useReducer(
     (prevState, action) => {
@@ -96,11 +96,9 @@ export default function App(props) {
             catch (err) {
               console.log('Error registering for push notifications');
             }
-
+            
             // Set up a listener for any new messages sent to firebase
-            _chatService = new ChatService();
             _chatService.listenForNewMessages();
-
             dispatch({ type: 'SIGN_IN' });
           }
         });

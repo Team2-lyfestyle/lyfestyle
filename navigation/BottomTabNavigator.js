@@ -24,11 +24,11 @@ export default function BottomTabNavigator({ navigation, route }) {
   navigation.setOptions({ header: 'null' });
 
   let chatService = React.useContext(ChatServiceContext);
-  let [numOfUnreadMessages, setNumOfUnreadMessages] = React.useState(chatService.numOfUnreadMessages);
+  let [totalNumOfUnreadMessages, setTotalNumOfUnreadMessages] = React.useState(chatService.totalNumOfUnreadMessages);
   
-  chatService.newMsgEmitter.on('newMessage', function() {
+  chatService.addNewMsgListener(function() {
     console.log('New message from bottomtabnavigator');
-    setNumOfUnreadMessages[chatService.numOfUnreadMessages];
+    setTotalNumOfUnreadMessages[chatService.totalNumOfUnreadMessages];
   });
 
   return (
@@ -68,7 +68,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         component={ChatStackNavigator}
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabBarIconWithBadge focused={focused} name='ios-text' badgeCount={numOfUnreadMessages} />
+            <TabBarIconWithBadge focused={focused} name='ios-text' badgeCount={totalNumOfUnreadMessages} />
           )
         }}
       />

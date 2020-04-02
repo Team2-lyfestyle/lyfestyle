@@ -15,7 +15,12 @@ import {
   LayoutAnimation,
   UIManager,
 } from 'react-native';
+import dbCaller from '../util/DatabaseCaller';
+import fbqueries from '../util/firebase_queries';
 import { GiftedChat } from 'react-native-gifted-chat';
+import chatStorage from '../util/ChatStorage';
+import ChatService from '../util/ChatService';
+import ChatServiceContext from '../constants/ChatServiceContext';
 
 function getChatUpdate() {
   return [
@@ -42,6 +47,7 @@ export default class ChatScreen extends React.Component {
   constructor(props) {
     super(props);
     this.props = props;
+    this.chatSessionId = this.props.chatSessionId;
 
     // remember to bind class methods
     this.getMessages = this.getMessages.bind(this); 
@@ -54,25 +60,40 @@ export default class ChatScreen extends React.Component {
       dataIsLoaded: false,
     }
 
-    this.otherUser = {
-      _id: 2,
-      name: "",
-      avatar: 'https://placeimg.com/140/140/any',
-      username: "",
-    }
   }
 
   async componentDidMount() {
+    let currentUser = dbCaller.getCurrentUser();
     
-    /*
     this.thisUser = {
       _id: 1,
-      name: tok.user.name,
+      name: currentUser.name,
       avatar: 'https://placeimg.com/140/140/any', // placeholder for actual avatar
-      username: tok.user.username,
-      token: tok.token,
-    */
+      username: currentUser.uid
+    }
     
+    // Initialize otherUsers object
+    this.otherUsers = {};
+    let users = [], chatSession = await chatStorage.getChatSession(this.chatSessionId);
+    for (let member in chatSession.members) {
+      users.push(fbqueries.getUserById(member));
+    }
+    users = await Promise.all(users);
+    for (let user in users) {
+      this.otherUsers[user.uid] = {
+        _id: user.uid,
+        name: user.name,
+        avatar: 'https://placeimg.com/140/140/any',
+        username: user.username
+      }
+    }
+
+    // Load messages
+    let messages = await chatStorage.getMessages(this.chatSessionId);
+    this.setState({
+      messages: messages,
+      dataIsLoaded: true
+    });
   }
 
   componentWillUnmount() {
@@ -85,6 +106,9 @@ export default class ChatScreen extends React.Component {
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }));
+
+    // Then, send to firebase
+    ChatService.sendNewMessage(this.chatSessionId, messages[0]);
   }
 
   getMessages() {
@@ -104,7 +128,7 @@ export default class ChatScreen extends React.Component {
   }
 
   render() {
-    if (!this.state.componentHasLoaded) {
+    if (!this.state.dateIsLoaded) {
       return (
         <SafeAreaView style={{flex: 1}}>
           <Text>Loading</Text>

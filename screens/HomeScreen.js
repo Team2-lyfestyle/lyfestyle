@@ -3,7 +3,7 @@ import { Text, StyleSheet, View, FlatList, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment'
 import { Button } from 'native-base';
-import AuthContext from '../util/AuthContext'
+import AuthContext from '../constants/AuthContext'
 
 // Dummy Data
 posts = [

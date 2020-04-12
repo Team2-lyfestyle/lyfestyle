@@ -1,80 +1,43 @@
 import React, { useState } from 'react';
-import { View, Text, FlatLis, StyleSheet, Button } from 'react-native';
-import exercises from '../assets/data/exercises.json';
-import { TouchableOpacity, FlatList, ListFooterComponent } from 'react-native-gesture-handler';
+import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
+import { TouchableOpacity, ListFooterComponent } from 'react-native-gesture-handler';
+import exerciseData from "../assets/data/exercisesV2.json"
 
-//Arrow Function
-
-const numColumns = 2;
 
 const TrainingScreen = () => {
 
-  //React Hook States
-  const [back, setBack] = useState([
-    { name: 'Middle Back', key: '1' },
-    { name: 'Lats', key: '2' },
-    { name: 'Lower Back', key: '3' },
-    { name: 'Upper Back', key: '4' }
-  ]);
-  // let backMuscle = [
-  //   { id: '1', name: 'Middle Back', },
-  //   { id: '2', name: '' },
-  // ]
-  const [legs, setLegs] = useState([
-    { name: 'Abductors', key: '1' },
-    { name: 'Adductors', key: '2' },
-    { name: 'Calves', key: '3' },
-    { name: 'Hamstrings', key: '4' },
-    { name: 'Quadriceps', key: '5' }
-  ]);
-
-  // renderPost = post => {
-  //   <View>
-  //     <View style = {styles.muscleTitle}>
-  //       <Text style = {{fontSize: 25}}>Back</Text>
-  //     </View>
-  //     <View style = {styles.muscleContainer}>
-        
-  //     </View>
-  //   </View>
-  // }
+  renderExercise = ( {item} ) => {
+    return (
+      <Text>{item.name}</Text>
+    );
+  };
 
   return (
     <View style = {styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Training</Text>
       </View>
-
-      {/* <FlatList
+      {/* <Text>{ exerciseData['abdominals'] }</Text> */}
+      <Text style = {styles.muscleTitle}>Abdominals</Text>
+      <FlatList
         style = {styles.muscleContainer}
-        numColumns = {numColumns} */}
-      {/* /> */}   
-
-      <View style = {styles.muscleTitle}>
-        <Text style = {{fontSize: 25}}>Back</Text>
-      </View>
+        data = {exerciseData['abdominals']}
+        renderItem = { this.renderExercise }
+        // numColumns={numColumns}
+      />
+      <Text style = {styles.muscleTitle}>Adductors</Text>
       <FlatList
-          style={styles.muscleContainer}
-          data={back}
-          renderItem={({ item }) => (
-            <View style = {styles.box} >
-              <Text style={{ fontSize: 30 }}>{item.name}</Text>
-            </View>
-          )}
-        />
-      
-      <View style = {styles.muscleTitle}>
-        <Text style = {{fontSize: 25}}>Legs</Text>
-      </View>
+        style = {styles.muscleContainer}
+        data = {exerciseData['adductors']}
+        renderItem = { this.renderExercise }
+        // numColumns={numColumns}
+      />
+      <Text style = {styles.muscleTitle}>Quadriceps</Text>
       <FlatList
-        // horizontal
-        style={styles.muscleContainer}
-        data={legs}
-        renderItem={({ item }) => (
-          <View style = {styles.box}>
-            <Text style={{ fontSize: 30}}>{item.name}</Text>
-          </View>
-        )}
+        style = {styles.muscleContainer}
+        data = {exerciseData['quadriceps']}
+        renderItem = { this.renderExercise }
+        // numColumns={numColumns}
       />
     </View>
   );
@@ -106,26 +69,15 @@ const styles = StyleSheet.create({
     fontWeight: '500'
   },
   muscleTitle: {
-    marginLeft: 20,
-    marginTop: 8,
-    marginBottom: 5
+    marginLeft: 16,
+    marginBottom: 5,
+    fontSize: 16,
+    fontWeight: '500',
   },
   muscleContainer: {
-    //Flex one makes muscle container take up more volume of page.
-    //If we want to make it take up less volume, specify width and height
     flex: 1,
     marginHorizontal: 16,
-    marginBottom: 8, 
+    marginBottom: 16,
     backgroundColor: 'white',
   }, 
-  box: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 50,
-    width: 342,
-    borderWidth: 1,
-    borderColor: 'black',
-    marginBottom: 20
-  },
 });

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   TextInput,
-  Image
+  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -16,16 +16,14 @@ import queries from '../util/firebase_queries';
 
 const PostScreen = ({ navigation }) => {
   // State data needed
-  const [post, updatePost] = React.useState(false);
-  const [postPhoto, updatePostPhoto] = React.useState(false);
+  const [post, updatePost] = React.useState('');
+  const [postPhoto, updatePostPhoto] = React.useState(null);
 
   React.useEffect(() => {
     async function askPermission() {
       if (Constants.platform.ios) {
         const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-        const { statusCamera } = await Permissions.askAsync(Permissions.CAMERA);
-
-        if (status !== 'granted' || statusCamera !== 'granted') {
+        if (status !== 'granted') {
           console.log('Gimme Permission');
         }
       }
@@ -42,8 +40,8 @@ const PostScreen = ({ navigation }) => {
   let handlePostPhotoLibrary = () => {
     ImagePicker.launchImageLibraryAsync({
       mediaTypes: 'Images',
-      allowsEditing: true
-    }).then(result => {
+      allowsEditing: true,
+    }).then((result) => {
       updatePostPhoto(result.uri);
     });
   };
@@ -52,8 +50,8 @@ const PostScreen = ({ navigation }) => {
   let handlePostPhotoCamera = () => {
     ImagePicker.launchCameraAsync({
       mediaTypes: 'Images',
-      allowsEditing: true
-    }).then(result => {
+      allowsEditing: true,
+    }).then((result) => {
       updatePostPhoto(result.uri);
     });
   };
@@ -64,14 +62,19 @@ const PostScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <Ionicons name='ios-arrow-round-back' size={30} color='#000' />
         </TouchableOpacity>
+        {/* Submit/Post */}
         <TouchableOpacity
           onPress={() => {
-            createPost(
-              {
-                description: post
-              },
-              postPhoto
-            );
+            if (post && postPhoto){
+              createPost(
+                {
+                  description: post,
+                },
+                postPhoto
+              );
+              updatePost('');
+              updatePostPhoto(null);
+            }
           }}
         >
           <Text style={styles.headerTitle}> POST </Text>
@@ -81,9 +84,13 @@ const PostScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholder='Share your lyfestyle!'
-          onChangeText={e => updatePost(e)}
+          onChangeText={(text) => {
+            updatePost(text);
+          }}
+          value={post}
         />
       </View>
+      {/* Options */}
       <View style={styles.photoOption}>
         <TouchableOpacity>
           <Ionicons
@@ -116,10 +123,9 @@ export default PostScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EFEdF4'
+    backgroundColor: '#EFEdF4',
   },
   header: {
-    paddingTop: 40,
     flexDirection: 'row',
     paddingBottom: 8,
     paddingHorizontal: 20,
@@ -130,19 +136,19 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 5 },
     shadowRadius: 15,
     shadowOpacity: 0.2,
-    zIndex: 10
+    zIndex: 10,
   },
   headerTitle: {
     fontSize: 15,
     fontWeight: '500',
-    color: '#000'
+    color: '#000',
   },
   input: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   inputContainer: {
     margin: 32,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   photoUpload: {
     alignSelf: 'center',
@@ -154,11 +160,11 @@ const styles = StyleSheet.create({
     borderBottomColor: '#CACACA',
     shadowColor: '#454D65',
     shadowOffset: { height: 5 },
-    shadowRadius: 15
+    shadowRadius: 15,
   },
   photoOption: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 20
-  }
+    paddingHorizontal: 20,
+  },
 });

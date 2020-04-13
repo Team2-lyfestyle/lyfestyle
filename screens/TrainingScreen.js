@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Button, ScrollView } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { LinearGradient } from 'expo-linear-gradient';
 import exerciseData from "../assets/data/exercisesV2.json"
 
 
@@ -8,7 +9,9 @@ const TrainingScreen = () => {
 
   renderExercise = ( {item} ) => {
     return (
-      <Text>{item.name}</Text>
+      <View>
+        <Text>{item.name}</Text>
+      </View>
     );
   };
 
@@ -18,7 +21,47 @@ const TrainingScreen = () => {
         <Text style={styles.headerTitle}>Training</Text>
       </View>
       {/* <Text>{ exerciseData['abdominals'] }</Text> */}
-      <ScrollView style = {{paddingTop: 8}, {alignSelf: 'center'}}>
+
+      <ScrollView showsVerticalScrollIndicator = {false} style = {{alignSelf: 'center'}}>
+        <View style = {styles.muscleGroup}>
+          {/* <LinearGradient
+            colors={['rgba(0, 254, 212, 1)', 'rgba(32, 64, 81, 1)']}
+            style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                top: 0,
+                height: hp('7%'),
+            }}
+          /> */}
+          <Text style = {styles.muscleGroupTitle}>Upper Body</Text>
+        </View>
+        <Text style = {styles.muscleTitle}>Biceps</Text>
+        <FlatList
+          style = {styles.muscleContainer}
+          data = {exerciseData['biceps']}
+          renderItem = { renderExercise }
+        />
+        <Text style = {styles.muscleTitle}>Chest</Text>
+        <FlatList
+          style = {styles.muscleContainer}
+          data = {exerciseData['chest']}
+          renderItem = { renderExercise }
+        />
+
+        <View style = {styles.muscleGroup}>
+        {/* <LinearGradient
+            colors={['rgba(0, 254, 212, 1)', 'rgba(32, 64, 81, 1)']}
+            style={{
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                top: 0,
+                height: hp('7%'),
+            }}
+          /> */}
+          <Text style = {styles.muscleGroupTitle}>Core</Text>
+        </View>
         <View>
           <Text style = {styles.muscleTitle}>Abdominals</Text>
         </View>
@@ -27,6 +70,10 @@ const TrainingScreen = () => {
           data = {exerciseData['abdominals']}
           renderItem = { renderExercise }
         />
+
+        <View style = {styles.muscleGroup}>
+          <Text style = {styles.muscleGroupTitle}>Lower Body</Text>
+        </View>
         <Text style = {styles.muscleTitle}>Adductors</Text>
         <FlatList
           style = {styles.muscleContainer}
@@ -37,12 +84,6 @@ const TrainingScreen = () => {
         <FlatList
           style = {styles.muscleContainer}
           data = {exerciseData['quadriceps']}
-          renderItem = { renderExercise }
-        />
-        <Text style = {styles.muscleTitle}>Biceps</Text>
-        <FlatList
-          style = {styles.muscleContainer}
-          data = {exerciseData['biceps']}
           renderItem = { renderExercise }
         />
       </ScrollView>
@@ -75,24 +116,29 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '500'
   },
+  muscleGroup: {
+    width: wp('91%'),
+    height: hp('7%'),
+    marginVertical: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#204051',
+    borderRadius: 5,
+  },
+  muscleGroupTitle: {
+    fontWeight: '500',
+    fontSize: 20,
+    color: '#00FED4'
+  },
   muscleTitle: {
-    // marginLeft: 16,
-    // width: wp('91%'),
-    // height: hp('3%'),
-    // justifyContent: 'center',
-    // alignSelf: 'center',
-    // backgroundColor: 'blue',
     marginBottom: 5,
-    // borderRadius: 5,
     fontSize: 16,
     fontWeight: '500',
   },
   muscleContainer: {
-    // flex: 1,
     width: wp('91%'),
     height: hp('30%'),
-    // marginHorizontal: 16,
-    marginBottom: 16,
+    marginBottom: 8,
     borderRadius: 5,
     backgroundColor: 'white',
    }, 

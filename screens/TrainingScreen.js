@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Button } from 'react-native';
-import { TouchableOpacity, ListFooterComponent } from 'react-native-gesture-handler';
+import { View, Text, FlatList, StyleSheet, Button, ScrollView } from 'react-native';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import exerciseData from "../assets/data/exercisesV2.json"
 
 
@@ -18,27 +18,34 @@ const TrainingScreen = () => {
         <Text style={styles.headerTitle}>Training</Text>
       </View>
       {/* <Text>{ exerciseData['abdominals'] }</Text> */}
-      <Text style = {styles.muscleTitle}>Abdominals</Text>
-      <FlatList
-        style = {styles.muscleContainer}
-        data = {exerciseData['abdominals']}
-        renderItem = { this.renderExercise }
-        // numColumns={numColumns}
-      />
-      <Text style = {styles.muscleTitle}>Adductors</Text>
-      <FlatList
-        style = {styles.muscleContainer}
-        data = {exerciseData['adductors']}
-        renderItem = { this.renderExercise }
-        // numColumns={numColumns}
-      />
-      <Text style = {styles.muscleTitle}>Quadriceps</Text>
-      <FlatList
-        style = {styles.muscleContainer}
-        data = {exerciseData['quadriceps']}
-        renderItem = { this.renderExercise }
-        // numColumns={numColumns}
-      />
+      <ScrollView style = {{paddingTop: 8}, {alignSelf: 'center'}}>
+        <View>
+          <Text style = {styles.muscleTitle}>Abdominals</Text>
+        </View>
+        <FlatList
+          style = {styles.muscleContainer}
+          data = {exerciseData['abdominals']}
+          renderItem = { renderExercise }
+        />
+        <Text style = {styles.muscleTitle}>Adductors</Text>
+        <FlatList
+          style = {styles.muscleContainer}
+          data = {exerciseData['adductors']}
+          renderItem = { renderExercise }
+        />
+        <Text style = {styles.muscleTitle}>Quadriceps</Text>
+        <FlatList
+          style = {styles.muscleContainer}
+          data = {exerciseData['quadriceps']}
+          renderItem = { renderExercise }
+        />
+        <Text style = {styles.muscleTitle}>Biceps</Text>
+        <FlatList
+          style = {styles.muscleContainer}
+          data = {exerciseData['biceps']}
+          renderItem = { renderExercise }
+        />
+      </ScrollView>
     </View>
   );
 };
@@ -69,15 +76,24 @@ const styles = StyleSheet.create({
     fontWeight: '500'
   },
   muscleTitle: {
-    marginLeft: 16,
+    // marginLeft: 16,
+    // width: wp('91%'),
+    // height: hp('3%'),
+    // justifyContent: 'center',
+    // alignSelf: 'center',
+    // backgroundColor: 'blue',
     marginBottom: 5,
+    // borderRadius: 5,
     fontSize: 16,
     fontWeight: '500',
   },
   muscleContainer: {
-    flex: 1,
-    marginHorizontal: 16,
+    // flex: 1,
+    width: wp('91%'),
+    height: hp('30%'),
+    // marginHorizontal: 16,
     marginBottom: 16,
+    borderRadius: 5,
     backgroundColor: 'white',
-  }, 
+   }, 
 });

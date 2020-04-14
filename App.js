@@ -22,6 +22,7 @@ import ChatServiceContext from './constants/ChatServiceContext';
 
 const Stack = createStackNavigator();
 
+
 export default function App(props) {
   const containerRef = React.useRef();
   const { getInitialState } = useLinking(containerRef);
@@ -98,7 +99,7 @@ export default function App(props) {
             }
             
             // Set up a listener for any new messages sent to firebase
-            _chatService.listenForNewMessages();
+            //_chatService.listenForNewMessages();
             dispatch({ type: 'SIGN_IN' });
           }
         });

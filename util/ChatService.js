@@ -3,30 +3,80 @@ import dbCaller from './DatabaseCaller';
 import { EventEmitter } from 'react-native';
 
 /*
-  Helper function to sort two message/chatSession objects by timestamp
+  Helper function to sort two message objects by createdAt
 */
-const sortByDate = (a, b) => (
-  a.timestamp.getTime() - b.timestamp.getTime()
+const sortMessagesByDate = (a, b) => (
+  a.createdAt.getTime() - b.createdAt.getTime()
+);
+const sortChatSessionsByDate = (a, b) => (
+  a.lastMessageAt.getTime() - b.lastMessageAt.getTime()
 );
 
-  
+// TODO: Make own EventEmitter class for listeners objects
 export default class ChatService {
-  totalNumOfUnreadMessages;
-  listeners;
+  currentFocusedChatSession;         // chatSessionId of the currently focused chat session (for ChatScreen)
+  newMessageListeners;               // Object containing functions that should execute on every new message event
+  chatSessionReadListeners;
+
 
   constructor() {
-    this.listeners = [];
-    this.totalNumOfUnreadMessages = 0;
-    chatStorage.getTotalNumOfUnreadMessages().then( (result) => {
-      this.totalNumOfUnreadMessages = result;
-    });
+    this.currentFocusedChatSession = null;
+    this.newMessageListeners = {};
+    this.chatSessionReadListeners = {};
   }
+
+  getTotalNumOfUnreadMessages() {
+    return chatStorage.getTotalNumOfUnreadMessages();
+  }
+
+  focusChatSession(chatSessionId) {
+    this.currentFocusedChatSession = chatSessionId;
+  }
+
+  blurChatSession() {
+    this.currentFocusedChatSession = null;
+  }
+
+  addChatSessionReadListener(fun) {
+    // Generate a random number [0, 100) that is not already a property in this.newMessageListeners
+    let key = Math.floor(Math.random() * 100);
+    while (key in this.chatSessionReadListeners) {
+      key = Math.floor(Math.random() * 100);
+    }
+    this.chatSessionReadListeners[key] = fun;
+    return () => this.clearChatSessionReadListener(key);
+  }
+
+  clearChatSessionReadListener(key) {
+    delete this.chatSessionReadListeners[key];
+  }
+
+  // Sets unread messages to 0, emits to any listeners on chat session read (really only for bottomtabnavigator)
+  async readChatSession(chatSessionId) {
+    await chatStorage.updateChatSession(chatSessionId, {
+      numOfUnreadMessages: 0
+    });
+    for (let i of Object.keys(this.newMessageListeners)) {
+      this.chatSessionReadListeners[i](chatSessionId);
+    }
+  }
+
 
   /*
   Accepts a function that gets executed when a new message is received
   */
   addNewMsgListener(fun) {
-    this.listeners.push(fun);
+    // Generate a random number [0, 100) that is not already a property in this.newMessageListeners
+    let key = Math.floor(Math.random() * 100);
+    while (key in this.newMessageListeners) {
+      key = Math.floor(Math.random() * 100);
+    }
+    this.newMessageListeners[key] = fun;
+    return () => this.clearNewMessageListener(key);
+  }
+
+  clearNewMessageListener(key) {
+    delete this.newMessageListeners[key];
   }
 
   /*
@@ -46,16 +96,17 @@ export default class ChatService {
       }
       */
       try {
-        let p1 = await chatStorage.mergeNewMsgsFromNotifs(newMessageObj);
-        let p2 = await dbCaller.deleteChatsFromNotifs();
+        // Pass currentFocusedChatSession so that unreadMessages are updated correctly
+        // ie, dont increment unread messages for a chat session that is currently focused in Chat Screen
+        let p1 = chatStorage.mergeNewMsgsFromNotifs(newMessageObj, this.currentFocusedChatSession);
+        let p2 = dbCaller.deleteChatsFromNotifs();
         await Promise.all([p1, p2]);
 
-        // Remember to update unread message counter
-        this.totalNumOfUnreadMessages = chatStorage.getTotalNumOfUnreadMessages();
-
         // Emit to all listeners that a new message(s) is ready to be read from local storage
-        for (let callback in listeners) {
-          callback();
+        // Pass an array of chatSessionId's that had new messages
+        let chatSessions = Object.keys(newMessageObj);
+        for (let i of Object.keys(this.newMessageListeners)) {
+          this.newMessageListeners[i](chatSessions);
         }
       }
       catch (err) {
@@ -64,13 +115,37 @@ export default class ChatService {
     });
   }
 
+  // Converts timestamp to a new Date object
+  async getMessages(chatId) {
+    let messages = await chatStorage.getMessages(chatId);
+    for (let message of Object.keys(messages)) {
+      messages[message].createdAt = new Date(messages[message].createdAt);
+    }
+    return messages;
+  }
+  
+  async getMessagesAsOrderedArr(chatId) {
+    let messages = await this.getMessages(chatId);
+  }
+
   async sendNewMessage(chatid, message) {
     let key = await dbCaller.sendNewMessage(chatid, message);
     chatStorage.addNewMessage(chatid, key, message);
   }
 
-  async getChatSessions() {
-    return await chatStorage.getChatSessions();
+  // 'filterEmpty' is a boolean
+  // Converts timestamp to a new Date object
+  async getChatSessions(filterEmpty) {
+    let chatSessions = await chatStorage.getChatSessions();
+    for (let chatSession of Object.keys(chatSessions)) {
+      if (filterEmpty && chatSessions[chatSession].lastMessageAt === "") {
+        delete chatSessions[chatSession];
+      }
+      else {
+        chatSessions[chatSession].lastMessageAt = new Date(chatSessions[chatSession].lastMessageAt);
+      }
+    }
+    return chatSessions;
   }
 
   /*
@@ -79,30 +154,24 @@ export default class ChatService {
   async doesChatSessionExistWithMembers(members) {
     // Helper Functions copied from stack overflow
     //-----------------
-    function eqSet(as, bs) {
-      return as.size === bs.size && all(isIn(bs), as);
+    function arrIsSubset(arr1, arr2) {
+      return arr1.every( elem => arr2.includes(elem));
     }
-    function all(pred, as) {
-        for (var a of as) if (!pred(a)) return false;
-        return true;
-    }
-    function isIn(as) {
-      return function (a) {
-          return as.has(a);
-      };
+    function checkEqualityAsSets(arr1, arr2) {
+      return arrIsSubset(arr1, arr2) && arrIsSubset(arr2, arr1);
     }
     //--------------
 
     // Make sure current user id is included in the members array
     let currentUserId = dbCaller.getCurrentUser().uid;
-    if (!(currentUserId in members)) {
+    if (!members.includes(currentUserId)) {
       members.push(currentUserId);
     }
-    members = new Set(members);
 
     let chatSessions = await chatStorage.getChatSessions();
     for (let chatSessionId of Object.keys(chatSessions)) {
-      if (eqSet(members, new Set(chatSessions[chatSessionId].members))) {
+      let submembers = Object.keys( chatSessions[chatSessionId].members );
+      if (checkEqualityAsSets(members, submembers)) {
         return chatSessionId;
       }
     }
@@ -117,22 +186,29 @@ export default class ChatService {
   */
   convertChatSessionsToOrderedArr(chatSessions) {
     let listData = [];
-    for (let key in Object.keys(chatSessions)) {
-      listData.push({key: key, ...chatSessions[key]});
+    for (let key of Object.keys(chatSessions)) {
+      listData.push({
+        ...chatSessions[key],
+        key: key
+      });
     }
-    listData.sort(sortByDate);
+    listData.sort(sortChatSessionsByDate);
     return listData;
   }
 
   /*
-  Equivalent to convertChatSessionsToOrderedArr
+  Converts a messages object to a format recognized by gifted chat
+  users object is used to assign a user to each message
   */
-  convertMessagesToOrderedArr(messages) {
+  convertMessagesToOrderedArr(messages, users) {
     let listData = [];
-    for (let key in Object.keys(messages)) {
-      listData.push({_id: key, ...messages[key]});
+    for (let key of Object.keys(messages)) {
+      listData.push({
+        ...messages[key],
+        _id: key
+      });
     }
-    listData.sort(sortByDate);
+    listData.sort(sortMessagesByDate);
     return listData;
   }
 
@@ -141,7 +217,71 @@ export default class ChatService {
   }
 
   async sendNewMessage(chatId, message) {
-    dbCaller.sendNewMessage(chatId, message);
-    chatStorage.updateChatSession(chatId, {lastMessage: message, timestamp: new Date()});
+    console.log('Sending new message', message, 'to', chatId);
+    let thisUser = dbCaller.getCurrentUser();
+    let newMessage = {
+      text: message,
+      user: {
+        _id: thisUser.uid,
+        name: thisUser.name ? thisUser.name : ''
+      },
+      createdAt: (new Date()).toISOString()
+    };
+    let messageId = await dbCaller.sendNewMessage(chatId, newMessage);
+
+    let promises = [];
+    promises.push( chatStorage.updateChatSession(chatId, { lastMessageText: message, lastMessageAt: newMessage.createdAt }) );
+    promises.push( chatStorage.addNewMessage(chatId, messageId, newMessage) );
+    return Promise.all(promises);
+  }
+
+  /*
+  members is an array containing the userid's of the new chat session
+  message is a string containing the message
+
+  Returns the chatSessionId of the newly created chat session
+  */
+  async createNewChatSession(members, message) {
+    console.log('Creating new chat session');
+    
+    // Convert members array to an object
+    let membersObj = {};
+    for (let member of members) {
+      membersObj[member] = true;
+    }
+
+    let thisUser = dbCaller.getCurrentUser();
+    let newMessage = {
+      text: message,
+      user: {
+        _id: thisUser.uid,
+        name: thisUser.name ? thisUser.name : '' // In case thisUser.name is undefined
+      },
+      createdAt: (new Date()).toISOString()
+    };
+    let newChatSession = {
+      members: membersObj,
+      createdAt: newMessage.createdAt,
+      lastMessageText: newMessage.text,
+      lastMessageAt: newMessage.createdAt,
+      //numOfUnreadMessages: 0
+    };
+    let data = {
+      chatSession: newChatSession,
+      message: newMessage
+    };
+
+    // result contains new chatSessionId and messageId
+    let result = await dbCaller.createNewChatSession(data);
+    console.log('result: ', result);
+    newChatSession.numOfUnreadMessages = 0; // Update numOfUnreadMessages for local storage
+    await Promise.all([chatStorage.addNewMessage(result.chatSessionId, result.messageId, newMessage),
+    chatStorage.setChatSession(result.chatSessionId, newChatSession)]);
+
+    return result.chatSessionId;
+  }
+
+  test() {
+    dbCaller.test();
   }
 }

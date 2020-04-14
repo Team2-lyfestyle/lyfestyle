@@ -15,11 +15,9 @@ import {
   LayoutAnimation,
   UIManager,
 } from 'react-native';
-import dbCaller from '../util/DatabaseCaller';
-import fbqueries from '../util/firebase_queries';
 import { GiftedChat } from 'react-native-gifted-chat';
+import dbCaller from '../util/DatabaseCaller';
 import chatStorage from '../util/ChatStorage';
-import ChatService from '../util/ChatService';
 import ChatServiceContext from '../constants/ChatServiceContext';
 
 function getChatUpdate() {
@@ -43,109 +41,143 @@ function getChatUpdate() {
 navigation parameters:
   'chatSessionId'
 */
-export default class ChatScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.props = props;
-    this.chatSessionId = this.props.chatSessionId;
 
-    // remember to bind class methods
-    this.getMessages = this.getMessages.bind(this); 
-    this.deleteLocalMessages = this.deleteLocalMessages.bind(this);
-    
-    this.messageCount = 0;    // Variable used to assign _id to messages
+export default function ChatScreen(props) {
+  let chatService = React.useContext(ChatServiceContext);
 
-    this.state = {
-      messages: [],
-      dataIsLoaded: false,
-    }
+  const thisUser = {
+    _id: dbCaller.getCurrentUser().uid,
+    name: dbCaller.getCurrentUser().name,
+    //avatar: 
+  };
 
-  }
+  let [chatSessionId, setChatSessionId] = React.useState(props.route.params.chatSessionId);
+  let [messages, setMessages] = React.useState([]);
+  let [dataIsLoaded, setDataIsLoaded] = React.useState(false);
+  let [members, setMembers] = React.useState(props.route.params.members);
 
-  async componentDidMount() {
-    let currentUser = dbCaller.getCurrentUser();
-    
-    this.thisUser = {
-      _id: 1,
-      name: currentUser.name,
-      avatar: 'https://placeimg.com/140/140/any', // placeholder for actual avatar
-      username: currentUser.uid
-    }
-    
-    // Initialize otherUsers object
-    this.otherUsers = {};
-    let users = [], chatSession = await chatStorage.getChatSession(this.chatSessionId);
-    for (let member in chatSession.members) {
-      users.push(fbqueries.getUserById(member));
-    }
-    users = await Promise.all(users);
-    for (let user in users) {
-      this.otherUsers[user.uid] = {
-        _id: user.uid,
-        name: user.name,
-        avatar: 'https://placeimg.com/140/140/any',
-        username: user.username
+
+  let loadMessages = async () => {
+    let messages = await chatService.getMessages(chatSessionId);
+    messages = chatService.convertMessagesToOrderedArr(messages);
+    setMessages(messages);
+  };
+
+  // Chat service
+  React.useEffect( () => {
+    const unsubscribe = chatService.addNewMsgListener( (chatSessions) => {
+      console.log('New message from Chat screen');
+      if (chatSessions.indexOf(chatSessionId) >= 0) {
+        loadMessages();
       }
-    }
-
-    // Load messages
-    let messages = await chatStorage.getMessages(this.chatSessionId);
-    this.setState({
-      messages: messages,
-      dataIsLoaded: true
     });
-  }
+    // Clear listener for cleanup
+    return unsubscribe;
+  }, []);
 
-  componentWillUnmount() {
+  // Initialize data on component mount
+  React.useEffect( () => {
+    async function initializeData() {
+      // Initialize members
+      let otherMembers = {};
+      let users = [];
 
-  }
+      // If no chat session id was passed, then a members object will be passed in route parameters
+      if (props.route.params.chatSessionId === '') {
+        for (let member of Object.keys(props.route.params.members)) {
+          users.push(dbCaller.getUserById(member));
+        }
+        users = await Promise.all(users);
+      }
+      else {
+        users = Object.keys( (await chatStorage.getChatSession(props.route.params.chatSessionId)).members );
+      }
 
-  onSend(messages = []) {
-    // First, append new message to GiftedChat
-    console.log(messages);
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }));
+      // Initialize otherMembers object (contains metadata of each member in the chat session)
+      for (let user of users) {
+        otherMembers[user.uid] = {
+          _id: user.uid,
+          name: user.name,
+          avatar: 'https://placeimg.com/140/140/any',
+        }
+      }
 
-    // Then, send to firebase
-    ChatService.sendNewMessage(this.chatSessionId, messages[0]);
-  }
+      // Load messages if returning to an existing chat session
+      if (chatSessionId !== '') {
+        await loadMessages();//await chatService.getMessages(chatSessionId, otherUsers);
+      }
 
-  getMessages() {
-    request = {
-      username: this.thisUser.username,
-      token: this.thisUser.token,
-      from: this.otherUser.username,
+      setMembers({
+        ...otherMembers,
+        [thisUser._id]: thisUser
+      });
+      setDataIsLoaded(true);
     }
-    
-  }
+    initializeData();
+  }, []); // empty array runs this effect only on component mount
 
-  deleteLocalMessages() {
-    this.setState({
-      messages: [],
+
+  // Focus listener
+  React.useEffect(() => {
+    const unsubscribe = props.navigation.addListener('focus', async () => {
+      console.log('Chat screen focused');
+      chatService.focusChatSession(chatSessionId);
     });
-    this.messageCount = 0;
+    // Return unsubscribe for cleanup
+    return unsubscribe;
+  }, [props.navigation]);
+
+  // Blur listener
+  React.useEffect(() => {
+    const unsubscribe = props.navigation.addListener('blur', async () => {
+      console.log('Chat screen blurred');
+      chatService.blurChatSession();
+    });
+    // Return unsubscribe for cleanup
+    return unsubscribe;
+  }, [props.navigation]);
+
+
+
+  let onSend = async (messages = []) => {
+    console.log('Sending messages:', messages);
+
+    // If chat session has not been created, create it
+    if (chatSessionId === "") {
+      setMessages(previousMessages => 
+        GiftedChat.append(previousMessages, messages)
+      );
+      let newChatSessionId = await chatService.createNewChatSession(Object.keys(members), messages[0].text);
+      setChatSessionId(newChatSessionId);
+    }
+    else {
+      // First, append new message to GiftedChat
+      console.log(messages);
+      setMessages(previousMessages => 
+        GiftedChat.append(previousMessages, messages)
+      );
+      // Then, send to firebase
+      chatService.sendNewMessage(chatSessionId, messages[0].text);
+    }
   }
 
-  render() {
-    if (!this.state.dateIsLoaded) {
-      return (
+  return (
+    !dataIsLoaded ?  
+      (
         <SafeAreaView style={{flex: 1}}>
           <Text>Loading</Text>
           <ActivityIndicator />
         </SafeAreaView>
       )
-    }
-    else {
-      return (
-        <View style={ { flex: 1 } }>
-          <GiftedChat 
-            messages={this.state.messages}
-            onSend={messages => this.onSend(messages)} 
-            user={this.thisUser}
-          />
-        </View>
-      );
-    }
-  }
+    :
+      (
+      <View style={ { flex: 1 } }>
+        <GiftedChat 
+          messages={messages}
+          onSend={messages => onSend(messages)} 
+          user={thisUser}
+        />
+      </View>
+    )
+  );
 }

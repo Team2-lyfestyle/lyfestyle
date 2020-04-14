@@ -14,17 +14,77 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import chatStorage from '../util/ChatStorage';
 import ChatServiceContext from '../constants/ChatServiceContext';
 import FriendService from '../util/FriendService';
+import dbCaller from '../util/DatabaseCaller';
 
-function renderHead({ names, timestamp }) {
 
+
+// https://stackoverflow.com/questions/8888491/how-do-you-display-javascript-datetime-in-12-hour-am-pm-format
+function formatAMPM(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  var strTime = hours + ':' + minutes + ' ' + ampm;
+  return strTime;
 }
 
-function renderLastMessage({ message }) {
+function RenderHead({ members, lastMessageAt }) {
+  let membersArr = [];
+  for (let member of Object.keys(members)) {
+    membersArr.push(members[member].name);
+  }
+  let displayMembers = membersArr.join(', ');
 
+  // Get datetime to display
+  let now = new Date();
+  let timeSince = now - lastMessageAt;
+  let displayTime = '';
+  // If been at least a week since lastMessageAt
+  if (timeSince > 7 * 8.64 * 10**7) { 
+    displayTime = `${lastMessageAt.getMonth()}/${lastMessageAt.getDay()}/${lastMessageAt.getFullYear().slice(2, 4)}`
+  }
+  // If on different days
+  else if (lastMessageAt.getDay() - now.getDay() !== 0) { 
+    displayTime = convertWeekdayToString(lastMessageAt.getDay());
+  }
+  else {
+    displayTime = formatAMPM(lastMessageAt);
+  }
+
+  return (
+    <View>
+      <View>
+        <Text>
+          {displayMembers}
+        </Text>
+      </View>
+      <View>
+        <Text>{displayTime}</Text>
+      </View>
+    </View>
+  );
 }
 
-function renderPicture({ pics }) {
+function RenderLastMessage({ lastMessageText }) {
+  return (
+    <View>
+      <Text>
+        {lastMessageText}
+      </Text>
+    </View>
+  );
+}
 
+function RenderPicture({ pics }) {
+  return (
+    <View>
+      <Text>
+        Avatars
+      </Text>
+    </View>
+  );
 }
 
 const sortByDate = (a, b) => (
@@ -33,27 +93,26 @@ const sortByDate = (a, b) => (
 
 
 export default function ChatSelectScreen({ navigation }) {
-  /*
-    const [listData, setListData] = useState(
-    Array(20)
-      .fill('')
-      .map((_, i) => ({ key: `${i}`, text: `item #${i}` }))
-  );
-  */
 
   let chatService = React.useContext(ChatServiceContext);
-
-  chatService.addNewMsgListener(async function() {
-    console.log('New message!');
-  });
+  let friendService = new FriendService();
 
   let [chatSessions, setChatSessions] = React.useState({});
   let [chatSessionsLoaded, setChatSessionsLoaded] = React.useState(false);
   let [searchText, setSearchText] = React.useState("");
-  let [composeText, setComposeText] = React.useState("");
+  let [composeText, setComposeText] = React.useState("");     // Text used in compose new message input, to filter out ppl
   let [isComposeModalVisible, setIsComposeModalVisible] = React.useState(false);
   let [composeSuggestions, setComposeSuggestions] = React.useState([]);
-  let [composeAdd, setComposeAdd] = React.useState({});
+  let [composeAdd, setComposeAdd] = React.useState({});       // Users to add to new chat session
+
+
+  React.useEffect( () => {
+    console.log('mounting chatselectscreen');
+    chatService.addNewMsgListener(async function() {
+      console.log('New message!');
+      loadMessages();
+    });
+  }, []);
 
 
   const closeRow = (rowMap, rowKey) => {
@@ -77,32 +136,39 @@ export default function ChatSelectScreen({ navigation }) {
     console.log('This row opened', rowKey);
   };
 
-  const renderItem = (rowData, rowMap) => (
+  const renderItem = (rowData, rowMap) => {
     /*
-    rowData.item is an object of the form: 
-    {
-      name: ["name"]
-      picture: ["url"]
-      lastMessage: "last message"
-      timestamp: "ios 8601 time"
-    }
+      rowData.item is an object of the form: 
+      {
+        key: chatSessionId
+        members: { members object }
+        lastMessageText: "last message"
+        lastMessageAt: "ios 8601 time"
+      }
     */
-    <TouchableHighlight
-      onPress={() => {
-        console.log('You touched me');
-        navigation.navigate('Chat', { chatSessionId: rowData.key });
-      }}
-      style={styles.rowFront}
-      underlayColor={'#AAA'}
-    >
-      <View>
-
-      </View>
-      <View>
-        <Text>I am {rowData.item.text} in a SwipeListView</Text>
-      </View>
-    </TouchableHighlight>
-  );
+   let chatSession = {
+     ...rowData.item
+   };
+   delete chatSession.key;
+    return (
+      <TouchableHighlight
+        onPress={() => {
+          console.log('You touched me', rowData.item.key);
+          navigation.navigate('Chat', { chatSessionId: rowData.item.key });
+        }}
+        style={styles.rowFront}
+        underlayColor={'#AAA'}
+      >
+        <View>
+          <RenderPicture {...chatSession} style={ {width: '20%', height: '100%'} } />
+          <View>
+            <RenderHead {...chatSession}/>
+            <RenderLastMessage {...chatSession}/>
+          </View>
+        </View>
+      </TouchableHighlight>
+    )
+  };
 
   const renderHiddenItem = (rowData, rowMap) => (
     <View style={styles.rowBack}>
@@ -123,7 +189,9 @@ export default function ChatSelectScreen({ navigation }) {
   );
 
   const getListData = () => {
-    return chatService.convertChatSessionsToOrderedArr(chatSessions);
+    let sessions = chatService.convertChatSessionsToOrderedArr(chatSessions);
+    console.log('Got sessions', sessions);
+    return sessions;
   }
 
   const loadMessages = async () => {
@@ -131,15 +199,15 @@ export default function ChatSelectScreen({ navigation }) {
       First, download any new messages from firebase and store it in ChatStorage
       Then, download the chat sessions from ChatStorage
     */
-    let newChatSessions = await chatStorage.getChatSessions();
+    let newChatSessions = await chatService.getChatSessions(true);
+
+    //console.log('Chat sessions:', newChatSessions);
     setChatSessions(newChatSessions);
     setChatSessionsLoaded(true);
   }
 
-  // Use dummy data for friends list for now
-  const friends = [ {uid: '1', name: 'John'}, {uid: '2', name: 'Jane'} ];
   const getSuggestions = async (text) => {
-    let suggestions = friends;
+    let suggestions = await friendService.getFriendsListAsArray();
     if (text) {
       suggestions = suggestions.filter( item => (
         item.name.match(new RegExp(`${text}`, 'i'))
@@ -164,9 +232,10 @@ export default function ChatSelectScreen({ navigation }) {
     }
   }
 
+  // Focus listener
   React.useEffect(() => {
     const unsubscribe = navigation.addListener('focus', async () => {
-      console.log('ChatSelect screen focused');
+      // console.log('ChatSelect screen focused');
       loadMessages();
     });
     // Return unsubscribe for cleanup
@@ -182,6 +251,20 @@ export default function ChatSelectScreen({ navigation }) {
         autoCapitalize='none'
         onChangeText={text => setSearchText(text)}
       />
+      <TouchableOpacity
+        onPress={() => { 
+          chatStorage.clearChatData();
+        }}
+      >
+        <Text>Delete local chat data</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => { 
+          //chatService.test();
+        }}
+      >
+        <Text></Text>
+      </TouchableOpacity>
       <TouchableOpacity
         onPress={() => { 
           setIsComposeModalVisible(true);
@@ -206,7 +289,7 @@ export default function ChatSelectScreen({ navigation }) {
             previewOpenValue={-40}
             previewOpenDelay={3000}
             onRowDidOpen={onRowDidOpen}
-            disableLeftSwipe={true}
+            disableRightSwipe={true}
           />
         )
       }
@@ -235,20 +318,34 @@ export default function ChatSelectScreen({ navigation }) {
           </TouchableHighlight>
           <TouchableHighlight 
             onPress={() => {
+              // Do nothing if nobody was added
+              if (Object.keys(composeAdd).length === 0) {
+                return;
+              }
+
               setIsComposeModalVisible(false);
-              chatService.doesChatSessionExistWithMembers(Object.keys(composeAdd)).then( 
+              let members = Object.keys(composeAdd);
+              members.push(dbCaller.getCurrentUser().uid);
+              console.log('Testing members:', members);
+              chatService.doesChatSessionExistWithMembers(members).then( 
                 result => {
                   if (result) {
+                    console.log('Chat session exists with id:', result);
                     navigation.navigate('Chat', { chatSessionId: result})
                   }
                   else {
                     // Create new chat session
-                    console.log('Creating new chat session');
+                    // First, convert members array to an object
+                    let membersObj = {}
+                    for (let member of members) {
+                      membersObj[member] = true;
+                    }
+                    navigation.navigate('Chat', { chatSessionId: '', members: membersObj});
                   }
                 }
               )
               .catch(
-                err => {console.log('Error creating chat session:', err)}
+                err => {console.log('Error:', err)}
               );
             }}
           >
@@ -305,6 +402,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     input: {
+      borderRadius: 10,
       borderBottomColor: '#8A8F9E',
       borderBottomWidth: StyleSheet.hairlineWidth,
       height: 40,

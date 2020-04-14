@@ -7,8 +7,7 @@ const asyncStorage = {
         value = JSON.stringify(value);
       }
       console.log(`Setting ${key}: ${value}`);
-      await AsyncStorage.setItem(key, value);
-      return true;
+      return AsyncStorage.setItem(key, value);
     }
     catch (err) {
       console.log(`Error setting ${key}: ${value}`, err);
@@ -34,6 +33,16 @@ const asyncStorage = {
       throw err;
     }
   },
+
+  removeItem: (key) => {
+    try {
+      return AsyncStorage.removeItem(key);
+    }
+    catch (err) {
+      console.log(`Error removing ${key}`, err);
+      throw err;
+    }
+  }
 }
 
 export default asyncStorage;

@@ -26,11 +26,25 @@ export default function BottomTabNavigator({ navigation, route }) {
   let chatService = React.useContext(ChatServiceContext);
   let [totalNumOfUnreadMessages, setTotalNumOfUnreadMessages] = React.useState(chatService.totalNumOfUnreadMessages);
   
-  chatService.addNewMsgListener(function() {
-    console.log('New message from bottomtabnavigator');
-    setTotalNumOfUnreadMessages[chatService.totalNumOfUnreadMessages];
-  });
+  React.useEffect( () => {
+    console.log('mounting bottomtabnavigator');
 
+    // This is where chat service will listen for new messages
+    chatService.listenForNewMessages();
+
+    const unsubscribe = chatService.addNewMsgListener(function() {
+      console.log('New message from bottomtabnavigator');
+      setTotalNumOfUnreadMessages(chatService.totalNumOfUnreadMessages);
+    });
+    return unsubscribe;
+  }, []);
+
+  React.useEffect( () => {
+    chatService.addChatSessionReadListener( async (chatSessionId) => {
+      setTotalNumOfUnreadMessages(await chatService.getTotalNumOfUnreadMessages());
+    });
+  }, []);
+  
   return (
     <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME} activeBackgroundColor = '#2f95dc'>
       <BottomTab.Screen
@@ -82,20 +96,22 @@ export default function BottomTabNavigator({ navigation, route }) {
           )
         }}
       />
-
-      <BottomTab.Screen
-        name='Queries'
-        component={QueryExampleScreen}
-        options={{
-          title: 'Queries',
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name='md-compass' />
-          )
-        }}
-      />
+      
     </BottomTab.Navigator>
   );
 }
+/*
+<BottomTab.Screen
+  name='Queries'
+  component={QueryExampleScreen}
+  options={{
+    title: 'Queries',
+    tabBarIcon: ({ focused }) => (
+      <TabBarIcon focused={focused} name='md-compass' />
+    )
+  }}
+/>
+*/
 
 function getHeaderTitle(route) {
   const routeName =

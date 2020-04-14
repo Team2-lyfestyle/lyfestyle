@@ -40,9 +40,11 @@ export default function BottomTabNavigator({ navigation, route }) {
   }, []);
 
   React.useEffect( () => {
-    chatService.addChatSessionReadListener( async (chatSessionId) => {
+    const unsubscribe = chatService.addChatSessionReadListener( async (chatSessionId) => {
+      console.log('Reading', chatSessionId, 'from bottomtabnavigator');
       setTotalNumOfUnreadMessages(await chatService.getTotalNumOfUnreadMessages());
     });
+    return unsubscribe;
   }, []);
   
   return (

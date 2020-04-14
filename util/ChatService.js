@@ -31,6 +31,7 @@ export default class ChatService {
 
   focusChatSession(chatSessionId) {
     this.currentFocusedChatSession = chatSessionId;
+    this.readChatSession(chatSessionId);
   }
 
   blurChatSession() {
@@ -56,7 +57,7 @@ export default class ChatService {
     await chatStorage.updateChatSession(chatSessionId, {
       numOfUnreadMessages: 0
     });
-    for (let i of Object.keys(this.newMessageListeners)) {
+    for (let i of Object.keys(this.chatSessionReadListeners)) {
       this.chatSessionReadListeners[i](chatSessionId);
     }
   }

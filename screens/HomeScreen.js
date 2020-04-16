@@ -96,7 +96,7 @@ export default function HomeScreen({ navigation }) {
           >
             <View>
               <Text style={styles.post}>{post.displayName}</Text>
-              <Text style={styles.timestamp}>{moment().calendar()}</Text>
+              <Text style={styles.timestamp}>{moment(post.timestamp).fromNow()}</Text>
             </View>
             <Ionicons name='ios-more' size={24} color='#73788B' />
           </View>

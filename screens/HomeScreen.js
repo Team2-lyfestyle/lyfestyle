@@ -78,6 +78,7 @@ export default function HomeScreen({ navigation }) {
     await queries.getPostByUser(callback);
   };
 
+
   renderPost = (post) => {
     return (
       <View style={styles.feedItem}>

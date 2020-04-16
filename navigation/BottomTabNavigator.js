@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import { createStackNavigator } from '@react-navigation/stack';
 //SCREENS
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import TrainingScreen from '../screens/TrainingScreen';
 import ChatStackNavigator from '../navigation/ChatStackNavigator';
-import TipScreen from '../screens/TipScreen';
 import PostScreen from '../screens/PostScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import QueryExampleScreen from '../screens/QueryExampleScreen';
+import { DarkTheme } from '@react-navigation/native';
+
 
 
 const BottomTab = createBottomTabNavigator();
@@ -22,7 +23,16 @@ export default function BottomTabNavigator({ navigation, route }) {
   navigation.setOptions({ header: 'null' });
 
   return (
-    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME} activeBackgroundColor = '#2f95dc'>
+    <BottomTab.Navigator
+      initialRouteName={INITIAL_ROUTE_NAME}
+      theme={DarkTheme}
+      tabBarOptions={{
+        activeTintColor: '#00FED4',
+        style: {
+          backgroundColor: '#122028'
+        }
+      }}
+    >
       <BottomTab.Screen
         name='Home'
         component={HomeScreen}
@@ -40,7 +50,9 @@ export default function BottomTabNavigator({ navigation, route }) {
           title: 'Training',
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} name='ios-fitness' />
-          )
+          ),
+
+          tabBarVisible: 'false'
         }}
       />
       <BottomTab.Screen
@@ -100,8 +112,6 @@ function getHeaderTitle(route) {
       return 'Post';
     case 'Chat':
       return 'Chat';
-    case 'Explore':
-      return 'Explore';
     case 'Profile':
       return 'Profile';
   }

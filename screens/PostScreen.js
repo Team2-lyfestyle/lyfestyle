@@ -16,8 +16,8 @@ import queries from '../util/firebase_queries';
 
 const PostScreen = ({ navigation }) => {
   // State data needed
-  const [post, updatePost] = React.useState('');
-  const [postPhoto, updatePostPhoto] = React.useState(null);
+  const [post, updatePost] = React.useState(false);
+  const [postPhoto, updatePostPhoto] = React.useState(false);
 
   React.useEffect(() => {
     async function askPermission() {
@@ -31,7 +31,6 @@ const PostScreen = ({ navigation }) => {
   });
 
   let createPost = async (data, uri = null) => {
-    if (uri) data.media = true;
     await queries.createPost(data, uri);
     navigation.navigate('Home');
   };
@@ -64,16 +63,17 @@ const PostScreen = ({ navigation }) => {
         </TouchableOpacity>
         {/* Submit/Post */}
         <TouchableOpacity
-          onPress={() => {
+          onPress={async () => {
             if (post && postPhoto){
-              createPost(
+              console.log("Creating POST")
+              await createPost(
                 {
                   description: post,
                 },
                 postPhoto
               );
-              updatePost('');
-              updatePostPhoto(null);
+              console.log("POST CREATED")
+              navigate("Home")
             }
           }}
         >
@@ -152,16 +152,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   photoUpload: {
-    alignSelf: 'center',
-    marginHorizontal: 30,
-    borderRadius: 15,
     width: 400,
     height: 300,
-
-    borderBottomColor: '#CACACA',
-    shadowColor: '#454D65',
-    shadowOffset: { height: 5 },
-    shadowRadius: 15,
   },
   photoOption: {
     flexDirection: 'row',

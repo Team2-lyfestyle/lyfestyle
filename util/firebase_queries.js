@@ -58,8 +58,11 @@ module.exports = {
       .equalTo(uid)
       .limitToLast(40)
       .on('value', function (snapshot) {
-        if (callback) callback(snapshot.val());
-        else snapshot.val();
+        if(snapshot.exists()){
+          if (callback) callback(snapshot.val());
+          else snapshot.val();
+        }
+        
       });
   },
 

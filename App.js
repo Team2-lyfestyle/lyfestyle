@@ -150,7 +150,7 @@ export default function App(props) {
           let authentication = await firebase.auth().createUserWithEmailAndPassword(email, password);
           await authentication.user.updateProfile({displayName: name})
           let uid = await firebase.auth().currentUser.uid;
-          await firebase.database().ref('users/' + uid).set({email: email, password: password, name: name});
+          await firebase.database().ref('users/' + uid).set({email: email, name: name});
           dispatch({ type: 'SIGN_IN' });
         }
         catch (e) {

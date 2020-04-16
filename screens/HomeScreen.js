@@ -45,10 +45,7 @@ posts = [
 
 export default function HomeScreen({ navigation }) {
 
-  const { signOut } = React.useContext(AuthContext);
-
   const [postsByUser, setPostsByUser] = React.useState(false);
-  const [currUser, setCurrUser] = React.useState(false);
 
   React.useEffect(() => {
     async function askPermission() {
@@ -66,18 +63,16 @@ export default function HomeScreen({ navigation }) {
     getPostByUser();
   }, []);
 
-  let getCurrUser = async () => {
-    var user = await queries.getCurrentUser();
-    setCurrUser(JSON.stringify(user));
-  };
   let getPostByUser = async () => {
     let callback = (snapshot) => {
       let postArray = [];
-      Object.keys(snapshot).forEach((key) => {
-        let temp = snapshot[key];
-        temp.id = key;
-        postArray.push(temp);
-      });
+      if(Object.keys(snapshot) != null){
+        Object.keys(snapshot).forEach((key) => {
+          let temp = snapshot[key];
+          temp.id = key;
+          postArray.push(temp);
+        });
+      }
       setPostsByUser(postArray);
     };
     await queries.getPostByUser(callback);

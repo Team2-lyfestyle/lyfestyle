@@ -54,12 +54,14 @@ module.exports = {
     return firebase
       .database()
       .ref('posts/')
-      .orderByChild('posterUID')
-      .equalTo(uid)
+      .orderByChild('timestamp')
       .limitToLast(40)
       .on('value', function (snapshot) {
-        if (callback) callback(snapshot.val());
-        else snapshot.val();
+        if(snapshot.exists()){
+          if (callback) callback(snapshot.val());
+          else snapshot.val();
+        }
+        
       });
   },
 

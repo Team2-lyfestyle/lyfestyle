@@ -2,13 +2,10 @@ import React from 'react';
 import { Text, StyleSheet, View, FlatList, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
-import { Button } from 'native-base';
 import AuthContext from '../util/AuthContext';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
-import * as ImagePicker from 'expo-image-picker';
 import queries from '../util/firebase_queries';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 //Dummy Data
 posts = [
@@ -80,7 +77,6 @@ export default function HomeScreen({ navigation }) {
         temp.id = key;
         postArray.push(temp);
       });
-
       setPostsByUser(postArray);
     };
     await queries.getPostByUser(callback);
@@ -99,14 +95,14 @@ export default function HomeScreen({ navigation }) {
             }}
           >
             <View>
-              <Text style={styles.post}>{post.name}</Text>
+              <Text style={styles.post}>{post.displayName}</Text>
               <Text style={styles.timestamp}>{moment().calendar()}</Text>
             </View>
             <Ionicons name='ios-more' size={24} color='#73788B' />
           </View>
           <Text style={styles.post}> {post.description} </Text>
           <Image
-            source={post.image}
+            source={{uri:post.media}}
             style={styles.postImage}
             resizeMode='cover'
           />

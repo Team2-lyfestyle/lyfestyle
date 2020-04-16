@@ -12,7 +12,6 @@ import QueryExampleScreen from '../screens/QueryExampleScreen';
 import { DarkTheme } from '@react-navigation/native';
 
 
-
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
 
@@ -105,7 +104,7 @@ function getHeaderTitle(route) {
 
   switch (routeName) {
     case 'Home':
-      return 'Home Page';
+      return 'LYFESTYLE';
     case 'Training':
       return 'Training';
     case 'Post':

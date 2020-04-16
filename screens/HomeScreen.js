@@ -1,11 +1,13 @@
 import React from 'react';
 import { Text, StyleSheet, View, FlatList, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import moment from 'moment'
-import { Button } from 'native-base';
-// import AuthContext from '../util/AuthContext'
+import moment from 'moment';
+import AuthContext from '../util/AuthContext';
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
+import queries from '../util/firebase_queries';
 
-// Dummy Data
+//Dummy Data
 posts = [
   {
     id: '1',
@@ -13,7 +15,7 @@ posts = [
     text: 'Look at my gym!',
     timestamp: 1584637200000,
     avatar: require('../assets/dummyImages/tempAvatar.jpg'),
-    image: require('../assets/dummyImages/tempImage1.jpg')
+    image: require('../assets/dummyImages/tempImage1.jpg'),
   },
   {
     id: '2',
@@ -21,7 +23,7 @@ posts = [
     text: 'Deadlifts today!',
     timestamp: 1584378000000,
     avatar: require('../assets/dummyImages/tempAvatar.jpg'),
-    image: require('../assets/dummyImages/tempImage2.jpg')
+    image: require('../assets/dummyImages/tempImage2.jpg'),
   },
   {
     id: '3',
@@ -29,7 +31,7 @@ posts = [
     text: 'Gymming with a view!',
     timestamp: 1584032400000,
     avatar: require('../assets/dummyImages/tempAvatar.jpg'),
-    image: require('../assets/dummyImages/tempImage3.jpg')
+    image: require('../assets/dummyImages/tempImage3.jpg'),
   },
   {
     id: '4',
@@ -37,40 +39,82 @@ posts = [
     text: 'This is a LYFESTYLE!',
     timestamp: 1583859600000,
     avatar: require('../assets/dummyImages/tempAvatar.jpg'),
-    image: require('../assets/dummyImages/tempImage4.jpg')
-  }
+    image: require('../assets/dummyImages/tempImage4.jpg'),
+  },
 ];
 
 export default function HomeScreen({ navigation }) {
-  
-  // const {signOut} = React.useContext(AuthContext)
 
-  renderPost = post => {
+  const { signOut } = React.useContext(AuthContext);
+
+  const [postsByUser, setPostsByUser] = React.useState(false);
+  const [currUser, setCurrUser] = React.useState(false);
+
+  React.useEffect(() => {
+    async function askPermission() {
+      if (Constants.platform.ios) {
+        const { statusRoll } = await Permissions.askAsync(
+          Permissions.CAMERA_ROLL
+        );
+        const { statusCamera } = await Permissions.askAsync(Permissions.CAMERA);
+        CAMERA;
+        if (statusRoll !== 'granted' && statusCamera !== 'granted') {
+          console.log('Gimme Permission');
+        }
+      }
+    }
+    getPostByUser();
+  }, []);
+
+  let getCurrUser = async () => {
+    var user = await queries.getCurrentUser();
+    setCurrUser(JSON.stringify(user));
+  };
+  let getPostByUser = async () => {
+    let callback = (snapshot) => {
+      let postArray = [];
+      Object.keys(snapshot).forEach((key) => {
+        let temp = snapshot[key];
+        temp.id = key;
+        postArray.push(temp);
+      });
+      setPostsByUser(postArray);
+    };
+    await queries.getPostByUser(callback);
+  };
+
+
+  renderPost = (post) => {
     return (
       <View style={styles.feedItem}>
-        <Image source={post.avatar} style={styles.avatar} />
+        {/* <Image source={post.avatar} style={styles.avatar} /> */}
         <View style={{ flex: 1 }}>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-              alignItems: 'center'
+              alignItems: 'center',
             }}
           >
             <View>
-              <Text style={styles.name}>{post.name}</Text>
-              <Text style={styles.timestamp}>{moment(post.timestamp).fromNow()}</Text>
+              <Text style={styles.post}>{post.displayName}</Text>
+              <Text style={styles.timestamp}>{moment().calendar()}</Text>
             </View>
             <Ionicons name='ios-more' size={24} color='#73788B' />
           </View>
-          <Text style={styles.post}> {post.text} </Text>
+          <Text style={styles.post}> {post.description} </Text>
           <Image
-            source={post.image}
+            source={{uri:post.media}}
             style={styles.postImage}
             resizeMode='cover'
           />
           <View style={{ flexDirection: 'row' }}>
-            <Ionicons name='ios-heart-empty' size={25} color='#000' style={{ marginRight: 15, marginTop: 10 }} />
+            <Ionicons
+              name='ios-heart-empty'
+              size={25}
+              color='#000'
+              style={{ marginRight: 15, marginTop: 10 }}
+            />
             <Ionicons></Ionicons>
           </View>
         </View>
@@ -82,14 +126,11 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Home </Text>
       </View>
-      {/* <Button onPress={() => { signOut() }}>
-        <Text>LogOut</Text>
-      </Button> */}
       <FlatList
         style={styles.feed}
-        data={posts}
+        data={postsByUser}
         renderItem={({ item }) => renderPost(item)}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
       />
     </View>
@@ -99,7 +140,7 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EFEdF4'
+    backgroundColor: '#EFEdF4',
   },
   header: {
     paddingTop: 40,
@@ -113,47 +154,47 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 5 },
     shadowRadius: 15,
     shadowOpacity: 0.2,
-    zIndex: 10
+    zIndex: 10,
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   feed: {
-    marginHorizontal: 16
+    marginHorizontal: 16,
   },
   feedItem: {
     backgroundColor: '#FFF',
     borderRadius: 5,
     padding: 8,
     flexDirection: 'row',
-    marginVertical: 8
+    marginVertical: 8,
   },
   avatar: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    marginRight: 15
+    marginRight: 15,
   },
   name: {
     fontSize: 15,
     fontWeight: '500',
-    color: '#454D65'
+    color: '#454D65',
   },
   timestamp: {
     fontSize: 11,
     color: '#C4C6CE',
-    marginTop: 4
+    marginTop: 4,
   },
   post: {
     marginTop: 15,
     marginBottom: 5,
     fontSize: 14,
-    color: '#838899'
+    color: '#838899',
   },
   postImage: {
     width: undefined,
     height: 250,
-    borderRadius: 15
-  }
+    borderRadius: 15,
+  },
 });

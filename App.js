@@ -3,7 +3,7 @@ import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { SplashScreen, Notifications } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import BottomTabNavigator from './navigation/BottomTabNavigator';
@@ -147,8 +147,9 @@ export default function App(props) {
       },
       signUp: async (email, password, name) => {
         try {
-          await firebase.auth().createUserWithEmailAndPassword(email, password);
-          let uid = firebase.auth().currentUser.uid;
+          let authentication = await firebase.auth().createUserWithEmailAndPassword(email, password);
+          await authentication.user.updateProfile({displayName: name})
+          let uid = await firebase.auth().currentUser.uid;
           await firebase.database().ref('users/' + uid).set({email: email, password: password, name: name});
           dispatch({ type: 'SIGN_IN' });
         }
@@ -169,8 +170,8 @@ export default function App(props) {
         <AuthContext.Provider value={authContext}><NotificationContext.Provider value={state.notification}>
 
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <NavigationContainer ref={containerRef} initialState={state.initialNavigationState}>
-            <Stack.Navigator headerMode='none'>
+          <NavigationContainer ref={containerRef} initialState={state.initialNavigationState} theme={DarkTheme}>
+            <Stack.Navigator headerMode='none' >
               {
                 state.isLoggedIn ? 
                 (

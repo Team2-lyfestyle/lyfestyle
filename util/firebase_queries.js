@@ -54,8 +54,7 @@ module.exports = {
     return firebase
       .database()
       .ref('posts/')
-      .orderByChild('posterUID')
-      .equalTo(uid)
+      .orderByChild('timestamp')
       .limitToLast(40)
       .on('value', function (snapshot) {
         if(snapshot.exists()){

@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#EFEdF4',
   },
   header: {
+    paddingTop: 40,
     flexDirection: 'row',
     paddingBottom: 8,
     paddingHorizontal: 20,

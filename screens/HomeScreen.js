@@ -44,6 +44,7 @@ posts = [
 ];
 
 export default function HomeScreen({ navigation }) {
+
   const { signOut } = React.useContext(AuthContext);
 
   const [postsByUser, setPostsByUser] = React.useState(false);
@@ -81,6 +82,7 @@ export default function HomeScreen({ navigation }) {
     };
     await queries.getPostByUser(callback);
   };
+
 
   renderPost = (post) => {
     return (

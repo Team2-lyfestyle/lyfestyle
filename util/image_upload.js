@@ -1,5 +1,4 @@
 import firebase from '../constants/firebase'
-
 let uriToBlob = (uri) => {
     return new Promise((resolve, reject) => {
 
@@ -20,33 +19,36 @@ let uriToBlob = (uri) => {
 
 let uploadToProfile = async (blob, fileName) => {
     let currentUser = await firebase.auth().currentUser.uid
-    return new Promise((resolve, reject) => {
-        var storageRef = firebase.storage().ref();
-        storageRef.child('uploads/' + currentUser + '/profile/' + fileName).put(blob, {
+    let path = 'uploads/' + currentUser + '/profile/' + fileName
+    firebase.storage().ref().child(path).put(blob, {
             contentType: 'image/jpeg'
-        }).then((snapshot) => {
+        }).then((snapshot) => {            
             blob.close();
-            resolve(snapshot);
+            snapshot.ref.getDownloadURL().then(async url => {
+                await firebase.database().ref('users/' + currentUser).update({ media: url })
+            })
         }).catch((error) => {
-            reject(error);
+            console.log("FAILED PROFILE PIC UPLOAD", error)
         });
-    });
 }
 
 let uploadToPost = async (blob, postId) => {
     let currentUser = await firebase.auth().currentUser.uid
-    return new Promise((resolve, reject) => {
-        var storageRef = firebase.storage().ref();
-        storageRef.child('uploads/' + currentUser + '/posts/' + postId + '.jpeg').put(blob, {
-            contentType: 'image/jpeg'
-        }).then((snapshot) => {
-            blob.close();
-            resolve(snapshot);
-        }).catch((error) => {
-            reject(error);
-        });
+    //update DB with path to image
+    let path = 'uploads/' + currentUser + '/posts/' + postId + '.jpeg'
+    // upload image
+    firebase.storage().ref().child(path).put(blob, {
+        contentType: 'image/jpeg'
+    }).then((snapshot) => {
+        blob.close()
+        snapshot.ref.getDownloadURL().then(async url => {
+            await firebase.database().ref('posts/' + postId).update({ media: url })
+        })
+    }).catch((error) => {
+        console.log("ERROR UPLOADING", error)
     });
-}
+};
+
 
 module.exports = {
     uploadProfileImage: (uri) => {

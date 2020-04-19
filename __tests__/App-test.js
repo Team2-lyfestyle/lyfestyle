@@ -1,29 +1,20 @@
-import * as React from 'react';
-import NavigationTestUtils from 'react-navigation/NavigationTestUtils';
+import React from 'react';
+import { configure, shallow } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import PostScreen from '../screens/PostScreen';
+
 import renderer from 'react-test-renderer';
 
-import App from '../App';
+// configure({ adapter: new Adapter() });
 
-jest.mock('expo', () => ({
-  AppLoading: 'AppLoading',
-}));
+// describe('<PostScreen />', () => {
+//   it('Should render the <PostScreen /> component', () => {
+//     const wrapper = shallow(<PostScreen />);
+//     expect(wrapper.find(PostScreen)).toHaveLength(1);
+//   });
+// });
 
-jest.mock('../navigation/AppNavigator', () => 'AppNavigator');
-
-describe('App', () => {
-  jest.useFakeTimers();
-
-  beforeEach(() => {
-    NavigationTestUtils.resetInternalState();
-  });
-
-  it(`renders the loading screen`, () => {
-    const tree = renderer.create(<App />).toJSON();
-    expect(tree).toMatchSnapshot();
-  });
-
-  it(`renders the root without loading screen`, () => {
-    const tree = renderer.create(<App skipLoadingScreen />).toJSON();
-    expect(tree).toMatchSnapshot();
-  });
+test('renders correctly', () => {
+  const tree = renderer.create(<PostScreen />).toJSON();
+  expect(tree).toMatchSnapshot();
 });

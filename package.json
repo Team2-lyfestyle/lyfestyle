@@ -7,10 +7,15 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest --watchAll"
+    "test": "jest"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "react-native",
+    "setupFilesAfterEnv": ["jest-enzyme"],
+    "testEnvironment": "enzyme",
+    "testEnvironmentOptions": {
+      "enzymeAdapter": "react16"
+    }
   },
   "dependencies": {
     "@eva-design/eva": "^1.4.0",
@@ -31,7 +36,6 @@
     "moment": "^2.24.0",
     "native-base": "^2.13.8",
     "react": "~16.9.0",
-    "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
     "react-native-gesture-handler": "~1.5.0",
     "react-native-gifted-chat": "^0.13.0",
@@ -46,7 +50,14 @@
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "babel-preset-expo": "~8.0.0",
-    "jest-expo": "~36.0.1"
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "jest": "^25.3.0",
+    "jest-environment-enzyme": "^7.1.2",
+    "jest-enzyme": "^7.1.2",
+    "jest-expo": "~36.0.1",
+    "react-dom": "^16.9.0",
+    "react-test-renderer": "^16.13.1"
   },
   "private": true
 }

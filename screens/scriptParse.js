@@ -4,9 +4,10 @@ filePath = "../assets/data/exercises.json"
 var file = JSON.parse(fs.readFileSync(filePath));
 
 for(item of file){
-    console.log(item)
   if(obj[item['muscleGroup']] != undefined){
-      obj[item['muscleGroup']].push({'name': item['name']})
+      if(!obj[item['muscleGroup']].some( muscle=> muscle['name'] === item['name'] )){
+        obj[item['muscleGroup']].push({'name': item['name']})  
+      }
   }
   else{
        obj[item['muscleGroup']] = [ {'name': item['name']} ]

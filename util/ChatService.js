@@ -6,7 +6,7 @@ import { EventEmitter } from 'react-native';
   Helper function to sort two message objects by createdAt
 */
 const sortMessagesByDate = (a, b) => (
-  a.createdAt.getTime() - b.createdAt.getTime()
+  b.createdAt.getTime() - a.createdAt.getTime()
 );
 const sortChatSessionsByDate = (a, b) => (
   a.lastMessageAt.getTime() - b.lastMessageAt.getTime()
@@ -90,13 +90,30 @@ export default class ChatService {
       newMessageObj is an object of the form:
       {
         chatId1: { 
-          msg1: { message: '...', timestamp: '...', name: '...'}, 
+          msg1: { text: '...', createdAt: '...', user: { _id: 'id', name: 'name' } }, 
           msg2: ...
         },
         chatId2: ...
       }
       */
       try {
+        // First, convert createdAt to a new Date object. Note that createdAt is just an ISO string
+        for (let chatId of Object.keys(newMessageObj)) {
+          for (let message of Object.keys(chatId)) {
+            message.createdAt = new Date(message.createdAt);
+          }
+        }
+
+        // Next, check whether or not each chat session exists on this device
+        // If does not exist, create it
+        let chatSessions = chatStorage.getChatSessions(); // Use chatStorage getChatSessions to save time creating Data() objects
+        for (let chatId of Object.keys(newMessageObj)) {
+          if ( !(await chatStorage.chatSessionExists(chatId)) ) {
+            let chatSession = await dbCaller.getChatSession(chatId);
+            await chatStorage.setChatSession(chatId, {...chatSession, numOfUnreadMessages: Object.keys(newMessageObj[chatId]).length} );
+          }
+        }
+
         // Pass currentFocusedChatSession so that unreadMessages are updated correctly
         // ie, dont increment unread messages for a chat session that is currently focused in Chat Screen
         let p1 = chatStorage.mergeNewMsgsFromNotifs(newMessageObj, this.currentFocusedChatSession);
@@ -105,7 +122,7 @@ export default class ChatService {
 
         // Emit to all listeners that a new message(s) is ready to be read from local storage
         // Pass an array of chatSessionId's that had new messages
-        let chatSessions = Object.keys(newMessageObj);
+        chatSessions = Object.keys(newMessageObj);
         for (let i of Object.keys(this.newMessageListeners)) {
           this.newMessageListeners[i](chatSessions);
         }
@@ -243,7 +260,6 @@ export default class ChatService {
   Returns the chatSessionId of the newly created chat session
   */
   async createNewChatSession(members, message) {
-    console.log('Creating new chat session');
     
     // Convert members array to an object
     let membersObj = {};

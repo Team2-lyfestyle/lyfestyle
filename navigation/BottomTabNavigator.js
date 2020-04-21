@@ -27,8 +27,6 @@ export default function BottomTabNavigator({ navigation, route }) {
   let [totalNumOfUnreadMessages, setTotalNumOfUnreadMessages] = React.useState(chatService.totalNumOfUnreadMessages);
   
   React.useEffect( () => {
-    console.log('mounting bottomtabnavigator');
-
     // This is where chat service will listen for new messages
     chatService.listenForNewMessages();
 

@@ -30,7 +30,14 @@ function formatAMPM(date) {
   return strTime;
 }
 
+
+
 function RenderHead({ members, lastMessageAt }) {
+  return (
+    <Text>Dont work</Text>
+  );
+  const weekdayToName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  
   let membersArr = [];
   for (let member of Object.keys(members)) {
     membersArr.push(members[member].name);
@@ -47,7 +54,7 @@ function RenderHead({ members, lastMessageAt }) {
   }
   // If on different days
   else if (lastMessageAt.getDay() - now.getDay() !== 0) { 
-    displayTime = convertWeekdayToString(lastMessageAt.getDay());
+    displayTime = weekdayToName[lastMessageAt.getDay()];
   }
   else {
     displayTime = formatAMPM(lastMessageAt);
@@ -162,7 +169,7 @@ export default function ChatSelectScreen({ navigation }) {
         <View>
           <RenderPicture {...chatSession} style={ {width: '20%', height: '100%'} } />
           <View>
-            <RenderHead {...chatSession}/>
+            <RenderHead />
             <RenderLastMessage {...chatSession}/>
           </View>
         </View>

@@ -46,7 +46,18 @@ const db = {
         }
         catch (err) {
             console.log('Error getting users');
-            return []
+            return [];
+        }
+    },
+
+    getChatSession: async function(id) {
+        try {
+            let chatSession = (await firebase.database().ref('chats/' + id).once('value')).val();
+            return chatSession;
+        }
+        catch (err) {
+            console.log('Error getting chat session', id);
+            return {};
         }
     },
 

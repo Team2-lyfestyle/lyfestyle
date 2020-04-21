@@ -6,10 +6,10 @@ import asyncStorage from './AsyncStorage';
 */
 function getMostRecentMessage(messages) {
   let min = {};
-  min.createdAt = Number.MAX_VALUE;
+  min.createdAt = new Date(0); // new Date(0) returns 0 seconds since Unix epoch
   for (let message of Object.keys(messages)) {
     messages[message].createdAt = new Date(messages[message].createdAt);
-    if (messages[message].createdAt.getTime() < min.createdAt.getTime()) {
+    if (messages[message].createdAt.getTime() > min.createdAt.getTime()) {
       min = messages[message];
     }
   }
@@ -64,7 +64,6 @@ const chatStorage = {
   getChatSessions: async function() {
     let chatSessions = await asyncStorage.getItem('chatSessions');
 
-    console.log('Got chatSessions:', chatSessions);
     // Null check: chatSessions is null if it has never been set before
     if (chatSessions === null) {
       asyncStorage.setItem('chatSessions', {});
@@ -90,11 +89,19 @@ const chatStorage = {
   },
 
   setChatSession: async function(id, session) {
-    console.log('here next');
     let chatSessions = await this.getChatSessions();
-    console.log('now here');
     chatSessions[id] = session;
     return asyncStorage.setItem('chatSessions', chatSessions);
+  },
+
+  chatSessionExists: async function(id) {
+    let chatSessions = await this.getChatSessions();
+    if (chatSessions[id]) {
+      return true;
+    }
+    else {
+      return false;
+    }
   },
 
   /*
@@ -107,17 +114,18 @@ const chatStorage = {
       return false;
 
     let chatSessions = await this.getChatSessions();
-    if (!chatSessions[id])
-      return false;
+    if (!chatSessions[id]) {
+      throw new Error(`Chat session ${id} does not exist. Create this chat session before updating it.`)
+    }
 
-    if (session['lastMessageText'])
-      chatSessions[id]['lastMessageText'] = session['lastMessageText'];
-    if (session['lastMessageAt'])
-      chatSessions[id]['lastMessageAt'] = session['lastMessageAt'];
-    if (session['numOfUnreadMessages'])
-      chatSessions[id]['numOfUnreadMessages'] = session['numOfUnreadMessages'];
-    if (session['incNumOfUnreadMessages'])
-      chatSessions[id]['numOfUnreadMessages'] += session['incNumOfUnreadMessages'];
+    for (let key of Object.keys(session)) {
+      if (key === 'incNumOfUnreadMessages') {
+        chatSessions[id].numOfUnreadMessages = Number(chatSessions[id].numOfUnreadMessages) + Number(session.incNumOfUnreadMessages);
+      }
+      else {
+        chatSessions[id][key] = session[key];
+      }
+    }
 
     return this.setChatSessions(chatSessions);
   },
@@ -158,11 +166,9 @@ const chatStorage = {
         chatId2: ...
       }
     */
-   let promises = [], mostRecentMessage, newChatSession;
-   //let unreadMessageCount = 0;
+    let promises = [], mostRecentMessage, newChatSession;
     for (let chatid of Object.keys(newMessageObj)) {
       mostRecentMessage = getMostRecentMessage(newMessageObj[chatid]);
-      //unreadMessageCount += (chatid === focusedChatId ? 0 : Object.keys(chatid).length);
       newChatSession = {
         lastMessageAt: mostRecentMessage.createdAt,
         lastMessageText: mostRecentMessage.text,

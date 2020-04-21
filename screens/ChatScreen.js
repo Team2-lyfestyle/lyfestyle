@@ -40,6 +40,7 @@ function getChatUpdate() {
 /*
 navigation parameters:
   'chatSessionId'
+  'members'
 */
 
 export default function ChatScreen(props) {
@@ -65,12 +66,14 @@ export default function ChatScreen(props) {
 
   // Chat service
   React.useEffect( () => {
+    console.log('Mounting chat service');
     const unsubscribe = chatService.addNewMsgListener( (chatSessions) => {
       console.log('New message from Chat screen');
       if (chatSessions.indexOf(chatSessionId) >= 0) {
         loadMessages();
       }
     });
+    chatService.readChatSession(chatSessionId);
     // Clear listener for cleanup
     return unsubscribe;
   }, []);
@@ -150,13 +153,11 @@ export default function ChatScreen(props) {
       let newChatSessionId = await chatService.createNewChatSession(Object.keys(members), messages[0].text);
       setChatSessionId(newChatSessionId);
     }
+    // Else, chat session already exists
     else {
-      // First, append new message to GiftedChat
-      console.log(messages);
       setMessages(previousMessages => 
         GiftedChat.append(previousMessages, messages)
       );
-      // Then, send to firebase
       chatService.sendNewMessage(chatSessionId, messages[0].text);
     }
   }

@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, StyleSheet, View, FlatList, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
-import AuthContext from '../util/AuthContext';
+import AuthContext from '../constants/AuthContext';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import queries from '../util/firebase_queries';

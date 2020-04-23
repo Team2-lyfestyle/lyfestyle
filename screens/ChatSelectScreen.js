@@ -52,8 +52,8 @@ function RenderHead({ members, lastMessageAt }) {
   let timeSince = now - lastMessageAt;
   let displayTime = '';
   // If been at least a week since lastMessageAt
-  if (timeSince > 7 * 8.64 * 10**7) { 
-    displayTime = `${lastMessageAt.getMonth()}/${lastMessageAt.getDay()}/${lastMessageAt.getFullYear().slice(2, 4)}`
+  if (timeSince > 7 * 8.64 * 10**7 && lastMessageAt) { 
+    displayTime = `${lastMessageAt.getMonth()}/${lastMessageAt.getDay()}/${lastMessageAt.getFullYear().toString().slice(2, 4)}`
   }
   // If on different days
   else if (lastMessageAt.getDay() - now.getDay() !== 0) { 

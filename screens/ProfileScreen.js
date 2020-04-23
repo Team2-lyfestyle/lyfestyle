@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
 import { Feather } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
-import AuthContext from '../util/AuthContext';
+import AuthContext from '../constants/AuthContext';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 // import { windowHeight, windowWidth } from '../constants/Dimensions';
 import { TouchableOpacity } from "react-native-gesture-handler";

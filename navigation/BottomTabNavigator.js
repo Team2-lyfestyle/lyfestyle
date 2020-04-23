@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 //SCREENS
 import TabBarIcon from '../components/TabBarIcon';
+import TabBarIconWithBadge from '../components/TabBarIconWithBadge';
 import HomeScreen from '../screens/HomeScreen';
 import TrainingScreen from '../screens/TrainingScreen';
 import ChatStackNavigator from '../navigation/ChatStackNavigator';
@@ -11,6 +12,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import QueryExampleScreen from '../screens/QueryExampleScreen';
 import { DarkTheme } from '@react-navigation/native';
 
+import ChatServiceContext from '../constants/ChatServiceContext';
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = 'Home';
@@ -21,6 +23,28 @@ export default function BottomTabNavigator({ navigation, route }) {
   // https://reactnavigation.org/docs/en/screen-options-resolution.html
   navigation.setOptions({ header: 'null' });
 
+  let chatService = React.useContext(ChatServiceContext);
+  let [totalNumOfUnreadMessages, setTotalNumOfUnreadMessages] = React.useState(chatService.totalNumOfUnreadMessages);
+  
+  React.useEffect( () => {
+    // This is where chat service will listen for new messages
+    chatService.listenForNewMessages();
+
+    const unsubscribe = chatService.addNewMsgListener(async function() {
+      console.log('New message from bottomtabnavigator');
+      setTotalNumOfUnreadMessages(await chatService.getTotalNumOfUnreadMessages());
+    });
+    return unsubscribe;
+  }, []);
+
+  React.useEffect( () => {
+    const unsubscribe = chatService.addChatSessionReadListener( async (chatSessionId) => {
+      console.log('Reading', chatSessionId, 'from bottomtabnavigator');
+      setTotalNumOfUnreadMessages(await chatService.getTotalNumOfUnreadMessages());
+    });
+    return unsubscribe;
+  }, []);
+  
   return (
     <BottomTab.Navigator
       initialRouteName={INITIAL_ROUTE_NAME}
@@ -69,7 +93,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         component={ChatStackNavigator}
         options={{
           tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name='ios-text' />
+            <TabBarIconWithBadge focused={focused} name='ios-text' badgeCount={totalNumOfUnreadMessages} />
           )
         }}
       />
@@ -83,20 +107,22 @@ export default function BottomTabNavigator({ navigation, route }) {
           )
         }}
       />
-
-      <BottomTab.Screen
-        name='Queries'
-        component={QueryExampleScreen}
-        options={{
-          title: 'Queries',
-          tabBarIcon: ({ focused }) => (
-            <TabBarIcon focused={focused} name='md-compass' />
-          )
-        }}
-      />
+      
     </BottomTab.Navigator>
   );
 }
+/*
+<BottomTab.Screen
+  name='Queries'
+  component={QueryExampleScreen}
+  options={{
+    title: 'Queries',
+    tabBarIcon: ({ focused }) => (
+      <TabBarIcon focused={focused} name='md-compass' />
+    )
+  }}
+/>
+*/
 
 function getHeaderTitle(route) {
   const routeName =

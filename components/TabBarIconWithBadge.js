@@ -12,14 +12,15 @@ export default function TabBarIconWithBadge(props) {
                 position: 'absolute',
                 right: -6,
                 top: -3, 
+                zIndex: 1,
                 backgroundColor: 'red',
-                borderRadius: 6,
-                width: 12,
-                height: 12,
+                borderRadius: 10,
+                width: 20,
+                height: 20,
                 justifyContent: 'center',
                 alignItems: 'center'
             }}>
-                {props.badgeCount > 0 && <Text>{props.badgeCount}</Text>}
+                {props.badgeCount > 0 && <Text style={{color: 'white'}}>{props.badgeCount < 10 ? props.badgeCount : '9+'}</Text>}
             </View>
         )}
         <TabBarIcon {...props}/>

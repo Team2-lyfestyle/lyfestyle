@@ -104,7 +104,7 @@ const QueryExampleScreen = ({ navigation }) => {
             setPostsByUser(JSON.stringify(postArray));
             console.log(postArray[1].description);
         }
-        await queries.getPostByUser(callback)
+        await queries.getPosts(callback)
     }
     let createPost = async (data, uri = null) => {
         if (uri)

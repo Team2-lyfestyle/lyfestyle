@@ -4,11 +4,13 @@ import {
     Text,
     TouchableOpacity,
     TouchableHighlight,
+    KeyboardAvoidingView,
     View,
     ActivityIndicator,
     FlatList
 } from 'react-native';
 import Modal from 'react-native-modal';
+import { Ionicons } from '@expo/vector-icons';
 import { TextInput } from 'react-native-gesture-handler';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import chatStorage from '../util/ChatStorage';
@@ -33,11 +35,12 @@ function formatAMPM(date) {
 
 
 function RenderHead({ members, lastMessageAt }) {
-  return (
+  /*return (
     <Text>Dont work</Text>
-  );
+  );*/
   const weekdayToName = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-  
+  console.log('members:', members, 'lastMessageAt:', lastMessageAt);
+
   let membersArr = [];
   for (let member of Object.keys(members)) {
     membersArr.push(members[member].name);
@@ -84,12 +87,12 @@ function RenderLastMessage({ lastMessageText }) {
   );
 }
 
-function RenderPicture({ pics }) {
+function RenderPicture({ pics, members }) {
   return (
-    <View>
-      <Text>
-        Avatars
-      </Text>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{width: '75%', height: '75%', borderRadius: 100, borderWidth: 0, justifyContent: 'center', alignItems: 'center'}}>
+        <Ionicons name={Object.keys(members).length > 2 ? "ios-contacts" : "ios-contact"} size={65} />
+      </View>
     </View>
   );
 }
@@ -111,12 +114,14 @@ export default function ChatSelectScreen({ navigation }) {
   let [isComposeModalVisible, setIsComposeModalVisible] = React.useState(false);
   let [composeSuggestions, setComposeSuggestions] = React.useState([]);
   let [composeAdd, setComposeAdd] = React.useState({});       // Users to add to new chat session
+  let [isOptionsModalVisible, setIsOptionsModalVisible] = React.useState(false);
+  let [modalMarginTop, setModalMarginTop] = React.useState(120);
 
 
   React.useEffect( () => {
     console.log('mounting chatselectscreen');
     chatService.addNewMsgListener(async function() {
-      console.log('New message!');
+      //console.log('New message from chat select screen');
       loadMessages();
     });
   }, []);
@@ -166,10 +171,10 @@ export default function ChatSelectScreen({ navigation }) {
         style={styles.rowFront}
         underlayColor={'#AAA'}
       >
-        <View>
-          <RenderPicture {...chatSession} style={ {width: '20%', height: '100%'} } />
-          <View>
-            <RenderHead />
+        <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center'}}>
+          <RenderPicture {...chatSession} />
+          <View style={{flex: 4}}>
+            <RenderHead {...chatSession}/>
             <RenderLastMessage {...chatSession}/>
           </View>
         </View>
@@ -188,7 +193,11 @@ export default function ChatSelectScreen({ navigation }) {
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.backRightBtn, styles.backRightBtnRight]}
-        onPress={() => deleteRow(rowMap, rowData.item.key)}
+        onPress={async () => {
+          //deleteRow(rowMap, rowData.item.key);
+          await chatService.deleteChatSession(rowData.item.key);
+          loadMessages();
+        }}
       >
         <Text style={styles.backTextWhite}>Delete</Text>
       </TouchableOpacity>
@@ -197,7 +206,7 @@ export default function ChatSelectScreen({ navigation }) {
 
   const getListData = () => {
     let sessions = chatService.convertChatSessionsToOrderedArr(chatSessions);
-    console.log('Got sessions', sessions);
+    console.log('Chat select screen: Got sessions', sessions);
     return sessions;
   }
 
@@ -252,33 +261,45 @@ export default function ChatSelectScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View><Text>Chats</Text></View>
+      <View style={{height: 60}}></View>
+
+      <View style={{height: 60, width: '100%'}}>
+        <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center'}}>
+          <View>
+            <Text style={{fontSize: 45, fontWeight: '500', color: '#EEEEEE'}}>Messages</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => { 
+              setIsComposeModalVisible(true);
+            }}
+          >
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <Ionicons name="ios-add" size={32} color="#00FED4" />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => { 
+              setIsOptionsModalVisible(true);
+            }}
+          >
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <Ionicons name="ios-more" size={32} color="#00FED4" />
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
+
       <TextInput
-        style={styles.input}
+        placeholder="Search"
+        placeholderTextColor="#222222"
+        fontSize="30"
+        style={styles.chatFilterInput}
         autoCapitalize='none'
         onChangeText={text => setSearchText(text)}
+        autoCorrect={false}
       />
-      <TouchableOpacity
-        onPress={() => { 
-          chatStorage.clearChatData();
-        }}
-      >
-        <Text>Delete local chat data</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => { 
-          //chatService.test();
-        }}
-      >
-        <Text></Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => { 
-          setIsComposeModalVisible(true);
-        }}
-      >
-        <Text>New Message</Text>
-      </TouchableOpacity>
 
       {
         !chatSessionsLoaded ? 
@@ -302,7 +323,37 @@ export default function ChatSelectScreen({ navigation }) {
       }
 
       <Modal 
+        isVisible={isOptionsModalVisible}
+        style={{margin: 0, justifyContent: 'flex-end'}}
+      >
+        <View style={{height: 200, width: '100%', backgroundColor: '#204051'}}>
+          <View style={{flex: 1, justifyContent: 'space-around', alignItems: 'center'}}>
+            <TouchableHighlight onPress={() => {
+                setIsOptionsModalVisible(false);
+                chatStorage.clearChatData();
+              }}
+              style={styles.optionsButton} //{{width: 100, height: 50, backgroundColor: 'white', borderRadius: 100}}>
+            >
+              <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <Text style={styles.optionsButtonText}>Delete local chat sessions</Text>
+              </View>
+            </TouchableHighlight>
+            <TouchableHighlight onPress={() => {
+                setIsOptionsModalVisible(false);
+              }}
+              style={styles.optionsButton} //{{width: 100, height: 50, backgroundColor: 'white', borderRadius: 100}}>
+            >
+              <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <Text style={styles.optionsButtonText}>Cancel</Text>
+              </View>
+            </TouchableHighlight>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal 
         isVisible={isComposeModalVisible}
+        avoidKeyboard={true}
         onModalShow={() => { 
           // Show friends list
           getSuggestions().then( (suggestions) => {
@@ -317,51 +368,83 @@ export default function ChatSelectScreen({ navigation }) {
         onModalHide={() => {
           // Remove add suggestions
           setComposeAdd({});
+          setModalMarginTop(120);
         }}
+        onSwipeComplete={() => {
+          setIsComposeModalVisible(false);
+        }}
+        swipeDirection={['down']}
+        onBackdropPress={() => setIsComposeModalVisible(false)}
+        propagateSwipe={true}
+        style={{margin: 0, width: '100%', height: 400}}
       >
-        <View style={{backgroundColor: 'pink'}}>
-          <TouchableHighlight onPress={() => setIsComposeModalVisible(false)}>
-            <Text>Cancel</Text>
-          </TouchableHighlight>
-          <TouchableHighlight 
-            onPress={() => {
-              // Do nothing if nobody was added
-              if (Object.keys(composeAdd).length === 0) {
-                return;
-              }
+        <View style={{flex: 1, marginTop: modalMarginTop, overflow: 'hidden', 
+          borderTopLeftRadius: 25, borderTopRightRadius: 25, backgroundColor: '#204051'}}
+        >
+          <View style={{alignSelf: 'center', backgroundColor: 'black', borderRadius: 100, height: 3, width: '60%', marginTop: 10}}></View>
+          <Text style={{color: '#EEEEEE', height: 50, fontSize: 30, marginTop: 20, alignSelf: 'center', fontWeight: '500'}}>
+            New Message
+          </Text>
+          <View style={{width: '100%', height: 60}}>
+            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center'}}>
+              <TouchableHighlight 
+                style={styles.composeButton}
+                onPress={() => {
+                  // Do nothing if nobody was added
+                  if (Object.keys(composeAdd).length === 0) {
+                    return;
+                  }
 
-              setIsComposeModalVisible(false);
-              let members = Object.keys(composeAdd);
-              members.push(dbCaller.getCurrentUser().uid);
-              console.log('Testing members:', members);
-              chatService.doesChatSessionExistWithMembers(members).then( 
-                result => {
-                  if (result) {
-                    console.log('Chat session exists with id:', result);
-                    navigation.navigate('Chat', { chatSessionId: result})
-                  }
-                  else {
-                    // Create new chat session
-                    // First, convert members array to an object
-                    let membersObj = {}
-                    for (let member of members) {
-                      membersObj[member] = true;
+                  setIsComposeModalVisible(false);
+                  let members = Object.keys(composeAdd);
+                  members.push(dbCaller.getCurrentUserId());
+                  console.log('Testing members:', members);
+                  chatService.doesChatSessionExistWithMembers(members).then( 
+                    result => {
+                      if (result) {
+                        console.log('Chat session exists with id:', result);
+                        navigation.navigate('Chat', { chatSessionId: result})
+                      }
+                      else {
+                        // Create new chat session
+                        // First, convert members array to an object
+                        let membersObj = {}
+                        for (let member of members) {
+                          membersObj[member] = true;
+                        }
+                        navigation.navigate('Chat', { chatSessionId: '', members: membersObj});
+                      }
                     }
-                    navigation.navigate('Chat', { chatSessionId: '', members: membersObj});
-                  }
-                }
-              )
-              .catch(
-                err => {console.log('Error:', err)}
-              );
-            }}
-          >
-            <Text>Confirm</Text>
-          </TouchableHighlight>
+                  )
+                  .catch(
+                    err => {console.log('Error:', err)}
+                  );
+                }}
+              >
+                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                  <Text style={styles.composeButtonText}>Confirm</Text>
+                </View>
+              </TouchableHighlight>
+              <TouchableHighlight onPress={() => setIsComposeModalVisible(false)}
+                style={styles.composeButton} //{{width: 100, height: 50, backgroundColor: 'white', borderRadius: 100}}>
+              >
+                <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                  <Text style={styles.composeButtonText}>Cancel</Text>
+                </View>
+              </TouchableHighlight>
+            </View>
+          </View>
 
           <TextInput 
-            style={styles.input}
+            style={styles.composeInput}
             autoCapitalize='none'
+            autoCorrect={false}
+            onFocus={() => {
+              setModalMarginTop(-20);
+            }}
+            onBlur={() => {
+              setModalMarginTop(120);
+            }}
             onChangeText={text => {
               getSuggestions(text).then( (suggestions) => { 
                 setComposeSuggestions(suggestions);
@@ -369,34 +452,52 @@ export default function ChatSelectScreen({ navigation }) {
             }}
           />
 
-          <View>
-            <Text>People you will add</Text>
-            {
-            Object.keys(composeAdd).map( (uid) => (
-              <TouchableOpacity key={uid} onPress={() => composeSelectUser(composeAdd[uid])}>
-                <Text>{composeAdd[uid].name}</Text>
-              </TouchableOpacity>
-            ))
-            }
+          <View style={{width: '100%', height: 100}}>
+            <View style={{marginTop: 5, flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center', flexWrap: 'wrap'}}>
+              {
+              Object.keys(composeAdd).map( (uid) => (
+                <TouchableOpacity key={uid} onPress={() => composeSelectUser(composeAdd[uid])}
+                  style={{backgroundColor: '#406081', padding: 15, borderRadius: 100}}>
+                  <Text>{composeAdd[uid].name}</Text>
+                </TouchableOpacity>
+              ))
+              }
+            </View>
           </View>
 
-          <View>
-            <Text>People you can add</Text>
-            <FlatList
-              data={composeSuggestions}
-              renderItem={ ( {item} ) => (
-                <TouchableOpacity
-                  onPress={() => {
-                    composeSelectUser(item);
-                  }}
-                  style={{marginLeft: item.uid in composeAdd ? 10 : 0}}
-                >
-                  <Text>{item.name}</Text>
-                </TouchableOpacity>
-              )}
-              keyExtractor={(item) => item.uid}
-            />
+          <View 
+            style={{height: 1, width: '100%', alignSelf: 'center', borderRadius: 1, borderWidth: 1,
+            backgroundColor: '#204051', borderStyle: 'dashed', borderColor: 'grey'}}>
           </View>
+
+          <FlatList
+            style={{flex: 1}}
+            data={composeSuggestions}
+            renderItem={ ( {item} ) => (
+              <TouchableOpacity
+                onPress={() => {
+                  composeSelectUser(item);
+                }}
+                style={{width: '100%', height: 70,
+                        marginLeft: item.uid in composeAdd ? 10 : 0}}
+              >
+                <View style={{flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                  {item.uid in composeAdd && 
+                  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                    <Ionicons style={{marginTop: -15}} name="ios-checkmark" size={100} color="#00FED4" />
+                  </View>}
+                  <View style={{flex: 3, flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start'}}>
+                    <Text style={{marginLeft: 40, fontSize: 20, fontWeight: '500', color: '#EEEEEE'}}>{item.name}</Text>
+                  </View>
+                </View>
+                <View 
+                  style={{height: 1, width: '80%', alignSelf: 'center', borderRadius: 1,
+                  backgroundColor: '#406081'}}>
+                </View>
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item) => item.uid}
+          />
         </View>
       </Modal>
     </View>
@@ -405,27 +506,92 @@ export default function ChatSelectScreen({ navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'white',
-        flex: 1,
+      backgroundColor: '#204051',
+      flex: 1,
     },
-    input: {
-      borderRadius: 10,
+    button: {
+      width: 35,
+      height: 35,
+      backgroundColor: '#406081',
+      //borderColor: '#102031',
+      borderRadius: 100
+    },
+    buttonText: {
+      //textAlignVertical: 'center',
+      //marginVertical: 'auto',
+      //textAlign: 'center',
+      fontWeight: '800',
+      fontSize: 18,
+      color: '#00FED4'
+    },
+    composeButton: {
+      width: 100,
+      height: 50,
+      backgroundColor: '#406081',
+      //borderColor: '#102031',
+      borderRadius: 100
+    },
+    composeButtonText: {
+      //textAlignVertical: 'center',
+      //marginVertical: 'auto',
+      //textAlign: 'center',
+      fontWeight: '800',
+      fontSize: 18,
+      color: '#00FED4'
+    },
+    optionsButton: {
+      width: '80%',
+      height: 50,
+      backgroundColor: '#406081',
+      //borderColor: '#102031',
+      borderRadius: 100,
+    },
+    optionsButtonText: {
+      //textAlignVertical: 'center',
+      //marginVertical: 'auto',
+      //textAlign: 'center',
+      fontWeight: '800',
+      fontSize: 18,
+      color: '#00FED4'
+    },
+    chatFilterInput: {
+      borderRadius: 100,
+      backgroundColor: '#406081',
       borderBottomColor: '#8A8F9E',
       borderBottomWidth: StyleSheet.hairlineWidth,
-      height: 40,
-      fontSize: 15,
-      color: 'white'
+      marginVertical: 20,
+      paddingLeft: 30,
+      height: 50,
+      width: '90%',
+      alignSelf: 'center',
+      fontSize: 20,
+      color: '#EEEEEE'
+    },
+    composeInput: {
+      borderRadius: 100,
+      backgroundColor: '#406081',
+      borderBottomColor: '#8A8F9E',
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      marginTop: 20,
+      paddingLeft: 30,
+      height: 50,
+      width: '90%',
+      alignSelf: 'center',
+      fontSize: 20,
+      color: '#EEEEEE'
     },
     backTextWhite: {
         color: '#FFF',
     },
     rowFront: {
+        flex: 1,
+        flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#CCC',
         borderBottomColor: 'black',
         borderBottomWidth: 1,
         justifyContent: 'center',
-        height: 75,
+        height: 85,
     },
     rowBack: {
         alignItems: 'center',
@@ -434,6 +600,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingLeft: 15,
+        height: 85
     },
     backRightBtn: {
         alignItems: 'center',

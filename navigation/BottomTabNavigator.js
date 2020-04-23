@@ -30,9 +30,9 @@ export default function BottomTabNavigator({ navigation, route }) {
     // This is where chat service will listen for new messages
     chatService.listenForNewMessages();
 
-    const unsubscribe = chatService.addNewMsgListener(function() {
+    const unsubscribe = chatService.addNewMsgListener(async function() {
       console.log('New message from bottomtabnavigator');
-      setTotalNumOfUnreadMessages(chatService.totalNumOfUnreadMessages);
+      setTotalNumOfUnreadMessages(await chatService.getTotalNumOfUnreadMessages());
     });
     return unsubscribe;
   }, []);

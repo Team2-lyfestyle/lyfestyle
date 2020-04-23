@@ -46,12 +46,7 @@ navigation parameters:
 export default function ChatScreen(props) {
   let chatService = React.useContext(ChatServiceContext);
 
-  const thisUser = {
-    _id: dbCaller.getCurrentUser().uid,
-    name: dbCaller.getCurrentUser().name,
-    //avatar: 
-  };
-
+  let [thisUser, setThisUser] = React.useState({});
   let [chatSessionId, setChatSessionId] = React.useState(props.route.params.chatSessionId);
   let [messages, setMessages] = React.useState([]);
   let [dataIsLoaded, setDataIsLoaded] = React.useState(false);
@@ -66,9 +61,8 @@ export default function ChatScreen(props) {
 
   // Chat service
   React.useEffect( () => {
-    console.log('Mounting chat service');
     const unsubscribe = chatService.addNewMsgListener( (chatSessions) => {
-      console.log('New message from Chat screen');
+      //console.log('New message from Chat screen');
       if (chatSessions.indexOf(chatSessionId) >= 0) {
         loadMessages();
       }
@@ -81,6 +75,11 @@ export default function ChatScreen(props) {
   // Initialize data on component mount
   React.useEffect( () => {
     async function initializeData() {
+      let thisUser = {
+        _id: dbCaller.getCurrentUserId(),
+        name: (await dbCaller.getCurrentUser()).name,
+      }
+
       // Initialize members
       let otherMembers = {};
       let users = [];
@@ -110,6 +109,7 @@ export default function ChatScreen(props) {
         await loadMessages();//await chatService.getMessages(chatSessionId, otherUsers);
       }
 
+      setThisUser(thisUser);
       setMembers({
         ...otherMembers,
         [thisUser._id]: thisUser

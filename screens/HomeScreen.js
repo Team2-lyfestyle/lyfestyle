@@ -75,7 +75,7 @@ export default function HomeScreen({ navigation }) {
       }
       setPostsByUser(postArray);
     };
-    await queries.getPostByUser(callback);
+    await queries.getPosts(callback);
   };
 
 

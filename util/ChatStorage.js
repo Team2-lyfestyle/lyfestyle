@@ -118,6 +118,8 @@ const chatStorage = {
       throw new Error(`Chat session ${id} does not exist. Create this chat session before updating it.`)
     }
 
+    //console.log('From updateChatSession:', id, session);
+    //console.log('From updateChatSession:', chatSessions[id].numOfUnreadMessages);
     for (let key of Object.keys(session)) {
       if (key === 'incNumOfUnreadMessages') {
         chatSessions[id].numOfUnreadMessages = Number(chatSessions[id].numOfUnreadMessages) + Number(session.incNumOfUnreadMessages);
@@ -141,12 +143,15 @@ const chatStorage = {
   },
 
   deleteChatSession: async function(id) {
-    let chatSessions = this.getChatSessions();
-    if (!chatSessions[id])
+    let chatSessions = await this.getChatSessions();
+    if (!chatSessions[id]) {
+      console.log('Chat session does not exist with id', id);
       return false;
+    }
     
     delete chatSessions[id];
     this.setChatSessions(chatSessions);
+    asyncStorage.removeItem(id);
     return true;
   },
 
@@ -166,13 +171,15 @@ const chatStorage = {
         chatId2: ...
       }
     */
+
     let promises = [], mostRecentMessage, newChatSession;
+    //console.log('From mergeNewMsgsFromNotifs:', newMessageObj, focusedChatId);
     for (let chatid of Object.keys(newMessageObj)) {
       mostRecentMessage = getMostRecentMessage(newMessageObj[chatid]);
       newChatSession = {
         lastMessageAt: mostRecentMessage.createdAt,
         lastMessageText: mostRecentMessage.text,
-        incNumOfUnreadMessages: chatid === focusedChatId ? 0 : Object.keys(chatid).length 
+        incNumOfUnreadMessages: chatid === focusedChatId ? 0 : Object.keys(newMessageObj[chatid]).length 
       };
       promises.push( this.updateChatSession(chatid, newChatSession) );
       promises.push( this.addNewMessages(chatid, newMessageObj[chatid]) );

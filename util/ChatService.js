@@ -77,6 +77,7 @@ export default class ChatService {
   }
 
   clearNewMessageListener(key) {
+    //console.log('Clearing chat session read listener', key);
     delete this.newMessageListeners[key];
   }
 
@@ -181,7 +182,7 @@ export default class ChatService {
     //--------------
 
     // Make sure current user id is included in the members array
-    let currentUserId = dbCaller.getCurrentUser().uid;
+    let currentUserId = dbCaller.getCurrentUserId();
     if (!members.includes(currentUserId)) {
       members.push(currentUserId);
     }
@@ -230,21 +231,22 @@ export default class ChatService {
     return listData;
   }
 
-  async deleteChatSession() {
-
+  deleteChatSession(chatId) {
+    return chatStorage.deleteChatSession(chatId);
   }
 
   async sendNewMessage(chatId, message) {
-    console.log('Sending new message', message, 'to', chatId);
-    let thisUser = dbCaller.getCurrentUser();
+    //console.log('Sending new message', message, 'to', chatId);
+    let thisUser = await dbCaller.getCurrentUser();
     let newMessage = {
       text: message,
       user: {
-        _id: thisUser.uid,
+        _id: dbCaller.getCurrentUserId(),
         name: thisUser.name ? thisUser.name : ''
       },
       createdAt: (new Date()).toISOString()
     };
+    //console.log('newMessage:', newMessage);
     let messageId = await dbCaller.sendNewMessage(chatId, newMessage);
 
     let promises = [];
@@ -264,14 +266,14 @@ export default class ChatService {
     // Convert members array to an object
     let membersObj = {};
     for (let member of members) {
-      membersObj[member] = true;
+      membersObj[member] = { name: (await dbCaller.getUserById(member)).name };
     }
 
-    let thisUser = dbCaller.getCurrentUser();
+    let thisUser = await dbCaller.getCurrentUser();
     let newMessage = {
       text: message,
       user: {
-        _id: thisUser.uid,
+        _id: dbCaller.getCurrentUserId(),
         name: thisUser.name ? thisUser.name : '' // In case thisUser.name is undefined
       },
       createdAt: (new Date()).toISOString()
@@ -290,7 +292,7 @@ export default class ChatService {
 
     // result contains new chatSessionId and messageId
     let result = await dbCaller.createNewChatSession(data);
-    console.log('result: ', result);
+    //console.log('result: ', result);
     newChatSession.numOfUnreadMessages = 0; // Update numOfUnreadMessages for local storage
     await Promise.all([chatStorage.addNewMessage(result.chatSessionId, result.messageId, newMessage),
     chatStorage.setChatSession(result.chatSessionId, newChatSession)]);

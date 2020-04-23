@@ -3,12 +3,18 @@ import fbqueries from './firebase_queries';
 
 
 const db = {
-    getCurrentUser: function() {
-        return firebase.auth().currentUser;
+    getCurrentUser: async function() {
+        let thisUserId = firebase.auth().currentUser.uid;
+        let snapshot = await firebase.database().ref('users/' + thisUserId).once('value');
+        return snapshot.val();
+    },
+
+    getCurrentUserId: function() {
+        return firebase.auth().currentUser.uid;
     },
 
     getFriendsList: async function() {
-        let thisId = this.getCurrentUser().uid;
+        let thisId = this.getCurrentUserId();
         try {
             let friends = await firebase.database().ref('users/' + thisId + '/friends').once('value');
             friends = friends.val(); // Convert snapshot to object
@@ -71,7 +77,7 @@ const db = {
         */
         let messages = {};
         try {
-            messages = (await firebase.database().ref('notifs/' + this.getCurrentUser().uid + '/chats').once('value')).val();
+            messages = (await firebase.database().ref('notifs/' + this.getCurrentUserId() + '/chats').once('value')).val();
         }
         catch (err) {
             console.log('Error getting new messages');
@@ -82,7 +88,7 @@ const db = {
         // If there were new messages successfully retrieved, delete them in the database
         if (messages) {
             try {
-                await firebase.database().ref('notifs/' + this.getCurrentUser().uid + '/chats').remove();
+                await firebase.database().ref('notifs/' + this.getCurrentUserId() + '/chats').remove();
             }
             catch (err) {
                 console.log('Error deleting new messages in firebase');
@@ -92,8 +98,8 @@ const db = {
     },
 
     listenForNewMessages: function(callback) {
-        console.log('Now listening in firebase on', `notifs/${this.getCurrentUser().uid}/chats`);
-        firebase.database().ref('notifs/' + this.getCurrentUser().uid + '/chats').on('value', 
+        console.log('Now listening in firebase on', `notifs/${this.getCurrentUserId()}/chats`);
+        firebase.database().ref('notifs/' + this.getCurrentUserId() + '/chats').on('value', 
             (snapshot) => {
                 /*
                     snapshot.val() is an object of the form:
@@ -106,7 +112,7 @@ const db = {
                     }
                 */
                 let messages = snapshot.val();
-                console.log('Reading from chat notifs');
+                console.log('Reading from chat notifs', snapshot, messages);
                 
                 // only return data if new messages are available
                 if (messages) {
@@ -117,12 +123,12 @@ const db = {
     },
 
     stopListenForNewMessages: function() {
-        firebase.database().ref('notifs/' + this.getCurrentUser().uid + '/chats').off('value');
+        firebase.database().ref('notifs/' + this.getCurrentUserId() + '/chats').off('value');
     },
 
     deleteChatsFromNotifs: async function() {
         try {
-            await firebase.database().ref('notifs/' + this.getCurrentUser().uid + '/chats').remove();
+            await firebase.database().ref('notifs/' + this.getCurrentUserId() + '/chats').remove();
             return true;
         }
         catch (err) {
@@ -171,7 +177,7 @@ const db = {
     test: async function() {
         var ref;
         try {
-          let url = `notifs/${this.getCurrentUser().uid}/chats`;
+          let url = `notifs/${this.getCurrentUserId()}/chats`;
           console.log('Url:', url);
           let ref = firebase.database().ref(url);
           console.log('got ref');

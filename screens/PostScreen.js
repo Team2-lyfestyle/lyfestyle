@@ -32,6 +32,8 @@ const PostScreen = ({ navigation }) => {
 
   let createPost = async (data, uri = null) => {
     await queries.createPost(data, uri);
+    updatePost(false);
+    updatePostPhoto(false);
     navigation.navigate('Home');
   };
 
@@ -65,15 +67,12 @@ const PostScreen = ({ navigation }) => {
         <TouchableOpacity
           onPress={async () => {
             if (post && postPhoto){
-              console.log("Creating POST")
               await createPost(
                 {
                   description: post,
                 },
                 postPhoto
               );
-              console.log("POST CREATED")
-              navigate("Home")
             }
           }}
         >

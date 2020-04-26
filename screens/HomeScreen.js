@@ -116,6 +116,7 @@ export default function HomeScreen({ navigation }) {
       </View>
     );
   };
+  
   return (
     <View style={styles.container}>
       <View style={styles.header}>

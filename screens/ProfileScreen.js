@@ -35,7 +35,7 @@ export default function Profile({navigation}) {
                 {/* Profile Image  */}
                 <View style = {[styles.center, {marginTop: 8}]}>
                     <View style = {styles.profileImage}>
-                        <Image source={require("../assets/images/profile_pic.jpg")} style = {styles.profileImage}></Image>
+                        <Image source={require("../assets/images/doctor.png")} style = {styles.profileImage}></Image>
                     </View>
                 </View>
                 {/* Name */}

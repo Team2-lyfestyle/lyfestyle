@@ -1,11 +1,9 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from "react-native";
 import { Feather } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
 import AuthContext from '../constants/AuthContext';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-// import { windowHeight, windowWidth } from '../constants/Dimensions';
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 
 export default function Profile({navigation}) {
@@ -23,13 +21,16 @@ export default function Profile({navigation}) {
                         left: 0,
                         right: 0,
                         top: 0,
-                        // height: 300,
                         height: hp('35%'),
                     }}
                 />
 
                 <TouchableOpacity style = {styles.settingsIcon} onPress={() => { signOut() }}>
-                    <Feather name = "log-out" size = {23} color = "black"/>
+                    <Feather 
+                        name = "log-out" 
+                        size = {23} 
+                        color = "black"
+                    />
                 </TouchableOpacity>
                 
                 {/* Profile Image  */}
@@ -37,6 +38,14 @@ export default function Profile({navigation}) {
                     <View style = {styles.profileImage}>
                         <Image source={require("../assets/images/doctor.png")} style = {styles.profileImage}></Image>
                     </View>
+                    {/* Edit profile picture icon  */}
+                    <TouchableOpacity style = {styles.edit}>
+                        <Feather 
+                            name = "edit-2" 
+                            size = {25} 
+                            color = "black"
+                        />
+                    </TouchableOpacity>
                 </View>
                 {/* Name */}
                 <View style = {[styles.center, {marginTop: 30}, {marginBottom: 15}]}>
@@ -135,6 +144,19 @@ const styles = StyleSheet.create({
         shadowColor: '#202020',
         shadowOffset: {width: 0, height: 0},
         shadowRadius: 5,
+    },
+
+    // Edit icon for profile picture 
+    edit: {
+        backgroundColor: "#EFEdF4",
+        position: "absolute",
+        bottom: 0,
+        right: 0,
+        width: wp('11%'),
+        height: hp('5%'),
+        borderRadius: 20,
+        alignItems: "center",
+        justifyContent: "center"
     },
 
     // Properties to center Bio for profile

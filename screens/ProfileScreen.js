@@ -1,14 +1,80 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity, FlatList } from "react-native";
 import { Feather } from '@expo/vector-icons'
 import { LinearGradient } from 'expo-linear-gradient';
 import AuthContext from '../constants/AuthContext';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
+import queries from '../util/firebase_queries';
 
-export default function Profile({navigation}) {
+export default function Profile({post}) {
+    //Used for sign out icon
+    const {signOut} = React.useContext(AuthContext);
+    // const [updateCurrentUser] = React.useState(false);
+    const [postsByUser, setPostsByUser] = React.useState(false);
+    const [nameOfUser, setnameOfUser] = React.useState('');
 
-    const {signOut} = React.useContext(AuthContext)
+    React.useEffect(() => {
+        async function askPermission() {
+            if (Constants.platform.ios) {
+                const { statusRoll } = await Permissions.aAsync(Permissions.CAMERA_ROLL);
+                const { statusCamera } = await Permissions.askAsync(Permissions.CAMERA);
+                CAMERA
+                if (statusRoll !== 'granted' && statusCamera !== 'granted') {
+                  console.log("Gimme Permission")
+                }
+            };
+        }
+        getCurrentUserPost();
+        console.log(posts);
+    }, []);
+
+    // Photo library 
+    // let handlePostPhotoLibrary = () => {
+    //     ImagePicker.launchImageLibraryAsync({
+    //       mediaTypes: 'Images',
+    //       allowsEditing: true,
+    //     }).then((result) => {
+    //       updateCurrentUser(result.uri);
+    //     });
+    // };
+
+    let getCurrentUserPost = async () => {
+
+        let callback = (snapshot) => {
+            let postArray = []
+            Object.keys(snapshot).forEach(key => {
+                let temp = snapshot[key]
+                temp.id = key
+                postArray.push(temp)
+            })
+            
+            setPostsByUser(postArray);
+            setnameOfUser(postArray[0].displayName);
+            // console.log(postArray[1].description);
+        }
+        await queries.getCurrUserPosts(callback)
+    }
+    console.log(postsByUser)
+    
+    renderPost = (post) => {
+        return (
+            <View style = {styles.pictureContainer}>
+                <ScrollView horizontal = {true} showsHorizontalScrollIndicator = {false}>
+                    <View style = {styles.mediaImage}>
+                        <Text>{post.displayName}</Text>
+                        <Image
+                            source={{uri:post.media}}
+                            style={styles.postImage}
+                            resizeMode='cover'
+                        />
+                    </View>
+                </ScrollView>
+            </View>
+      );
+    }
 
     return (
         <View style = {styles.container}>
@@ -44,12 +110,13 @@ export default function Profile({navigation}) {
                             name = "edit-2" 
                             size = {25} 
                             color = "black"
+                            onPress={() => handlePostPhotoLibrary()}
                         />
                     </TouchableOpacity>
                 </View>
                 {/* Name */}
                 <View style = {[styles.center, {marginTop: 30}, {marginBottom: 15}]}>
-                    <Text style = {[{fontSize: 30}, { fontWeight: '400' }]}>John Doe</Text>
+                    <Text style = {[{fontSize: 30}, { fontWeight: '400' }]}>{nameOfUser}</Text>
                 </View>
             </View>
        
@@ -66,14 +133,13 @@ export default function Profile({navigation}) {
                 {/* Stats Container */}
                 <View style = {styles.statsContainer}>
                     <View style = {[{marginTop: hp('1.5%')}]}>
-                        <Text style = {[{fontSize: 15}, { fontWeight: '700' }]}>100 </Text>
-                        <Text style = {[{fontSize: 10}, { fontWeight: '700' }, {color: 'grey'}]}>Posts</Text>
+                        <Text style = {[{fontSize: 15}, { fontWeight: '700' }]}>Posts</Text>
                     </View>
                 </View>
                 {/* Picture Container  */}
-                <View style = {styles.pictureContainer}>
+                {/* <View style = {styles.pictureContainer}>
                     {/* Scroll pictures in the horizontal direction  */}
-                    <ScrollView horizontal = {true} showsHorizontalScrollIndicator = {false}>
+                    {/* <ScrollView horizontal = {true} showsHorizontalScrollIndicator = {false}>
                         <View style = {styles.mediaImage}>
                             <Image source = {require("../assets/images/1.jpg")} style = {styles.image} resizeMode="cover"></Image>
                         </View>
@@ -95,8 +161,15 @@ export default function Profile({navigation}) {
                         <View style = {styles.mediaImage}>
                             <Image source = {require("../assets/images/7.jpg")} style = {styles.image} resizeMode="cover"></Image>
                         </View>
-                    </ScrollView>
-                </View>
+                    </ScrollView> */}
+                {/* </View> */}
+                <FlatList
+                    horizontal
+                    style={styles.feed}
+                    data={postsByUser}
+                    renderItem={({ item }) => renderPost(item)}
+                    keyExtractor={(item) => item.id}
+                />
             </ScrollView>
         </View>
     );
@@ -197,5 +270,14 @@ const styles = StyleSheet.create({
         flex: 1,
         width: undefined,
         height: undefined
-    }
+    },
+
+    feed: {
+        marginHorizontal: 16,
+    },
+    postImage: {
+        width: undefined,
+        height: 250,
+        borderRadius: 15,
+      },
 })

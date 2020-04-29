@@ -39,10 +39,11 @@ export default function Profile({post}) {
           mediaTypes: 'Images',
           allowsEditing: true,
         }).then(async (result) => {
-          await queries.updateCurrentUser({bio: 'hello'},result.uri);
+          await queries.updateCurrentUser({bio: 'My name is Israel and I attend California State University, Fresno. I am studying computer science and will graduate in 1.5 years.'},result.uri);
         });
     };
 
+    // User information 
     let getCurrUser = async () => {
         let callback = (snapshot) => {
             setnameOfUser(snapshot.name)
@@ -52,6 +53,7 @@ export default function Profile({post}) {
         // console.log(user)
     }
 
+    // Gets user posts 
     let getCurrentUserPost = async () => {
 
         let callback = (snapshot) => {
@@ -69,7 +71,7 @@ export default function Profile({post}) {
         await queries.getCurrUserPosts(callback)
     }
     console.log(postsByUser)
-    
+    // Function that flat list uses to render posts 
     renderPost = (post) => {
         return (
             <View style = {styles.pictureContainer}>
@@ -78,7 +80,7 @@ export default function Profile({post}) {
                         <Image
                             source={{uri:post.media}}
                             style={styles.postImage}
-                            resizeMode='cover'
+                            resizeMode='contain'
                         />
                     </View>
                 </ScrollView>
@@ -146,33 +148,7 @@ export default function Profile({post}) {
                         <Text style = {[{fontSize: 15}, { fontWeight: '700' }]}>Posts</Text>
                     </View>
                 </View>
-                {/* Picture Container  */}
-                {/* <View style = {styles.pictureContainer}>
-                    {/* Scroll pictures in the horizontal direction  */}
-                    {/* <ScrollView horizontal = {true} showsHorizontalScrollIndicator = {false}>
-                        <View style = {styles.mediaImage}>
-                            <Image source = {require("../assets/images/1.jpg")} style = {styles.image} resizeMode="cover"></Image>
-                        </View>
-                        <View style = {styles.mediaImage}>
-                            <Image source = {require("../assets/images/2.jpg")} style = {styles.image} resizeMode="cover"></Image>
-                        </View>
-                        <View style = {styles.mediaImage}>
-                            <Image source = {require("../assets/images/3.jpg")} style = {styles.image} resizeMode="cover"></Image>
-                        </View>
-                        <View style = {styles.mediaImage}>
-                            <Image source = {require("../assets/images/4.jpg")} style = {styles.image} resizeMode="cover"></Image>
-                        </View>
-                        <View style = {styles.mediaImage}>
-                            <Image source = {require("../assets/images/5.jpg")} style = {styles.image} resizeMode="cover"></Image>
-                        </View>
-                        <View style = {styles.mediaImage}>
-                            <Image source = {require("../assets/images/6.jpg")} style = {styles.image} resizeMode="cover"></Image>
-                        </View>
-                        <View style = {styles.mediaImage}>
-                            <Image source = {require("../assets/images/7.jpg")} style = {styles.image} resizeMode="cover"></Image>
-                        </View>
-                    </ScrollView> */}
-                {/* </View> */}
+                {/* Flat list for images (posts) */}
                 <FlatList
                     horizontal
                     style={styles.feed}
@@ -186,6 +162,7 @@ export default function Profile({post}) {
 }
 
 const styles = StyleSheet.create({
+    //Container for profile page
     container: {
         flex: 1,
         backgroundColor: '#EFEdF4',
@@ -260,34 +237,29 @@ const styles = StyleSheet.create({
         paddingBottom: 5
     },
 
-    // Sets margin for image container 
-    pictureContainer: {
-        marginTop: hp('3%'),
-        marginBottom: hp('3%')
+    // Margin horizontal for post feed 
+    feed: {
+        marginHorizontal: 0,
     },
 
-    // Container for images 
+    // Sets margin for image container 
+    pictureContainer: {
+        marginTop: hp('1%'),
+        marginBottom: hp('1%')
+    },
+
+    // Container for each image
     mediaImage: {
-        width: wp('47%'),
-        height: hp('25%'),
-        borderRadius: 12,
+        width: wp('57%'),
+        height: hp('35%'),
+        // borderRadius: 30,
         overflow: 'hidden',
         marginHorizontal: wp('3.5%')
     },
 
-    // Properties for images(posts) 
-    image : {
-        flex: 1,
-        width: undefined,
-        height: undefined
-    },
-
-    feed: {
-        marginHorizontal: 16,
-    },
+    //Properties for images (posts)
     postImage: {
-        width: undefined,
-        height: 250,
-        borderRadius: 15,
+        flex: 1,
+        borderRadius: 15
       },
 })

@@ -15,6 +15,7 @@ export default function Profile({post}) {
     // const [updateCurrentUser] = React.useState(false);
     const [postsByUser, setPostsByUser] = React.useState(false);
     const [nameOfUser, setnameOfUser] = React.useState('');
+    const [bio, setBio] = React.useState('');
 
     React.useEffect(() => {
         async function askPermission() {
@@ -28,18 +29,28 @@ export default function Profile({post}) {
             };
         }
         getCurrentUserPost();
-        console.log(posts);
+        getCurrUser();
+        // console.log(user);
     }, []);
 
     // Photo library 
-    // let handlePostPhotoLibrary = () => {
-    //     ImagePicker.launchImageLibraryAsync({
-    //       mediaTypes: 'Images',
-    //       allowsEditing: true,
-    //     }).then((result) => {
-    //       updateCurrentUser(result.uri);
-    //     });
-    // };
+    let handlePostPhotoLibrary = () => {
+        ImagePicker.launchImageLibraryAsync({
+          mediaTypes: 'Images',
+          allowsEditing: true,
+        }).then(async (result) => {
+          await queries.updateCurrentUser({bio: 'hello'},result.uri);
+        });
+    };
+
+    let getCurrUser = async () => {
+        let callback = (snapshot) => {
+            setnameOfUser(snapshot.name)
+            setBio(snapshot.bio)
+        }
+        await queries.getCurrentUser(callback)
+        // console.log(user)
+    }
 
     let getCurrentUserPost = async () => {
 
@@ -64,7 +75,6 @@ export default function Profile({post}) {
             <View style = {styles.pictureContainer}>
                 <ScrollView horizontal = {true} showsHorizontalScrollIndicator = {false}>
                     <View style = {styles.mediaImage}>
-                        <Text>{post.displayName}</Text>
                         <Image
                             source={{uri:post.media}}
                             style={styles.postImage}
@@ -128,7 +138,7 @@ export default function Profile({post}) {
                 </View>
 
                 <View style = {styles.centerBio}>
-                    <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tincidunt enim quis laoreet dapibus. Nulla lacinia posuere diam aliquam tincidunt. Vivamus commodo ligula quis nisl placerat laoreet.</Text>
+                    <Text>{bio}</Text>
                 </View>
                 {/* Stats Container */}
                 <View style = {styles.statsContainer}>

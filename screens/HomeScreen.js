@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, StyleSheet, View, FlatList, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
-import AuthContext from '../util/AuthContext';
+import AuthContext from '../constants/AuthContext';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import queries from '../util/firebase_queries';
@@ -70,19 +70,19 @@ export default function HomeScreen({ navigation }) {
         Object.keys(snapshot).forEach((key) => {
           let temp = snapshot[key];
           temp.id = key;
+          temp.timestamp = new Date(temp.timestamp).toDateString()
           postArray.push(temp);
         });
       }
       setPostsByUser(postArray);
     };
-    await queries.getPostByUser(callback);
+    await queries.getPosts(callback);
   };
 
 
   renderPost = (post) => {
     return (
       <View style={styles.feedItem}>
-        {/* <Image source={post.avatar} style={styles.avatar} /> */}
         <View style={{ flex: 1 }}>
           <View
             style={{
@@ -93,7 +93,7 @@ export default function HomeScreen({ navigation }) {
           >
             <View>
               <Text style={styles.post}>{post.displayName}</Text>
-              <Text style={styles.timestamp}>{moment(post.timestamp).fromNow()}</Text>
+              <Text style={styles.timestamp}>{post.timestamp}</Text>
             </View>
             <Ionicons name='ios-more' size={24} color='#73788B' />
           </View>
@@ -110,13 +110,11 @@ export default function HomeScreen({ navigation }) {
               color='#000'
               style={{ marginRight: 15, marginTop: 10 }}
             />
-            <Ionicons></Ionicons>
           </View>
         </View>
       </View>
     );
   };
-  
   return (
     <View style={styles.container}>
       <View style={styles.header}>

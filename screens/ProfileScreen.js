@@ -10,7 +10,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function Profile({navigation}) {
 
-    const {signOut} = React.useContext(AuthContext)
+    //const {signOut} = React.useContext(AuthContext)
 
     return (
         <View style = {styles.container}>

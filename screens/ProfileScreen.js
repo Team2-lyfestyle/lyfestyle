@@ -16,6 +16,7 @@ export default function Profile({post}) {
     const [postsByUser, setPostsByUser] = React.useState(false);
     const [nameOfUser, setnameOfUser] = React.useState('');
     const [bio, setBio] = React.useState('');
+    const [picture, setPicture] = React.useState('');
 
     React.useEffect(() => {
         async function askPermission() {
@@ -48,6 +49,7 @@ export default function Profile({post}) {
         let callback = (snapshot) => {
             setnameOfUser(snapshot.name)
             setBio(snapshot.bio)
+            setPicture(snapshot.media)
         }
         await queries.getCurrentUser(callback)
         // console.log(user)
@@ -87,6 +89,14 @@ export default function Profile({post}) {
             </View>
       );
     }
+    renderProfilePic = () => {
+        if(picture)
+            return (<Image source={{uri: picture}} style = {styles.profileImage}></Image>)
+        else    
+            return (<Image source={require("../assets/images/doctor.png")} style = {styles.profileImage}></Image>)
+
+    }
+    
 
     return (
         <View style = {styles.container}>
@@ -114,7 +124,7 @@ export default function Profile({post}) {
                 {/* Profile Image  */}
                 <View style = {[styles.center, {marginTop: 8}]}>
                     <View style = {styles.profileImage}>
-                        <Image source={require("../assets/images/doctor.png")} style = {styles.profileImage}></Image>
+                        {renderProfilePic()}
                     </View>
                     {/* Edit profile picture icon  */}
                     <TouchableOpacity style = {styles.edit}>

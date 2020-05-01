@@ -13,7 +13,7 @@ import {
   Platform
 } from 'react-native';
 import firebase from '../constants/firebase';
-import AuthContext from '../util/AuthContext';
+import AuthContext from '../constants/AuthContext';
 
 
 

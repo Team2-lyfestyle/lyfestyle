@@ -24,9 +24,11 @@ export default async function registerForPushNotificationsAsync() {
     console.log("Getting token:", token);
 
     // Send the token to firebase
-    // const uid = firebase.auth().currentUser.uid
-    // const tokenRef = firebase.database().ref(`users/${uid}/token`).push(token);
-  }catch(err){
+    const uid = firebase.auth().currentUser.uid
+    const tokenRef = firebase.database().ref(`users/${uid}/token`).push(token);
+    tokenRef.set(true);
+  } 
+  catch (err){
     console.log(err)
   }
 }

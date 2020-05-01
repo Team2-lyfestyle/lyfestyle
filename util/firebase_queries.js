@@ -45,12 +45,9 @@ module.exports = {
                 console.log("POST FAILED \n", err)
             })
     },
-  // GETS all posts made by current User.
-  // To get ALL posts made by ANYONE, remove ".orderByChild('posterUID').equalTo(uid)"
 
   // callback is a function that handles the output of the snapshot. In this callback you should transform the snapshot and save it in the state
-  getPostByUser: (callback) => {
-    let uid = firebase.auth().currentUser.uid;
+  getPosts: (callback) => {
     return firebase
       .database()
       .ref('posts/')
@@ -62,6 +59,22 @@ module.exports = {
           else snapshot.val();
         }
         
+      });
+  },
+
+  getCurrUserPosts: (callback) => {
+    let uid = firebase.auth().currentUser.uid;
+    return firebase
+      .database()
+      .ref('posts/')
+      .orderByChild('posterUID')
+      .equalTo(uid)
+      .limitToLast(10)
+      .on('value', function (snapshot) {
+        if(snapshot.exists()){
+          if (callback) callback(snapshot.val());
+          else snapshot.val();
+        } 
       });
   },
 

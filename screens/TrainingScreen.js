@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Button, ScrollView } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ScrollView } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { LinearGradient } from 'expo-linear-gradient';
 import exerciseData from "../assets/data/exercisesV2.json"
 
 
@@ -9,8 +8,8 @@ const TrainingScreen = () => {
 
   renderExercise = ( {item} ) => {
     return (
-      <View>
-        <Text>{item.name}</Text>
+      <View style = {styles.workouts}>
+        <Text style = {[{padding: 10}, {fontSize: 15}]}>{item.name}</Text>
       </View>
     );
   };
@@ -20,46 +19,63 @@ const TrainingScreen = () => {
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Training</Text>
       </View>
-      {/* <Text>{ exerciseData['abdominals'] }</Text> */}
-
-      <ScrollView showsVerticalScrollIndicator = {false} style = {{alignSelf: 'center'}}>
+      <ScrollView showsVerticalScrollIndicator = {false} contentContainerStyle={{alignItems: 'center'}}>
+        {/* UPPER BODY  */}
+          <View style = {styles.muscleGroup}>
+            <Text style = {styles.muscleGroupTitle}>Upper Body</Text>
+          </View>
+          <ScrollView horizontal = {true} showsHorizontalScrollIndicator = {false}>
+            <View style = {styles.horizontalBox}>
+              <Text style = {styles.muscleTitle}>Biceps</Text>
+              <FlatList
+                style = {styles.muscleContainer}
+                data = {exerciseData['biceps']}
+                renderItem = { renderExercise }
+              />
+            </View>
+            <View style = {styles.horizontalBox}>
+              <Text style = {styles.muscleTitle}>Chest</Text>
+              <FlatList
+                style = {styles.muscleContainer}
+                data = {exerciseData['chest']}
+                renderItem = { renderExercise }
+              />
+            </View>
+            <View style = {styles.horizontalBox}>
+              <Text style = {styles.muscleTitle}>Middle Back</Text>
+              <FlatList
+                style = {styles.muscleContainer}
+                data = {exerciseData['middle back']}
+                renderItem = { renderExercise }
+              /> 
+            </View>
+            <View style = {styles.horizontalBox}>
+              <Text style = {styles.muscleTitle}>Shoulders</Text>
+              <FlatList
+                style = {styles.muscleContainer}
+                data = {exerciseData['shoulders']}
+                renderItem = { renderExercise }
+              />
+            </View>
+            <View style = {styles.horizontalBox}>
+              <Text style = {styles.muscleTitle}>Traps</Text>
+              <FlatList
+                style = {styles.muscleContainer}
+                data = {exerciseData['traps']}
+                renderItem = { renderExercise }
+              />
+            </View>
+            <View style = {styles.horizontalBox}>
+              <Text style = {styles.muscleTitle}>Triceps</Text>
+              <FlatList
+                style = {styles.muscleContainer}
+                data = {exerciseData['triceps']}
+                renderItem = { renderExercise }
+              /> 
+            </View>
+          </ScrollView>
+        {/* CORE  */}
         <View style = {styles.muscleGroup}>
-          {/* <LinearGradient
-            colors={['rgba(0, 254, 212, 1)', 'rgba(32, 64, 81, 1)']}
-            style={{
-                position: 'absolute',
-                left: 0,
-                right: 0,
-                top: 0,
-                height: hp('7%'),
-            }}
-          /> */}
-          <Text style = {styles.muscleGroupTitle}>Upper Body</Text>
-        </View>
-        <Text style = {styles.muscleTitle}>Biceps</Text>
-        <FlatList
-          style = {styles.muscleContainer}
-          data = {exerciseData['biceps']}
-          renderItem = { renderExercise }
-        />
-        <Text style = {styles.muscleTitle}>Chest</Text>
-        <FlatList
-          style = {styles.muscleContainer}
-          data = {exerciseData['chest']}
-          renderItem = { renderExercise }
-        />
-
-        <View style = {styles.muscleGroup}>
-        {/* <LinearGradient
-            colors={['rgba(0, 254, 212, 1)', 'rgba(32, 64, 81, 1)']}
-            style={{
-                position: 'absolute',
-                left: 0,
-                right: 0,
-                top: 0,
-                height: hp('7%'),
-            }}
-          /> */}
           <Text style = {styles.muscleGroupTitle}>Core</Text>
         </View>
         <View>
@@ -70,22 +86,60 @@ const TrainingScreen = () => {
           data = {exerciseData['abdominals']}
           renderItem = { renderExercise }
         />
-
+        {/* LOWER BODY  */}
         <View style = {styles.muscleGroup}>
           <Text style = {styles.muscleGroupTitle}>Lower Body</Text>
         </View>
-        <Text style = {styles.muscleTitle}>Adductors</Text>
-        <FlatList
-          style = {styles.muscleContainer}
-          data = {exerciseData['adductors']}
-          renderItem = { renderExercise }
-        />
-        <Text style = {styles.muscleTitle}>Quadriceps</Text>
-        <FlatList
-          style = {styles.muscleContainer}
-          data = {exerciseData['quadriceps']}
-          renderItem = { renderExercise }
-        />
+        <ScrollView horizontal = {true} showsHorizontalScrollIndicator = {false}>
+          <View style = {styles.horizontalBox}>
+            <Text style = {styles.muscleTitle}>Adductors</Text>
+            <FlatList
+              style = {styles.muscleContainer}
+              data = {exerciseData['adductors']}
+              renderItem = { renderExercise }
+            />
+          </View>
+          <View style = {styles.horizontalBox}>
+            <Text style = {styles.muscleTitle}>Calves</Text>
+            <FlatList
+              style = {styles.muscleContainer}
+              data = {exerciseData['calves']}
+              renderItem = { renderExercise }
+            />
+          </View>
+          <View style = {styles.horizontalBox}>
+            <Text style = {styles.muscleTitle}>Glutes</Text>
+            <FlatList
+              style = {styles.muscleContainer}
+              data = {exerciseData['glutes']}
+              renderItem = { renderExercise }
+            />
+          </View>
+          <View style = {styles.horizontalBox}>
+            <Text style = {styles.muscleTitle}>Hamstrings</Text>
+            <FlatList
+              style = {styles.muscleContainer}
+              data = {exerciseData['hamstrings']}
+              renderItem = { renderExercise }
+            />
+          </View>
+          <View style = {styles.horizontalBox}>
+              <Text style = {styles.muscleTitle}>Lower Back</Text>
+              <FlatList
+                style = {styles.muscleContainer}
+                data = {exerciseData['lower back']}
+                renderItem = { renderExercise }
+              /> 
+            </View>
+          <View style = {styles.horizontalBox}>
+            <Text style = {styles.muscleTitle}>Quadriceps</Text>
+            <FlatList
+              style = {styles.muscleContainer}
+              data = {exerciseData['quadriceps']}
+              renderItem = { renderExercise }
+            />
+          </View>
+        </ScrollView>
       </ScrollView>
     </View>
   );
@@ -136,10 +190,23 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   muscleContainer: {
-    width: wp('91%'),
-    height: hp('30%'),
+    width: wp('85%'),
+    height: hp('20%'),
     marginBottom: 8,
     borderRadius: 5,
     backgroundColor: 'white',
    }, 
+   horizontalBox: {
+     marginHorizontal: 10,
+     alignItems: 'center'
+   },
+   workouts: {
+    width: wp('75%'),
+    alignItems: 'center',
+    alignSelf: 'center',
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginVertical: 8,
+   }
 });

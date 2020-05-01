@@ -13,10 +13,31 @@ export default function ChatStackNavigator() {
             <Stack.Screen
                 name="ChatSelect"
                 component={ChatSelectScreen}
+                options={{
+                    title: 'Chats',
+                    headerStyle: {
+                        height: 0,
+                        backgroundColor: '#204051',
+                    },
+                    headerTintColor: '#fff',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                  }}
             />
             <Stack.Screen
                 name="Chat"
                 component={ChatScreen}
+                options={{
+                    title: 'Chat',
+                    headerStyle: {
+                        backgroundColor: '#204051',
+                    },
+                    headerTintColor: '#fff',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                  }}
             />
         </Stack.Navigator>
     )

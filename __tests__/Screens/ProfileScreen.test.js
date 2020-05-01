@@ -5,14 +5,9 @@ import ProfileScreen from '../../screens/ProfileScreen';
 
 import renderer from 'react-test-renderer';
 
-// describe('<ProfileScreen />', () => {
-//   it('Should render the <ProfileScreen /> component', () => {
-//     const wrapper = shallow(<ProfileScreen />);
-//     expect(wrapper.find(ProfileScreen)).toMatchSnapshot();
-//   });
-// });
-
-test('renders correctly', () => {
-  const tree = renderer.create(<ProfileScreen />).toJSON();
-  expect(tree).toMatchSnapshot();
+describe('<ProfileScreen />', () => {
+  it('Should render the <ProfileScreen /> component', () => {
+    const wrapper = shallow(<ProfileScreen />);
+    expect(wrapper.find(ProfileScreen)).toMatchSnapshot();
+  });
 });

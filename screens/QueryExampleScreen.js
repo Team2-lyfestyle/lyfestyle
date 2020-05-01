@@ -3,8 +3,9 @@ import { Text, StyleSheet, View, TouchableOpacity, Image, ScrollView, Button } f
 import { TextInput, FlatList } from 'react-native-gesture-handler';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
-import * as ImagePicker from 'expo-image-picker'
-import queries from '../util/firebase_queries'
+import * as ImagePicker from 'expo-image-picker';
+import queries from '../util/firebase_queries';
+
 const QueryExampleScreen = ({ navigation }) => {
 
     // State for displaying data retrieved from DB
@@ -25,7 +26,7 @@ const QueryExampleScreen = ({ navigation }) => {
             if (Constants.platform.ios) {
                 const { statusRoll } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
                 const { statusCamera } = await Permissions.askAsync(Permissions.CAMERA);
-                CAMERA
+                //CAMERA
                 if (statusRoll !== 'granted' && statusCamera !== 'granted') {
                     console.log("Gimme Permission")
                 }
@@ -103,7 +104,7 @@ const QueryExampleScreen = ({ navigation }) => {
             setPostsByUser(JSON.stringify(postArray));
             console.log(postArray[1].description);
         }
-        await queries.getPostByUser(callback)
+        await queries.getPosts(callback)
     }
     let createPost = async (data, uri = null) => {
         if (uri)

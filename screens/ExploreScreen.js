@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl, Image } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
-import dbCaller from '../util/DatabaseCaller';
+import dbCaller from '../util/firebase_queries';
 import FriendService from '../util/FriendService';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 

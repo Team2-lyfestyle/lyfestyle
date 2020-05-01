@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native
 import { Tab, Tabs } from 'native-base';
 import { TextInput } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
-import dbCaller from '../util/DatabaseCaller';
+import dbCaller from '../util/firebase_queries';
 
 const FriendsScreen = (props) => {
   let [friendsList, setFriendsList] = React.useState([]);

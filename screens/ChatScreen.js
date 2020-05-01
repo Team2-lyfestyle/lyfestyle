@@ -1,47 +1,14 @@
 import React from 'react';
 import {
-  Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
   Text,
-  TouchableOpacity,
   View,
   SafeAreaView,
-  Animated,
-  Easing,
-  RefreshControl,
   ActivityIndicator,
-  LayoutAnimation,
-  UIManager,
 } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
-import dbCaller from '../util/DatabaseCaller';
+import dbCaller from '../util/firebase_queries';
 import chatStorage from '../util/ChatStorage';
 import ChatServiceContext from '../constants/ChatServiceContext';
-
-function getChatUpdate() {
-  return [
-    {
-      _id: 1,
-      text: 'Hello',
-      createdAt: new Date(),
-      user: { _id: 2 }
-    },
-    {
-      _id: 2,
-      text: 'World',
-      createdAt: new Date(),
-      user: { _id: 2 }
-    },
-  ]
-}
-
-/*
-navigation parameters:
-  'chatSessionId'
-  'members'
-*/
 
 export default function ChatScreen(props) {
   let chatService = React.useContext(ChatServiceContext);

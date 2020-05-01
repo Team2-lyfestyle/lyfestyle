@@ -4,7 +4,6 @@ import {
     Text,
     TouchableOpacity,
     TouchableHighlight,
-    KeyboardAvoidingView,
     View,
     ActivityIndicator,
     FlatList
@@ -16,7 +15,7 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import chatStorage from '../util/ChatStorage';
 import ChatServiceContext from '../constants/ChatServiceContext';
 import FriendService from '../util/FriendService';
-import dbCaller from '../util/DatabaseCaller';
+import dbCaller from '../util/firebase_queries';
 
 
 

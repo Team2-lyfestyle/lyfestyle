@@ -1,4 +1,4 @@
-import dbCaller from './DatabaseCaller';
+import dbCaller from './firebase_queries';
 
 export default class FriendService {
   async getFriendsListAsArray() {

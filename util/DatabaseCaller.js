@@ -40,11 +40,12 @@ const db = {
         }
     },
 
+    // ids is an object with keys as the user id's
     getUsersByIdsAsArray: async function(ids) {
         let users = [];
         try {
             console.log('Getting users:', ids);
-            for (let id in ids) {
+            for (let id of Object.keys(ids)) {
                 users.push(this.getUserById(id));
             }
             // Make sure all promises resolve succesfully
@@ -53,6 +54,98 @@ const db = {
         catch (err) {
             console.log('Error getting users');
             return [];
+        }
+    },
+
+    getAllUsers: async function() {
+        try {
+            let users = (await firebase.database().ref('users').once('value')).val();
+            return users;
+        }
+        catch (err) {
+            console.log('Error getting users', err);
+            return {};
+        }
+    },
+
+    userChangeListeners: {},
+
+    listenForUserChanges: function(callback) {
+        try {
+            firebase.database().ref('users/' + this.getCurrentUserId()).on('value', callback);
+            
+        }
+        catch (err) {
+            console.log('Error listening to user changes', err);
+        }
+    },
+
+    stopListenForUserChanges: function(callback) {
+        try {
+            firebase.database().ref('users/' + this.getCurrentUserId()).off('value', callback);
+        }
+        catch (err) {
+            console.log(err);
+        }
+    },
+
+    addUserToFriends: function(id) {
+        try {
+            let friendsRef = firebase.database().ref('users/' + this.getCurrentUserId() + '/friends/' + id);
+            return friendsRef.set(true);
+        }
+        catch (err) {
+            console.log('Error adding user to friends', id);
+        }
+    },
+
+    deleteSentFriendRequest: function(id) {
+        try {
+            let friendReqsRef = firebase.database().ref('users/' + this.getCurrentUserId() + '/friendRequestsSent/' + id);
+            return friendReqsRef.remove();
+        }
+        catch (err) {
+            console.log('Error removing user from sent friend requests', id);
+        }
+    },
+
+    deleteRcvdFriendRequest: function(id) {
+        try {
+            let friendReqsRef = firebase.database().ref('users/' + this.getCurrentUserId() + '/friendRequestsRcvd/' + id);
+            return friendReqsRef.remove();
+        }
+        catch (err) {
+            console.log('Error removing user from received friend requests', id);
+        }
+    },
+
+    deleteRcvdFriendRequest: function(id) {
+        try {
+            let friendReqsRef = firebase.database().ref('users/' + this.getCurrentUserId() + '/friendRequestsRcvd/' + id);
+            return friendReqsRef.remove();
+        }
+        catch (err) {
+            console.log('Error removing user from friend requests', id);
+        }
+    },
+
+    removeFriend: function(id) {
+        try {
+            let friendReqsRef = firebase.database().ref('users/' + this.getCurrentUserId() + '/friends/' + id);
+            return friendReqsRef.remove();
+        }
+        catch (err) {
+            console.log('Error removing user from friend requests', id);
+        }
+    },
+
+    sendFriendRequest: function(id) {
+        try {
+            let friendReqsRef = firebase.database().ref('users/' + this.getCurrentUserId() + '/friendRequestsSent/' + id);
+            return friendReqsRef.set(true);
+        }
+        catch (err) {
+            console.log('Error sending friend request to', id);
         }
     },
 
@@ -98,7 +191,6 @@ const db = {
     },
 
     listenForNewMessages: function(callback) {
-        console.log('Now listening in firebase on', `notifs/${this.getCurrentUserId()}/chats`);
         firebase.database().ref('notifs/' + this.getCurrentUserId() + '/chats').on('value', 
             (snapshot) => {
                 /*
@@ -112,7 +204,7 @@ const db = {
                     }
                 */
                 let messages = snapshot.val();
-                console.log('Reading from chat notifs', snapshot, messages);
+                //console.log('Reading from chat notifs', snapshot, messages);
                 
                 // only return data if new messages are available
                 if (messages) {

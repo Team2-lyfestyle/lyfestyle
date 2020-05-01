@@ -70,7 +70,7 @@ export default function ChatScreen(props) {
     chatService.readChatSession(chatSessionId);
     // Clear listener for cleanup
     return unsubscribe;
-  }, []);
+  }, [chatSessionId]);
 
   // Initialize data on component mount
   React.useEffect( () => {
@@ -152,6 +152,7 @@ export default function ChatScreen(props) {
       );
       let newChatSessionId = await chatService.createNewChatSession(Object.keys(members), messages[0].text);
       setChatSessionId(newChatSessionId);
+      chatService.focusChatSession(newChatSessionId);
     }
     // Else, chat session already exists
     else {

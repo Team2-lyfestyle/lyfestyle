@@ -52,11 +52,11 @@ function RenderHead({ members, lastMessageAt }) {
   let timeSince = now - lastMessageAt;
   let displayTime = '';
   // If been at least a week since lastMessageAt
-  if (timeSince > 7 * 8.64 * 10**7 && lastMessageAt) { 
+  if (timeSince > (7 * 8.64 * 10**7) && lastMessageAt) { 
     displayTime = `${lastMessageAt.getMonth()}/${lastMessageAt.getDay()}/${lastMessageAt.getFullYear().toString().slice(2, 4)}`
   }
   // If on different days
-  else if (lastMessageAt.getDay() - now.getDay() !== 0) { 
+  else if (timeSince > (8.64 * 10**7) || lastMessageAt.getDay() - now.getDay() !== 0) { 
     displayTime = weekdayToName[lastMessageAt.getDay()];
   }
   else {
@@ -398,7 +398,7 @@ export default function ChatSelectScreen({ navigation }) {
                   setIsComposeModalVisible(false);
                   let members = Object.keys(composeAdd);
                   members.push(dbCaller.getCurrentUserId());
-                  console.log('Testing members:', members);
+                  //console.log('Testing members:', members);
                   chatService.doesChatSessionExistWithMembers(members).then( 
                     result => {
                       if (result) {

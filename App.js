@@ -11,12 +11,8 @@ import SignInScreen from './screens/SignInScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import useLinking from './navigation/useLinking';
 import firebase from './constants/firebase'
-import registerForPushNotificationsAsync from './util/registerForPushNotificationsAsnyc';
-import dbCaller from './util/DatabaseCaller';
-import chatStorage from './util/ChatStorage';
 import ChatService from './util/ChatService';
 
-import NotificationContext from './constants/NotificationContext';
 import AuthContext from './constants/AuthContext';
 import ChatServiceContext from './constants/ChatServiceContext';
 
@@ -26,7 +22,6 @@ const Stack = createStackNavigator();
 export default function App(props) {
   const containerRef = React.useRef();
   const { getInitialState } = useLinking(containerRef);
-  let _notificationSubscription;
   const _chatService = new ChatService();
 
   const [state, dispatch] = React.useReducer(
@@ -52,24 +47,14 @@ export default function App(props) {
             ...prevState,
             isLoggedIn: false,
           };
-        case 'NOTIFICATION':
-          return {
-            ...prevState,
-            notification: action.notification,
-          }
       }
     },
     {
       isLoadingComplete: false,
       initialNavigationState: null,
       isLoggedIn: false,
-      notification: null,
     }
   );
-
-  const _handleNotification = (notification) => {
-    dispatch({ type: 'NOTIFICATION', notification: notification });
-  }
 
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
@@ -84,19 +69,6 @@ export default function App(props) {
         firebase.auth().onAuthStateChanged(async user => {
           // If user is defined, then we are signed in
           if (user) {
-            // Register for push notifications 
-            try {
-              await registerForPushNotificationsAsync();
-              // Handle notifications that are received or selected while the app
-              // is open. If the app was closed and then opened by tapping the
-              // notification (rather than just tapping the app icon to open it),
-              // this function will fire on the next tick after the app starts
-              // with the notification data.
-              _notificationSubscription = Notifications.addListener(_handleNotification);
-            }
-            catch (err) {
-              console.log('Error registering for push notifications');
-            }
 
             // Set up a listener for any new messages sent to firebase
             //_chatService.listenForNewMessages();
@@ -120,14 +92,6 @@ export default function App(props) {
     }
     loadResourcesAndDataAsync();
 
-    // Unsubscribe from notifications when component unmounts
-    /*
-    return function cleanup() {
-      if (_notificationSubscription) {
-        _notificationSubscription.remove();
-      }
-    }
-    */
   }, []);
 
   const authContext = React.useMemo(
@@ -180,7 +144,7 @@ export default function App(props) {
     return (
       <View style={styles.container}>
 
-        <AuthContext.Provider value={authContext}><NotificationContext.Provider value={state.notification}>
+        <AuthContext.Provider value={authContext}>
           <ChatServiceContext.Provider value={_chatService}>
             {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
             <NavigationContainer ref={containerRef} initialState={state.initialNavigationState} theme={DarkTheme}>
@@ -200,7 +164,7 @@ export default function App(props) {
               </Stack.Navigator>
             </NavigationContainer>
           </ChatServiceContext.Provider>
-        </NotificationContext.Provider></AuthContext.Provider>
+        </AuthContext.Provider>
       </View>
     );
   }

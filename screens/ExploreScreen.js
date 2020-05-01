@@ -1,9 +1,11 @@
 import React from 'react'
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl } from 'react-native'
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, RefreshControl, Image } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import dbCaller from '../util/DatabaseCaller';
 import FriendService from '../util/FriendService';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+
 
 let friendService = new FriendService();
 
@@ -48,6 +50,11 @@ const ExploreScreen = ({navigation}) => {
     return usersArr;
   }
 
+  const renderImage = (media) => {
+    if(media) return (<Image source={{uri:media}} style={styles.profileImage}/>)
+    else return <Ionicons name="ios-contact" size={100} />
+  }
+
   const renderUser = ({ item }) => (
     <View /*style={{borderColor: 'black', borderWidth: 1}}*/>
       <View style={{margin: 20, backgroundColor: 'white', borderRadius: 5}}>
@@ -60,7 +67,7 @@ const ExploreScreen = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <Ionicons name="ios-contact" size={100} />
+          {renderImage(item.media)}
         </View>
         <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center'}}>
           <TouchableOpacity
@@ -209,6 +216,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#EEEEEE'
   },
+  profileImage: {
+    width: wp('35%'),
+    height: hp('16%'),
+    borderRadius: 100,
+    shadowColor: '#202020',
+    shadowOffset: {width: 0, height: 0},
+    shadowRadius: 5,
+},
 });
 
 export default ExploreScreen;

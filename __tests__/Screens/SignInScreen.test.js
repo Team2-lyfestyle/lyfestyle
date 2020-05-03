@@ -12,3 +12,8 @@ describe('<SignInScreen />', () => {
   });
 });
 
+
+test('renders correctly', () => {
+  const tree = renderer.create(<SignInScreen />).toJSON();
+  expect(tree).toMatchSnapshot();
+});

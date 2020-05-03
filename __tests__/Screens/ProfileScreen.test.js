@@ -11,3 +11,9 @@ describe('<ProfileScreen />', () => {
     expect(wrapper.find(ProfileScreen)).toMatchSnapshot();
   });
 });
+
+
+test('renders correctly', () => {
+  const tree = renderer.create(<ProfileScreen />).toJSON();
+  expect(tree).toMatchSnapshot();
+});

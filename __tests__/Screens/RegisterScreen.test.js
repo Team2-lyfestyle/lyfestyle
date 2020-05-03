@@ -12,3 +12,8 @@ describe('<RegisterScreen />', () => {
   });
 });
 
+
+test('renders correctly', () => {
+  const tree = renderer.create(<RegisterScreen />).toJSON();
+  expect(tree).toMatchSnapshot();
+});

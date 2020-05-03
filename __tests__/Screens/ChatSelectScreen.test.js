@@ -11,3 +11,9 @@ describe('<ChatSelectScreen />', () => {
     expect(wrapper.find(ChatSelectScreen)).toMatchSnapshot();
   });
 });
+
+
+test('renders correctly', () => {
+  const tree = renderer.create(<ChatSelectScreen />).toJSON();
+  expect(tree).toMatchSnapshot();
+});

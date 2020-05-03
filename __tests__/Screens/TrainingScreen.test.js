@@ -11,3 +11,8 @@ describe('<TrainingScreen />', () => {
     expect(wrapper.find(TrainingScreen)).toMatchSnapshot();
   });
 });
+
+test('renders correctly', () => {
+  const tree = renderer.create(<TrainingScreen />).toJSON();
+  expect(tree).toMatchSnapshot();
+});

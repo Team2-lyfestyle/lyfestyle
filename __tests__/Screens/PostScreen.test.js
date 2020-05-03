@@ -12,4 +12,7 @@ describe('<PostScreen />', () => {
   });
 });
 
-
+test('renders correctly', () => {
+  const tree = renderer.create(<PostScreen />).toJSON();
+  expect(tree).toMatchSnapshot();
+});

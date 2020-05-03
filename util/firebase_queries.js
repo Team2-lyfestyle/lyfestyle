@@ -20,7 +20,7 @@ module.exports = {
   },
 
   // GET a user using ID
-  getUserByID: (uid, callback) => {
+  getUserByID: function (uid, callback) {
     return firebase
       .database()
       .ref('users/' + uid)
@@ -32,16 +32,22 @@ module.exports = {
       });
   },
 
+  myGetUserById: async function (id) {
+    let user = (await firebase.database().ref('users/' + id).once('value')).val();
+    user.uid = id;
+    return user;
+  },
+
   // ids is an object with keys as the user id's
-  getUsersByIdsAsArray: async function (ids) {
+  getUsersByIdsAsArray: function (ids) {
     let users = [];
     try {
-      console.log('Getting users:', ids);
+      //console.log('Getting users:', ids);
       for (let id of Object.keys(ids)) {
-        users.push(this.getUserById(id));
+        users.push(this.myGetUserById(id));
       }
       // Make sure all promises resolve succesfully
-      return await Promise.all(users);
+      return Promise.all(users);
     }
     catch (err) {
       console.log('Error getting users');

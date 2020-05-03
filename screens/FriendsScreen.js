@@ -26,7 +26,6 @@ const FriendsScreen = (props) => {
     return () => {
       dbCaller.stopListenForUserChanges(callback);
     }
-      
   }, []);
 
   const renderItem = ({ item, buttons }) => {

@@ -1,5 +1,5 @@
 import chatStorage from './ChatStorage';
-import dbCaller from './DatabaseCaller';
+import dbCaller from './firebase_queries';
 import { EventEmitter } from 'react-native';
 
 /*

@@ -11,12 +11,8 @@ import SignInScreen from './screens/SignInScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import useLinking from './navigation/useLinking';
 import firebase from './constants/firebase'
-import registerForPushNotificationsAsync from './util/registerForPushNotificationsAsnyc';
-import dbCaller from './util/DatabaseCaller';
-import chatStorage from './util/ChatStorage';
 import ChatService from './util/ChatService';
 
-import NotificationContext from './constants/NotificationContext';
 import AuthContext from './constants/AuthContext';
 import ChatServiceContext from './constants/ChatServiceContext';
 
@@ -26,7 +22,6 @@ const Stack = createStackNavigator();
 export default function App(props) {
   const containerRef = React.useRef();
   const { getInitialState } = useLinking(containerRef);
-  let _notificationSubscription;
   const _chatService = new ChatService();
 
   const [state, dispatch] = React.useReducer(
@@ -52,24 +47,14 @@ export default function App(props) {
             ...prevState,
             isLoggedIn: false,
           };
-        case 'NOTIFICATION':
-          return {
-            ...prevState,
-            notification: action.notification,
-          }
       }
     },
     {
       isLoadingComplete: false,
       initialNavigationState: null,
       isLoggedIn: false,
-      notification: null,
     }
   );
-  
-  const _handleNotification = (notification) => {
-    dispatch({ type: 'NOTIFICATION', notification: notification });
-  }
 
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
@@ -79,25 +64,12 @@ export default function App(props) {
 
         // Load our initial navigation state
         dispatch({ type: 'NAVIGATION', initialNavigationState: await getInitialState() });
-        
+
         // check firebase login and register for push notifications
         firebase.auth().onAuthStateChanged(async user => {
           // If user is defined, then we are signed in
           if (user) {
-            // Register for push notifications 
-            try {
-              await registerForPushNotificationsAsync();
-              // Handle notifications that are received or selected while the app
-              // is open. If the app was closed and then opened by tapping the
-              // notification (rather than just tapping the app icon to open it),
-              // this function will fire on the next tick after the app starts
-              // with the notification data.
-              _notificationSubscription = Notifications.addListener(_handleNotification);
-            }
-            catch (err) {
-              console.log('Error registering for push notifications');
-            }
-            
+
             // Set up a listener for any new messages sent to firebase
             //_chatService.listenForNewMessages();
             dispatch({ type: 'SIGN_IN' });
@@ -120,14 +92,6 @@ export default function App(props) {
     }
     loadResourcesAndDataAsync();
 
-    // Unsubscribe from notifications when component unmounts
-    /*
-    return function cleanup() {
-      if (_notificationSubscription) {
-        _notificationSubscription.remove();
-      }
-    }
-    */
   }, []);
 
   const authContext = React.useMemo(
@@ -150,14 +114,20 @@ export default function App(props) {
         }).catch(err => {
           console.log("Sign Out FAILED: ", err)
         })
-        
+
       },
       signUp: async (email, password, name) => {
         try {
           let authentication = await firebase.auth().createUserWithEmailAndPassword(email, password);
-          await authentication.user.updateProfile({displayName: name})
+          await authentication.user.updateProfile({ displayName: name })
           let uid = await firebase.auth().currentUser.uid;
-          await firebase.database().ref('users/' + uid).set({email: email, name: name});
+          await firebase.database().ref('users/' + uid).set(
+            {
+              email: email,
+              name: name,
+              bio: "Hello this is my lyfestyle",
+              media: "https://firebasestorage.googleapis.com/v0/b/csci152-lyfestyle.appspot.com/o/uploads%2Fdefaults%2Fprofile%2Fdoctor.png?alt=media&token=84fb61ca-ef18-4733-9afd-05d1d9bc7687"
+            });
           dispatch({ type: 'SIGN_IN' });
         }
         catch (e) {
@@ -174,27 +144,27 @@ export default function App(props) {
     return (
       <View style={styles.container}>
 
-        <AuthContext.Provider value={authContext}><NotificationContext.Provider value={state.notification}>
-        <ChatServiceContext.Provider value={_chatService}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <NavigationContainer ref={containerRef} initialState={state.initialNavigationState} theme={DarkTheme}>
-            <Stack.Navigator headerMode='none' >
-              {
-                state.isLoggedIn ? 
-                (
-                  <Stack.Screen name="Home" component={BottomTabNavigator} />
-                ) : 
-                (
-                <>
-                  <Stack.Screen name="SignIn" component={SignInScreen}/>
-                  <Stack.Screen name="Register" component={RegisterScreen}/>
-                </>
-                )
-              }
-            </Stack.Navigator>
-          </NavigationContainer>
-        </ChatServiceContext.Provider>
-        </NotificationContext.Provider></AuthContext.Provider>
+        <AuthContext.Provider value={authContext}>
+          <ChatServiceContext.Provider value={_chatService}>
+            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+            <NavigationContainer ref={containerRef} initialState={state.initialNavigationState} theme={DarkTheme}>
+              <Stack.Navigator headerMode='none' >
+                {
+                  state.isLoggedIn ?
+                    (
+                      <Stack.Screen name="Home" component={BottomTabNavigator} />
+                    ) :
+                    (
+                      <>
+                        <Stack.Screen name="SignIn" component={SignInScreen} />
+                        <Stack.Screen name="Register" component={RegisterScreen} />
+                      </>
+                    )
+                }
+              </Stack.Navigator>
+            </NavigationContainer>
+          </ChatServiceContext.Provider>
+        </AuthContext.Provider>
       </View>
     );
   }

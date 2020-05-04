@@ -42,7 +42,7 @@ export default function Profile({post}) {
           mediaTypes: 'Images',
           allowsEditing: true,
         }).then(async (result) => {
-          await queries.updateCurrentUser({bio: 'My name is Israel Perez and I attend California State University, Fresno. I am studying computer science and will graduate in 1.5 years. I enjoy playing video games, eating, and going outdoors.'},result.uri);
+          await queries.updateCurrentUser({}, result.uri);
         });
     };
 
@@ -91,7 +91,7 @@ export default function Profile({post}) {
             </View>
       );
     }
-    renderProfilePic = () => {
+    let renderProfilePic = () => {
         if(picture)
             return (<Image source={{uri: picture}} style = {styles.profileImage}></Image>)
         else    
@@ -99,6 +99,11 @@ export default function Profile({post}) {
 
     }
     
+    let handleBio = async () => {
+        if(isEdit)
+            await queries.updateCurrentUser({bio: bio});
+        setisEdit(!isEdit)    
+    }
 
     return (
         <View style = {styles.container}>
@@ -154,13 +159,19 @@ export default function Profile({post}) {
                             name = "edit-2" 
                             size = {22} 
                             color = "black"
-                            onPress = {() => {setisEdit(!isEdit)}}
+                            onPress = {() => handleBio()}
                         />
                     </TouchableOpacity>
                 </View>
                 {/* Bio  */}
                 <View style = {styles.centerBio}>
-                    <TextInput editable = {isEdit}>{bio}</TextInput>
+                    <TextInput 
+                        editable = {isEdit}
+                        onChangeText={(text) => {
+                            setBio(text);
+                        }}>
+                            {bio}
+                    </TextInput>
                     {/* <Text>{bio}</Text> */}
                 </View>
 

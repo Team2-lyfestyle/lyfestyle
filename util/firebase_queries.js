@@ -9,7 +9,7 @@ module.exports = {
     return firebase
       .database()
       .ref('users/' + uid)
-      .once('value', function (snapshot) {
+      .on('value', function (snapshot) {
         if (callback) callback(snapshot.val());
         else snapshot.val();
       });

@@ -43,6 +43,7 @@ export default function Profile({post}) {
           allowsEditing: true,
         }).then(async (result) => {
           await queries.updateCurrentUser({}, result.uri);
+          setPicture(result.uri)
         });
     };
 

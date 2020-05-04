@@ -4,15 +4,10 @@ import Firebase from 'firebase'
 
 module.exports = {
   // GET curent Loggedin USER.
-  getCurrentUser: (callback) => {
-    let uid = firebase.auth().currentUser.uid;
-    return firebase
-      .database()
-      .ref('users/' + uid)
-      .once('value', function (snapshot) {
-        if (callback) callback(snapshot.val());
-        else snapshot.val();
-      });
+  getCurrentUser: async (callback) => {
+    let thisUserId = firebase.auth().currentUser.uid;
+    let snapshot = await firebase.database().ref('users/' + thisUserId).once('value');
+    return snapshot.val();
   },
 
   getCurrentUserId: function () {
@@ -20,17 +15,18 @@ module.exports = {
   },
 
   // GET a user using ID
-  getUserByID: function (uid, callback) {
-    return firebase
-      .database()
-      .ref('users/' + uid)
-      .once('value', function (snapshot) {
-        let user = snapshot.val()
-        user.uid = uid
-        if (callback) callback(user);
-        else user;
-      });
-  },
+  getUserById: async function(id) {
+    try {
+        let user = await firebase.database().ref(`users/${id}`).once('value');
+        user = user.val();
+        user.uid = id;
+        return user;
+    }
+    catch (err) {
+        console.log('Error getting user', id);
+        return null;
+    }
+},
 
   myGetUserById: async function (id) {
     let user = (await firebase.database().ref('users/' + id).once('value')).val();
@@ -42,7 +38,6 @@ module.exports = {
   getUsersByIdsAsArray: function (ids) {
     let users = [];
     try {
-      //console.log('Getting users:', ids);
       for (let id of Object.keys(ids)) {
         users.push(this.myGetUserById(id));
       }
@@ -50,7 +45,7 @@ module.exports = {
       return Promise.all(users);
     }
     catch (err) {
-      console.log('Error getting users');
+      console.log('Error getting users by ID as arrays');
       return [];
     }
   },

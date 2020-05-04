@@ -23,7 +23,7 @@ export default function Profile({post}) {
     React.useEffect(() => {
         async function askPermission() {
             if (Constants.platform.ios) {
-                const { statusRoll } = await Permissions.aAsync(Permissions.CAMERA_ROLL);
+                const { statusRoll } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
                 const { statusCamera } = await Permissions.askAsync(Permissions.CAMERA);
                 CAMERA
                 if (statusRoll !== 'granted' && statusCamera !== 'granted') {
@@ -45,6 +45,13 @@ export default function Profile({post}) {
           await queries.updateCurrentUser({}, result.uri);
         });
     };
+
+    let handleBio = async () => {
+        console.log("Hello")
+        if(isEdit)
+            await queries.updateCurrentUser({bio: bio});
+        setisEdit(!isEdit)    
+    }
 
     // User information 
     let getCurrUser = async () => {
@@ -74,6 +81,7 @@ export default function Profile({post}) {
         }
         await queries.getCurrUserPosts(callback)
     }
+
     console.log(postsByUser)
     // Function that flat list uses to render posts 
     renderPost = (post) => {
@@ -91,7 +99,7 @@ export default function Profile({post}) {
             </View>
       );
     }
-    let renderProfilePic = () => {
+    renderProfilePic = () => {
         if(picture)
             return (<Image source={{uri: picture}} style = {styles.profileImage}></Image>)
         else    
@@ -99,11 +107,7 @@ export default function Profile({post}) {
 
     }
     
-    let handleBio = async () => {
-        if(isEdit)
-            await queries.updateCurrentUser({bio: bio});
-        setisEdit(!isEdit)    
-    }
+    
 
     return (
         <View style = {styles.container}>

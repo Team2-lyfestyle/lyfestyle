@@ -40,7 +40,7 @@ export default function Profile({post}) {
           mediaTypes: 'Images',
           allowsEditing: true,
         }).then(async (result) => {
-          await queries.updateCurrentUser({bio: 'My name is Israel and I attend California State University, Fresno. I am studying computer science and will graduate in 1.5 years.'},result.uri);
+          await queries.updateCurrentUser({bio: 'My name is Israel Perez and I attend California State University, Fresno. I am studying computer science and will graduate in 1.5 years. I enjoy playing video games, eating, and going outdoors.'},result.uri);
         });
     };
 
@@ -141,17 +141,26 @@ export default function Profile({post}) {
                     <Text style = {[{fontSize: 30}, { fontWeight: '400' }]}>{nameOfUser}</Text>
                 </View>
             </View>
-       
-                {/* Bio  */}
-                <View style = {styles.statsContainer}>
-                    <View style = {[{marginTop: hp('1.5%')}]}>
+        
+                {/* Bio Title */}
+                <View style = {[styles.statsContainerBio, {justifyContent:'space-between'}]}>
+                    <View style = {{marginTop: hp('1.5%')}}>
                         <Text style = {[{fontSize: 15}, { fontWeight: '700' }]}>Bio </Text>
                     </View>
+                    <TouchableOpacity style = {styles.editBio}>
+                        <Feather 
+                            name = "edit-2" 
+                            size = {22} 
+                            color = "black"
+                            onPress={() => handlePostPhotoLibrary()}
+                        />
+                    </TouchableOpacity>
                 </View>
-
+                {/* Bio  */}
                 <View style = {styles.centerBio}>
                     <Text>{bio}</Text>
                 </View>
+
                 {/* Stats Container */}
                 <View style = {styles.statsContainer}>
                     <View style = {[{marginTop: hp('1.5%')}]}>
@@ -229,13 +238,41 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
 
-    // Properties to center Bio for profile
-    centerBio: {
-        alignSelf: 'center',
-        marginTop: hp('3%'),
-        marginBottom: hp('3%'),
+    // Stats = Number of posts container 
+    statsContainerBio: {
+        flexDirection: 'row',
         marginLeft: wp('3%'),
         marginRight: wp('3%'),
+        borderBottomWidth: 1.5,
+        paddingBottom: 5,
+    },
+
+    // Properties to center Bio for profile
+    centerBio: {
+        // backgroundColor: 'white',
+        // width: wp('90%'),
+        // height: hp('10%'),
+        // borderRadius: 20,
+        alignSelf: 'center',
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        padding: 8,
+        // marginTop: hp('3%'),
+        // marginBottom: hp('3%'),
+        marginVertical: hp('3%'),
+        // marginLeft: wp('3%'),
+        // marginRight: wp('3%'),
+        marginHorizontal: wp('3%')
+    },
+
+    //Edit icon for bio
+    editBio: {
+        position: 'relative',
+        width: wp('10%'),
+        height: hp('4%'),
+        borderRadius: 20,
+        alignItems: "center",
+        justifyContent: "center"
     },
 
     // Stats = Number of posts container 
@@ -244,7 +281,7 @@ const styles = StyleSheet.create({
         marginLeft: wp('3%'),
         marginRight: wp('3%'),
         borderBottomWidth: 1.5,
-        paddingBottom: 5
+        paddingBottom: 10,
     },
 
     // Margin horizontal for post feed 
@@ -254,8 +291,8 @@ const styles = StyleSheet.create({
 
     // Sets margin for image container 
     pictureContainer: {
-        marginTop: hp('1%'),
-        marginBottom: hp('1%')
+        marginTop: hp('0%'),
+        marginBottom: hp('0%')
     },
 
     // Container for each image

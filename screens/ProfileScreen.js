@@ -8,6 +8,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import queries from '../util/firebase_queries';
+import { TextInput } from "react-native-gesture-handler";
 
 export default function Profile({post}) {
     //Used for sign out icon
@@ -17,6 +18,7 @@ export default function Profile({post}) {
     const [nameOfUser, setnameOfUser] = React.useState('');
     const [bio, setBio] = React.useState('');
     const [picture, setPicture] = React.useState('');
+    const [isEdit, setisEdit] = React.useState(false);
 
     React.useEffect(() => {
         async function askPermission() {
@@ -152,12 +154,14 @@ export default function Profile({post}) {
                             name = "edit-2" 
                             size = {22} 
                             color = "black"
+                            onPress = {() => {setisEdit(!isEdit)}}
                         />
                     </TouchableOpacity>
                 </View>
                 {/* Bio  */}
                 <View style = {styles.centerBio}>
-                    <Text>{bio}</Text>
+                    <TextInput editable = {isEdit}>{bio}</TextInput>
+                    {/* <Text>{bio}</Text> */}
                 </View>
 
                 {/* Stats Container */}

@@ -33,10 +33,9 @@ const PostScreen = ({ navigation }) => {
   });
 
   let getCurrentUser = async () => {
-    function callback(snapshot){
-      updateProfilePic(snapshot.media)
-    }
-    await queries.getCurrentUser(callback)
+
+    let user = await queries.getCurrentUser()
+    updateProfilePic(user.media)
   }
 
 

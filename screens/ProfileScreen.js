@@ -152,7 +152,6 @@ export default function Profile({post}) {
                             name = "edit-2" 
                             size = {22} 
                             color = "black"
-                            onPress={() => handlePostPhotoLibrary()}
                         />
                     </TouchableOpacity>
                 </View>

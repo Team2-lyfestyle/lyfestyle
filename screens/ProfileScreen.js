@@ -52,17 +52,16 @@ export default function Profile({post}) {
         if(isEdit)
             await queries.updateCurrentUser({bio: bio});
         setisEdit(!isEdit)    
+        console.log(isEdit)
+
     }
 
     // User information 
     let getCurrUser = async () => {
-        let callback = (snapshot) => {
-            setnameOfUser(snapshot.name)
-            setBio(snapshot.bio)
-            setPicture(snapshot.media)
-        }
-        await queries.getCurrentUser(callback)
-        // console.log(user)
+        let user = await queries.getCurrentUser()
+        setnameOfUser(user.name)
+        setBio(user.bio)
+        setPicture(user.media)
     }
 
     // Gets user posts 

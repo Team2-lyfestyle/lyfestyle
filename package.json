@@ -10,7 +10,8 @@
     "test": "jest --watchAll"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "automock": false
   },
   "dependencies": {
     "@eva-design/eva": "^1.4.0",

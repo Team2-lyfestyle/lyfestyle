@@ -79,7 +79,7 @@ module.exports = {
   // If the parameter passed doesnt exist, it will be added to the user.
   updateCurrentUser: (data, image) => {
     let uid = firebase.auth().currentUser.uid
-    data.timestamp = firebase.database.ServerValue.TIMESTAMP
+    data.timestamp = Firebase.database.ServerValue.TIMESTAMP
     return firebase.database().ref('users/' + uid)
       .update(data)
       .then(() => {

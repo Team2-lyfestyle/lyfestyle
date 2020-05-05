@@ -164,7 +164,7 @@ const QueryExampleScreen = ({ navigation }) => {
                     <Text>Click to getPostByUser</Text>
                 </TouchableOpacity>
                 <Text>{postsByUser}</Text>
-                
+                 
 
             </View>
 

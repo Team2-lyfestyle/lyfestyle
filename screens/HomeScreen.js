@@ -44,7 +44,6 @@ posts = [
 ];
 
 export default function HomeScreen({ navigation }) {
-
   const [postsByUser, setPostsByUser] = React.useState(false);
 
   React.useEffect(() => {
@@ -66,11 +65,11 @@ export default function HomeScreen({ navigation }) {
   let getPostByUser = async () => {
     let callback = (snapshot) => {
       let postArray = [];
-      if(Object.keys(snapshot) != null){
+      if (Object.keys(snapshot) != null) {
         Object.keys(snapshot).forEach((key) => {
           let temp = snapshot[key];
           temp.id = key;
-          temp.timestamp = new Date(temp.timestamp).toDateString()
+          temp.timestamp = new Date(temp.timestamp).toDateString();
           postArray.push(temp);
         });
       }
@@ -79,11 +78,17 @@ export default function HomeScreen({ navigation }) {
     await queries.getPosts(callback);
   };
 
+  let renderProfileImg = (image) => {
+    if(image)
+      return (<Image source={{uri: image}} style={styles.avatar} />)
+    else
+      return (<Image source={require('../assets/images/lyfestyle.png')} style={styles.avatar} />)
+    }
 
   renderPost = (post) => {
     return (
       <View style={styles.feedItem}>
-        {/* <Image source={post.avatar} style={styles.avatar} /> */}
+        {renderProfileImg(post.profile)}
         <View style={{ flex: 1 }}>
           <View
             style={{
@@ -100,7 +105,7 @@ export default function HomeScreen({ navigation }) {
           </View>
           <Text style={styles.post}> {post.description} </Text>
           <Image
-            source={{uri:post.media}}
+            source={{ uri: post.media }}
             style={styles.postImage}
             resizeMode='cover'
           />
@@ -111,7 +116,6 @@ export default function HomeScreen({ navigation }) {
               color='#000'
               style={{ marginRight: 15, marginTop: 10 }}
             />
-            <Ionicons></Ionicons>
           </View>
         </View>
       </View>
@@ -123,6 +127,7 @@ export default function HomeScreen({ navigation }) {
         <Text style={styles.headerTitle}>Home </Text>
       </View>
       <FlatList
+        inverted
         style={styles.feed}
         data={postsByUser}
         renderItem={({ item }) => renderPost(item)}

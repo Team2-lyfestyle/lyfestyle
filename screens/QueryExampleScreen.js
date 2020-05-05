@@ -26,7 +26,7 @@ const QueryExampleScreen = ({ navigation }) => {
             if (Constants.platform.ios) {
                 const { statusRoll } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
                 const { statusCamera } = await Permissions.askAsync(Permissions.CAMERA);
-                CAMERA
+                //CAMERA
                 if (statusRoll !== 'granted' && statusCamera !== 'granted') {
                     console.log("Gimme Permission")
                 }

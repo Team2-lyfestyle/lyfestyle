@@ -115,7 +115,9 @@ const chatStorage = {
 
     let chatSessions = await this.getChatSessions();
     if (!chatSessions[id]) {
-      throw new Error(`Chat session ${id} does not exist. Create this chat session before updating it.`)
+      return;
+      console.log(`Chat session ${id} does not exist. Create this chat session before updating it with ${session}.`);
+      throw new Error(`Chat session ${id} does not exist. Create this chat session before updating it with ${session}.`);
     }
 
     //console.log('From updateChatSession:', id, session);

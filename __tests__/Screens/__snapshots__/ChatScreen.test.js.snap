@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ChatScreen /> Should render the <ChatScreen /> component 1`] = `null`;
+
+exports[`<PostScreen /> Should render the <PostScreen /> component 1`] = `null`;

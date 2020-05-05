@@ -20,7 +20,7 @@ const SignInScreen = ({ navigation }) => {
   const [email, updateEmail] = React.useState(false);
   const [password, updatePassword] = React.useState(false);
   const [data, updatedata] = React.useState(false);
-  const { signIn } = React.useContext(AuthContext);
+  //const { signIn } = React.useContext(AuthContext);
 
   let _submit = () => {
     signIn(email, password);

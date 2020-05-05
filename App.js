@@ -18,8 +18,8 @@ import ChatServiceContext from './constants/ChatServiceContext';
 
 const Stack = createStackNavigator();
 
-
 export default function App(props) {
+  console.disableYellowBox = true;
   const containerRef = React.useRef();
   const { getInitialState } = useLinking(containerRef);
   const _chatService = new ChatService();
@@ -36,7 +36,7 @@ export default function App(props) {
           return {
             ...prevState,
             initialNavigationState: action.initialNavigationState,
-          }
+          };
         case 'SIGN_IN':
           return {
             ...prevState,
@@ -66,7 +66,7 @@ export default function App(props) {
         dispatch({ type: 'NAVIGATION', initialNavigationState: await getInitialState() });
 
         // check firebase login and register for push notifications
-        firebase.auth().onAuthStateChanged(async user => {
+        firebase.auth().onAuthStateChanged(async (user) => {
           // If user is defined, then we are signed in
           if (user) {
 
@@ -81,7 +81,6 @@ export default function App(props) {
           ...Ionicons.font,
           'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
         });
-
       } catch (e) {
         // We might want to provide this error information to an error reporting service
         console.warn(e);
@@ -97,14 +96,13 @@ export default function App(props) {
   const authContext = React.useMemo(
     () => ({
       signIn: async (email, password) => {
-        console.log("Signing in");
+        console.log('Signing in');
         try {
           await firebase.auth().signInWithEmailAndPassword(email, password);
-          console.log("Credentials valid");
+          console.log('Credentials valid');
           dispatch({ type: 'SIGN_IN' });
-        }
-        catch (e) {
-          console.log("Log in failed", e);
+        } catch (e) {
+          console.log('Log in failed', e);
         }
       },
       signOut: () => {
@@ -129,9 +127,8 @@ export default function App(props) {
               media: "https://firebasestorage.googleapis.com/v0/b/csci152-lyfestyle.appspot.com/o/uploads%2Fdefaults%2Fprofile%2Fdoctor.png?alt=media&token=84fb61ca-ef18-4733-9afd-05d1d9bc7687"
             });
           dispatch({ type: 'SIGN_IN' });
-        }
-        catch (e) {
-          console.log("Sign up failed", e);
+        } catch (e) {
+          console.log('Sign up failed', e);
         }
       },
     }),

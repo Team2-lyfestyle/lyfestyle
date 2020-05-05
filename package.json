@@ -21,6 +21,7 @@
     "transformIgnorePatterns": [
       "node_modules/((?!(jest-))?@react-navigation/.*)"
     ]
+    "automock": false
   },
   "dependencies": {
     "@eva-design/eva": "^1.4.0",

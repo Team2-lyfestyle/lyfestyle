@@ -112,48 +112,47 @@ export default function Profile({post}) {
 
     return (
         <View style = {styles.container}>
-        <ScrollView showsVerticalScrollIndicator = {false}>
-            <View style = {styles.header}>
-                <LinearGradient
-                    colors={['rgba(rgba(0, 254, 212, 1))', 'transparent']}
-                    style={{
-                        position: 'absolute',
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        height: hp('35%'),
-                    }}
-                />
-
-                <TouchableOpacity style = {styles.settingsIcon} onPress={() => { signOut() }}>
-                    <Feather 
-                        name = "log-out" 
-                        size = {23} 
-                        color = "black"
+            <ScrollView showsVerticalScrollIndicator = {false}>
+                <View style = {styles.header}>
+                    <LinearGradient
+                        colors={['rgba(rgba(0, 254, 212, 1))', 'transparent']}
+                        style={{
+                            position: 'absolute',
+                            left: 0,
+                            right: 0,
+                            top: 0,
+                            height: hp('35%'),
+                        }}
                     />
-                </TouchableOpacity>
-                
-                {/* Profile Image  */}
-                <View style = {[styles.center, {marginTop: 8}]}>
-                    <View style = {styles.profileImage}>
-                        {renderProfilePic()}
-                    </View>
-                    {/* Edit profile picture icon  */}
-                    <TouchableOpacity style = {styles.edit}>
+
+                    <TouchableOpacity style = {styles.settingsIcon} onPress={() => { signOut() }}>
                         <Feather 
-                            name = "edit-2" 
-                            size = {25} 
+                            name = "log-out" 
+                            size = {23} 
                             color = "black"
-                            onPress={() => handlePostPhotoLibrary()}
                         />
                     </TouchableOpacity>
+                    
+                    {/* Profile Image  */}
+                    <View style = {[styles.center, {marginTop: 8}]}>
+                        <View style = {styles.profileImage}>
+                            {renderProfilePic()}
+                        </View>
+                        {/* Edit profile picture icon  */}
+                        <TouchableOpacity style = {styles.edit}>
+                            <Feather 
+                                name = "edit-2" 
+                                size = {25} 
+                                color = "black"
+                                onPress={() => handlePostPhotoLibrary()}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                    {/* Name */}
+                    <View style = {[styles.center, {marginTop: 30}, {marginBottom: 15}]}>
+                        <Text style = {[{fontSize: 30}, { fontWeight: '400' }]}>{nameOfUser}</Text>
+                    </View>
                 </View>
-                {/* Name */}
-                <View style = {[styles.center, {marginTop: 30}, {marginBottom: 15}]}>
-                    <Text style = {[{fontSize: 30}, { fontWeight: '400' }]}>{nameOfUser}</Text>
-                </View>
-            </View>
-        
                 {/* Bio Title */}
                 <View style = {[styles.statsContainerBio, {justifyContent:'space-between'}]}>
                     <View style = {{marginTop: hp('1.5%')}}>
@@ -170,8 +169,8 @@ export default function Profile({post}) {
                 </View>
                 {/* Bio  */}
                 <View style={isEdit ? 
-                                {color: '#E0E0E0', fontSize: 38, marginVertical: 30, marginHorizontal: 10, borderWidth: 1.5, borderColor: '#black', padding: 5, backgroundColor: 'white', shadowOffset: {width:0, height: 2}, shadowColor: 'black', shadowOpacity: .55, shadowRadius: 3.84, elevation: 5} :
-                                {color: '#E0E0E0', fontSize: 38, marginVertical: 30, marginHorizontal: 10, alignItems: 'center', justifyContent: 'center'}}>
+                                {fontSize: 38, marginVertical: 30, marginHorizontal: 10, padding: 5, backgroundColor: 'white', shadowOffset: {width:0, height: 2}, shadowColor: 'black', shadowOpacity: .55, shadowRadius: 3.84, elevation: 5} :
+                                {fontSize: 38, marginVertical: 30, marginHorizontal: 10, alignItems: 'center', justifyContent: 'center'}}>
                     <TextInput
                         multiline
                         editable = {isEdit}
@@ -259,7 +258,7 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
 
-    // Stats = Number of posts container 
+    // Stats for Bio 
     statsContainerBio: {
         flexDirection: 'row',
         marginLeft: wp('3%'),
@@ -267,14 +266,6 @@ const styles = StyleSheet.create({
         marginTop: hp('1%'),
         borderBottomWidth: 1.5,
         paddingBottom: 5,
-    },
-
-    // Properties to center Bio for profile
-    centerBio: {
-        alignSelf: 'center',
-        padding: 8,
-        marginVertical: hp('3%'),
-        marginHorizontal: wp('3%')
     },
 
     //Edit icon for bio
@@ -288,7 +279,7 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
 
-    // Stats = Number of posts container 
+    // Stats for Posts 
     statsContainer: {
         flexDirection: 'row',
         marginLeft: wp('3%'),

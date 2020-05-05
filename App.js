@@ -47,14 +47,6 @@ export default function App(props) {
             ...prevState,
             isLoggedIn: false,
           };
-<<<<<<< HEAD
-        case 'NOTIFICATION':
-          return {
-            ...prevState,
-            notification: action.notification,
-          };
-=======
->>>>>>> development
       }
     },
     {
@@ -63,13 +55,6 @@ export default function App(props) {
       isLoggedIn: false,
     }
   );
-<<<<<<< HEAD
-
-  const _handleNotification = (notification) => {
-    dispatch({ type: 'NOTIFICATION', notification: notification });
-  };
-=======
->>>>>>> development
 
   // Load any resources or data that we need prior to rendering the app
   React.useEffect(() => {
@@ -78,36 +63,12 @@ export default function App(props) {
         SplashScreen.preventAutoHide();
 
         // Load our initial navigation state
-<<<<<<< HEAD
-        dispatch({
-          type: 'NAVIGATION',
-          initialNavigationState: await getInitialState(),
-        });
-=======
         dispatch({ type: 'NAVIGATION', initialNavigationState: await getInitialState() });
->>>>>>> development
 
         // check firebase login and register for push notifications
         firebase.auth().onAuthStateChanged(async (user) => {
           // If user is defined, then we are signed in
           if (user) {
-<<<<<<< HEAD
-            // Register for push notifications
-            try {
-              await registerForPushNotificationsAsync();
-              // Handle notifications that are received or selected while the app
-              // is open. If the app was closed and then opened by tapping the
-              // notification (rather than just tapping the app icon to open it),
-              // this function will fire on the next tick after the app starts
-              // with the notification data.
-              _notificationSubscription = Notifications.addListener(
-                _handleNotification
-              );
-            } catch (err) {
-              console.log('Error registering for push notifications');
-            }
-=======
->>>>>>> development
 
             // Set up a listener for any new messages sent to firebase
             //_chatService.listenForNewMessages();
@@ -145,30 +106,6 @@ export default function App(props) {
         }
       },
       signOut: () => {
-<<<<<<< HEAD
-        firebase
-          .auth()
-          .signOut()
-          .then(() => {
-            console.log('Sign Out Successful');
-            dispatch({ type: 'SIGN_OUT' });
-          })
-          .catch((err) => {
-            console.log('Sign Out FAILED: ', err);
-          });
-      },
-      signUp: async (email, password, name) => {
-        try {
-          let authentication = await firebase
-            .auth()
-            .createUserWithEmailAndPassword(email, password);
-          await authentication.user.updateProfile({ displayName: name });
-          let uid = await firebase.auth().currentUser.uid;
-          await firebase
-            .database()
-            .ref('users/' + uid)
-            .set({ email: email, name: name });
-=======
         firebase.auth().signOut().then(() => {
           console.log("Sign Out Successful")
           dispatch({ type: 'SIGN_OUT' })
@@ -189,7 +126,6 @@ export default function App(props) {
               bio: "Hello this is my lyfestyle",
               media: "https://firebasestorage.googleapis.com/v0/b/csci152-lyfestyle.appspot.com/o/uploads%2Fdefaults%2Fprofile%2Fdoctor.png?alt=media&token=84fb61ca-ef18-4733-9afd-05d1d9bc7687"
             });
->>>>>>> development
           dispatch({ type: 'SIGN_IN' });
         } catch (e) {
           console.log('Sign up failed', e);
@@ -204,33 +140,6 @@ export default function App(props) {
   } else {
     return (
       <View style={styles.container}>
-<<<<<<< HEAD
-        <AuthContext.Provider value={authContext}>
-          <NotificationContext.Provider value={state.notification}>
-            <ChatServiceContext.Provider value={_chatService}>
-              {Platform.OS === 'ios' && <StatusBar barStyle='default' />}
-              <NavigationContainer
-                ref={containerRef}
-                initialState={state.initialNavigationState}
-                theme={DarkTheme}
-              >
-                <Stack.Navigator headerMode='none'>
-                  {state.isLoggedIn ? (
-                    <Stack.Screen name='Home' component={BottomTabNavigator} />
-                  ) : (
-                    <>
-                      <Stack.Screen name='SignIn' component={SignInScreen} />
-                      <Stack.Screen
-                        name='Register'
-                        component={RegisterScreen}
-                      />
-                    </>
-                  )}
-                </Stack.Navigator>
-              </NavigationContainer>
-            </ChatServiceContext.Provider>
-          </NotificationContext.Provider>
-=======
 
         <AuthContext.Provider value={authContext}>
           <ChatServiceContext.Provider value={_chatService}>
@@ -252,7 +161,6 @@ export default function App(props) {
               </Stack.Navigator>
             </NavigationContainer>
           </ChatServiceContext.Provider>
->>>>>>> development
         </AuthContext.Provider>
       </View>
     );

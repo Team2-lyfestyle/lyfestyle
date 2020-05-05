@@ -78,11 +78,6 @@ export default function HomeScreen({ navigation }) {
     await queries.getPosts(callback);
   };
 
-<<<<<<< HEAD
-  renderPost = (post) => {
-    return (
-      <View style={styles.feedItem}>
-=======
   let renderProfileImg = (image) => {
     if(image)
       return (<Image source={{uri: image}} style={styles.avatar} />)
@@ -94,7 +89,6 @@ export default function HomeScreen({ navigation }) {
     return (
       <View style={styles.feedItem}>
         {renderProfileImg(post.profile)}
->>>>>>> development
         <View style={{ flex: 1 }}>
           <View
             style={{

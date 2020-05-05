@@ -169,18 +169,17 @@ export default function Profile({post}) {
                     </TouchableOpacity>
                 </View>
                 {/* Bio  */}
-                {/* style = {styles.centerBio}  */}
                 <View style={isEdit ? 
-                                {color: '#E0E0E0', fontSize: 38, marginTop: 10, borderWidth: 1, borderColor: '#E0E0E0', padding: 5} :
-                                {color: '#E0E0E0', fontSize: 38, marginTop: 10}}>
+                                {color: '#E0E0E0', fontSize: 38, marginVertical: 30, marginHorizontal: 10, borderWidth: 1.5, borderColor: '#black', padding: 5, backgroundColor: 'white', shadowOffset: {width:0, height: 2}, shadowColor: 'black', shadowOpacity: .55, shadowRadius: 3.84, elevation: 5} :
+                                {color: '#E0E0E0', fontSize: 38, marginVertical: 30, marginHorizontal: 10, alignItems: 'center', justifyContent: 'center'}}>
                     <TextInput
+                        multiline
                         editable = {isEdit}
                         onChangeText={(text) => {
                             setBio(text);
                         }}>
                             {bio}
                     </TextInput>
-                    {/* <Text>{bio}</Text> */}
                 </View>
 
                 {/* Stats Container */}
@@ -265,31 +264,22 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginLeft: wp('3%'),
         marginRight: wp('3%'),
+        marginTop: hp('1%'),
         borderBottomWidth: 1.5,
         paddingBottom: 5,
     },
 
     // Properties to center Bio for profile
     centerBio: {
-        // backgroundColor: 'white',
-        // width: wp('90%'),
-        // height: hp('10%'),
-        // borderRadius: 20,
         alignSelf: 'center',
-        // alignItems: 'center',
-        // justifyContent: 'center',
         padding: 8,
-        // marginTop: hp('3%'),
-        // marginBottom: hp('3%'),
         marginVertical: hp('3%'),
-        // marginLeft: wp('3%'),
-        // marginRight: wp('3%'),
         marginHorizontal: wp('3%')
     },
 
     //Edit icon for bio
     editBio: {
-        backgroundColor: 'blue',
+        backgroundColor: 'white',
         position: 'relative',
         width: wp('9%'),
         height: hp('4%'),
@@ -322,7 +312,6 @@ const styles = StyleSheet.create({
     mediaImage: {
         width: wp('57%'),
         height: hp('35%'),
-        // borderRadius: 30,
         overflow: 'hidden',
         marginHorizontal: wp('3.5%')
     },

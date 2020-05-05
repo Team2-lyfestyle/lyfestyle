@@ -9,6 +9,8 @@ import TrainingScreen from '../screens/TrainingScreen';
 import ChatStackNavigator from '../navigation/ChatStackNavigator';
 import PostScreen from '../screens/PostScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import ExploreScreen from '../screens/ExploreScreen';
+import ExploreStackNavigator from '../navigation/ExploreStackNavigator';
 import QueryExampleScreen from '../screens/QueryExampleScreen';
 import { DarkTheme } from '@react-navigation/native';
 
@@ -85,6 +87,16 @@ export default function BottomTabNavigator({ navigation, route }) {
           title: 'Post',
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} name='ios-add-circle' />
+          )
+        }}
+      />
+      <BottomTab.Screen
+        name='Explore'
+        component={ExploreStackNavigator}
+        options={{
+          title: 'Explore',
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon focused={focused} name='ios-search' />
           )
         }}
       />

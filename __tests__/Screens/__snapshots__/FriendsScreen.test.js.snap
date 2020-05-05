@@ -1,0 +1,325 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<FriendsScreen /> Should render the <FriendsScreen /> component 1`] = `null`;
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#EFEdF4",
+      "flex": 1,
+    }
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      Array [
+        Object {
+          "flex": 1,
+        },
+        undefined,
+      ]
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "borderBottomWidth": 0.5,
+            "borderColor": "#a7a6ab",
+            "elevation": 3,
+            "flexDirection": "row",
+            "height": 50,
+            "justifyContent": "space-around",
+            "shadowColor": undefined,
+            "shadowOffset": undefined,
+            "shadowOpacity": undefined,
+            "shadowRadius": undefined,
+          },
+          Object {
+            "backgroundColor": "#F8F8F8",
+          },
+          Object {},
+        ]
+      }
+    >
+      <View
+        accessible={true}
+        focusable={true}
+        isTVSelectable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "flex": 1,
+            "opacity": 1,
+          }
+        }
+      >
+        <View
+          active={true}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "#F8F8F8",
+              "flex": 1,
+              "flexDirection": "row",
+              "justifyContent": "center",
+            }
+          }
+        >
+          <Text
+            style={
+              Array [
+                Object {
+                  "color": "#007aff",
+                  "fontFamily": "System",
+                  "fontSize": 16,
+                  "fontWeight": "600",
+                  "marginLeft": 7,
+                  "marginRight": 7,
+                },
+                Object {
+                  "fontSize": 15,
+                },
+                undefined,
+                Object {
+                  "color": "#007aff",
+                },
+              ]
+            }
+            uppercase={false}
+          >
+            Friends
+          </Text>
+        </View>
+      </View>
+      <View
+        accessible={true}
+        focusable={true}
+        isTVSelectable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "flex": 1,
+            "opacity": 1,
+          }
+        }
+      >
+        <View
+          active={false}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "#F8F8F8",
+              "flex": 1,
+              "flexDirection": "row",
+              "justifyContent": "center",
+            }
+          }
+        >
+          <Text
+            style={
+              Array [
+                Object {
+                  "color": "#6b6b6b",
+                  "fontFamily": "System",
+                  "fontSize": 16,
+                  "marginLeft": 7,
+                  "marginRight": 7,
+                },
+                Object {
+                  "fontSize": 15,
+                },
+                undefined,
+                Object {
+                  "color": "#6b6b6b",
+                },
+              ]
+            }
+            uppercase={false}
+          >
+            Sent
+          </Text>
+        </View>
+      </View>
+      <View
+        accessible={true}
+        focusable={true}
+        isTVSelectable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "flex": 1,
+            "opacity": 1,
+          }
+        }
+      >
+        <View
+          active={false}
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "#F8F8F8",
+              "flex": 1,
+              "flexDirection": "row",
+              "justifyContent": "center",
+            }
+          }
+        >
+          <Text
+            style={
+              Array [
+                Object {
+                  "color": "#6b6b6b",
+                  "fontFamily": "System",
+                  "fontSize": 16,
+                  "marginLeft": 7,
+                  "marginRight": 7,
+                },
+                Object {
+                  "fontSize": 15,
+                },
+                undefined,
+                Object {
+                  "color": "#6b6b6b",
+                },
+              ]
+            }
+            uppercase={false}
+          >
+            Received
+          </Text>
+        </View>
+      </View>
+      <View
+        style={
+          Object {
+            "backgroundColor": "#007aff",
+            "bottom": 0,
+            "height": 4,
+            "left": 0,
+            "position": "absolute",
+            "width": 250,
+          }
+        }
+      />
+    </View>
+    <RCTScrollView
+      alwaysBounceVertical={false}
+      automaticallyAdjustContentInsets={false}
+      contentOffset={
+        Object {
+          "x": 0,
+        }
+      }
+      directionalLockEnabled={true}
+      horizontal={true}
+      keyboardDismissMode="on-drag"
+      keyboardShouldPersistTaps="handled"
+      onMomentumScrollBegin={[Function]}
+      onMomentumScrollEnd={[Function]}
+      onScroll={[Function]}
+      pagingEnabled={true}
+      scrollEnabled={true}
+      scrollEventThrottle={16}
+      scrollsToTop={false}
+      showsHorizontalScrollIndicator={false}
+    >
+      <View>
+        <View
+          style={
+            Object {
+              "width": 750,
+            }
+          }
+        >
+          <View
+            heading="Friends"
+            style={
+              Object {
+                "backgroundColor": "#FFF",
+                "flex": 1,
+              }
+            }
+          >
+            <RCTScrollView
+              data={Array []}
+              disableVirtualization={false}
+              getItem={[Function]}
+              getItemCount={[Function]}
+              horizontal={false}
+              initialNumToRender={10}
+              keyExtractor={[Function]}
+              maxToRenderPerBatch={10}
+              numColumns={1}
+              onContentSizeChange={[Function]}
+              onEndReachedThreshold={2}
+              onLayout={[Function]}
+              onMomentumScrollEnd={[Function]}
+              onScroll={[Function]}
+              onScrollBeginDrag={[Function]}
+              onScrollEndDrag={[Function]}
+              removeClippedSubviews={false}
+              renderItem={[Function]}
+              scrollEventThrottle={50}
+              stickyHeaderIndices={Array []}
+              style={
+                Object {
+                  "backgroundColor": "#EFEdF4",
+                  "flex": 1,
+                }
+              }
+              updateCellsBatchingPeriod={50}
+              viewabilityConfigCallbackPairs={Array []}
+              windowSize={21}
+            >
+              <View />
+            </RCTScrollView>
+          </View>
+        </View>
+        <View
+          style={
+            Object {
+              "width": 750,
+            }
+          }
+        >
+          <View
+            heading="Sent"
+          />
+        </View>
+        <View
+          style={
+            Object {
+              "width": 750,
+            }
+          }
+        >
+          <View
+            heading="Received"
+          />
+        </View>
+      </View>
+    </RCTScrollView>
+  </View>
+</View>
+`;

@@ -169,8 +169,11 @@ export default function Profile({post}) {
                     </TouchableOpacity>
                 </View>
                 {/* Bio  */}
-                <View style = {styles.centerBio}>
-                    <TextInput 
+                {/* style = {styles.centerBio}  */}
+                <View style={isEdit ? 
+                                {color: '#E0E0E0', fontSize: 38, marginTop: 10, borderWidth: 1, borderColor: '#E0E0E0', padding: 5} :
+                                {color: '#E0E0E0', fontSize: 38, marginTop: 10}}>
+                    <TextInput
                         editable = {isEdit}
                         onChangeText={(text) => {
                             setBio(text);
@@ -286,10 +289,11 @@ const styles = StyleSheet.create({
 
     //Edit icon for bio
     editBio: {
+        backgroundColor: 'blue',
         position: 'relative',
-        width: wp('10%'),
+        width: wp('9%'),
         height: hp('4%'),
-        borderRadius: 20,
+        borderRadius: 25,
         alignItems: "center",
         justifyContent: "center"
     },

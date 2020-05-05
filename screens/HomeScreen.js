@@ -79,11 +79,17 @@ export default function HomeScreen({ navigation }) {
     await queries.getPosts(callback);
   };
 
+  let renderProfileImg = (image) => {
+    if(image)
+      return (<Image source={{uri: image}} style={styles.avatar} />)
+    else
+      return (<Image source={require('../assets/images/lyfestyle.png')} style={styles.avatar} />)
+    }
 
   renderPost = (post) => {
     return (
       <View style={styles.feedItem}>
-        {/* <Image source={post.avatar} style={styles.avatar} /> */}
+        {renderProfileImg(post.profile)}
         <View style={{ flex: 1 }}>
           <View
             style={{

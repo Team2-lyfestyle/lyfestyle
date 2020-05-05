@@ -18,6 +18,7 @@ const PostScreen = ({ navigation }) => {
   // State data needed
   const [post, updatePost] = React.useState(false);
   const [postPhoto, updatePostPhoto] = React.useState(false);
+  const [profilePic, updateProfilePic] = React.useState(false);  // Used to save profile picture in post to load it in home screen
 
   React.useEffect(() => {
     async function askPermission() {
@@ -28,7 +29,15 @@ const PostScreen = ({ navigation }) => {
         }
       }
     }
+    getCurrentUser()
   });
+
+  let getCurrentUser = async () => {
+
+    let user = await queries.getCurrentUser()
+    updateProfilePic(user.media)
+  }
+
 
   let createPost = async (data, uri = null) => {
     await queries.createPost(data, uri);
@@ -70,6 +79,7 @@ const PostScreen = ({ navigation }) => {
               await createPost(
                 {
                   description: post,
+                  profile: profilePic
                 },
                 postPhoto
               );

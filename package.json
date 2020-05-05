@@ -20,7 +20,7 @@
     },
     "transformIgnorePatterns": [
       "node_modules/((?!(jest-))?@react-navigation/.*)"
-    ]
+    ],
     "automock": false
   },
   "dependencies": {

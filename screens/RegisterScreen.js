@@ -22,7 +22,7 @@ const RegisterScreen = ({ navigation }) => {
   const [email, updateEmail] = React.useState(false);
   const [password, updatePassword] = React.useState(false);
   const [data, updatedata] = React.useState(false);
-  //const { signUp } = React.useContext(AuthContext);
+  const { signUp } = React.useContext(AuthContext);
 
   let storeData = obj => {
     firebase

@@ -40,7 +40,7 @@
     "expo-web-browser": "~8.0.0",
     "firebase": "^7.14.0",
     "mem": "^4.0.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "native-base": "^2.13.8",
     "react": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
